@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- jquery lib required for bootstrap js library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+        <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
+        <link rel="stylesheet" href="styles.css">
+
+      <title></title>
+    </head>
+    <body>
+      {% if error_msg %}
+        <!-- TODO: style  -->
+        <div align="center">{{ error_msg }}</div>
+      {% endif %}
+        <form class="form-horizontal login-form-white-spacer" role="form" method="post">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="inputUser" class="col-sm-offset-2 col-sm-2 control-label">User Name</label>
+              <div class="col-sm-4">
+                <input type="text" name="USERNAME" class="form-control" id="inputEmail" placeholder="Enter User Name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputPassword" class="col-sm-offset-2 col-sm-2 control-label">Password</label>
+              <div class="col-sm-4">
+                <input type="password" name="PASSWORD" class="form-control" id="inputPassword" placeholder="Password">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-primary">Sign in</button>
+              </div>
+            </div>
+        </form>
+        <div class="text-center">
+        <a href="{% url "register" %}">No Account? Register here.</a>
+        </div>
+    </body>
+</html>
+

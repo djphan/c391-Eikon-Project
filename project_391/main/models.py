@@ -3,12 +3,16 @@ from django.db import models
 # Create your models here.
 
 class Users(models.Model):
-    user_name = models.CharField(primary_key=True, max_length=24)
+    username = models.CharField(primary_key=True, max_length=24, db_column="user_name")
     password = models.CharField(max_length=24)
     date_registered = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = "users"
+
+    def __str__(self):
+        return self.username
+        
 
 class Persons(models.Model):
     user_name = models.ForeignKey(Users, primary_key=True, db_column="user_name")
@@ -21,6 +25,10 @@ class Persons(models.Model):
     class Meta:
         db_table = "persons"
 
+    def __str__(self):
+        return ' '.join([str(self.user_name), '-', self.first_name, self.last_name, self.email])
+
+
 class Groups(models.Model):
     group_id = models.IntegerField(primary_key=True)
     user_name = models.ForeignKey(Users, db_column="user_name")
@@ -30,6 +38,7 @@ class Groups(models.Model):
     class Meta:
         db_table = "groups"
         unique_together = (("user_name", "group_name"),)
+
 
 class GroupLists(models.Model):
     """
@@ -54,6 +63,7 @@ class GroupLists(models.Model):
     class Meta:
         db_table = "group_lists"
         unique_together = (("group_id", "friend_id"),)
+
 
 class Images(models.Model):
     photo_id = models.IntegerField(primary_key=True)
