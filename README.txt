@@ -50,7 +50,10 @@ the path doesn't contain .../.virtualenv/... then you're running your computer's
 version of django, which we don't want to get mixed up with the project's
 version.
 
-At this point you should be able to git clone this repository.
+Finally:
+$ pip3 install pillow
+
+At this point you should be able to git clone this repository and run the server.
 
 :-)
 
