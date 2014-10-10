@@ -19,11 +19,7 @@
       <title></title>
     </head>
     <body>
-      {% if error_msg %}
-        <!-- TODO: style  -->
-        <div align="center">{{ error_msg }}</div>
-      {% endif %}
-        <form class="form-horizontal white-spacer-20" role="form" method="post">
+      <form class="form-horizontal white-spacer-20" role="form" method="post">
           {% csrf_token %}
             <div class="form-group animated bounceInLeft">
               <label for="inputUser" class="col-sm-offset-2 col-sm-2 control-label">User Name</label>
@@ -37,13 +33,16 @@
                 <input type="password" name="PASSWORD" class="form-control" id="inputPassword" placeholder="Password">
               </div>
             </div>
+            {% if error_msg %}
+            <h4 class="bg-warning login-warning center-block animated flash">{{ error_msg }}</h4>
+            {% endif %}
             <div class="form-group">
               <div class="col-sm-12 text-center">
                 <button type="submit" class="btn btn-primary animated fadeInUp delay-05s">Sign in</button>
               </div>
             </div>
         </form>
-        <div class="text-center animated fadeInUp delay-1s">
+              <div class="text-center animated fadeInUp delay-1s">
             <a href="{% url "register" %}">No Account? Register here.</a>
         </div>
     </body>

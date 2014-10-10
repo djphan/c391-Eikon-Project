@@ -60,6 +60,11 @@ i {
     background: rgb(135, 199, 135);
 }
 
+.login-warning {
+    text-align: center;
+    padding: 1.75em;
+}
+
 .editable:hover {
 
 }
