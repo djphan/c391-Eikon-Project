@@ -1,0 +1,18 @@
+Welcome to the index!
+<a href="{% url "index" %}">Go to index</a>
+<br>
+{% if temp_cookie_text %}
+{% autoescape off %}
+  <div align="center">{{temp_cookie_text}}</div>
+{% endautoescape %}
+{% endif %}
+<br>
+{% if username %}
+  <div align="center">username = {{username}}</div>
+{% endif %}
+<br>
+{% if password %}
+  <div align="center">password = {{password}}</div>
+{% endif %}
+  
+

@@ -85,3 +85,15 @@ class Images(models.Model):
     class Meta:
         db_table = "images"
         
+class Session(models.Model):
+    username = models.ForeignKey(Users)
+    sessiontracker = models.IntegerField(primary_key=True)
+    # expiry = models.DateField()  # implement later?
+    
+    
+    class Meta:
+        db_table = "session"
+
+    def __str__(self):
+        # String form is username plus last 4 digits of sessiontracker
+        return ("(%s:...%s)"%(self.username.username, str(self.sessiontracker)[-4:]))
