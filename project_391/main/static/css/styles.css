@@ -1,0 +1,115 @@
+.white-spacer-5 {
+    padding-top: 5%;
+}
+
+.white-spacer-10 {
+    padding-top: 10%;
+}
+
+.white-spacer-20 {
+    padding-top: 20%;
+}
+
+.large-image-display {
+    width: 75%;
+    padding-bottom: 10%;
+}
+
+.thumbnail-image-display {
+    padding-top: 0%;
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.thumbnail-photo-details {
+}
+
+
+li {
+    padding-top: 3%;
+    padding-bottom: 1%;
+}
+
+i {
+    padding-top: 3%;
+    padding-bottom: 1%;
+}
+
+#container {
+    width: 800px;
+    margin: 0 auto;
+    padding-top: 10%;
+    border: 1px solid black;
+}
+
+.list-group {
+    margin: 0px;
+}
+
+.grid-item {
+    width: 20%;
+    height: auto;
+    text-align: left;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.item {
+    width: 20%;
+    height: 20%;
+    background: rgb(135, 199, 135);
+}
+
+.editable:hover {
+
+}
+
+.delay-01s {
+    animation-delay: 0.1s;
+    -webkit-animation-delay: 0.1s;
+}
+
+.delay-02s {
+    animation-delay: 0.2s;
+    -webkit-animation-delay: 0.2s;
+}
+
+.delay-03s {
+    animation-delay: 0.3s;
+    -webkit-animation-delay: 0.3s;
+}
+
+.delay-04s {
+    animation-delay: 0.4s;
+    -webkit-animation-delay: 0.4s;
+}
+
+.delay-05s {
+    animation-delay: 0.5s;
+    -webkit-animation-delay: 0.5s;
+}
+
+.delay-06s {
+    animation-delay: 0.6s;
+    -webkit-animation-delay: 0.6s;
+}
+
+.delay-08s {
+    animation-delay: 0.8s;
+    -webkit-animation-delay: 0.8s;
+}
+
+.delay-1s {
+    animation-delay: 1s;
+    -webkit-animation-delay: 1s;
+}
+
+.delay-12s {
+    animation-delay: 1.2s;
+    --webkit-animation-delay: 1.2s;
+}
+
+.delay-2s {
+    animation-delay: 2s;
+    -webkit-animation-delay: 2s;
+}

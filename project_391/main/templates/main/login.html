@@ -7,15 +7,14 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+        <!-- Animate stylesheet -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css">
 
         <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
 
       <title></title>
     </head>
@@ -24,15 +23,15 @@
         <!-- TODO: style  -->
         <div align="center">{{ error_msg }}</div>
       {% endif %}
-        <form class="form-horizontal login-form-white-spacer" role="form" method="post">
+        <form class="form-horizontal white-spacer-20" role="form" method="post">
           {% csrf_token %}
-            <div class="form-group">
+            <div class="form-group animated bounceInLeft">
               <label for="inputUser" class="col-sm-offset-2 col-sm-2 control-label">User Name</label>
               <div class="col-sm-4">
                 <input type="text" name="USERNAME" class="form-control" id="inputEmail" placeholder="Enter User Name">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group animated bounceInRight">
               <label for="inputPassword" class="col-sm-offset-2 col-sm-2 control-label">Password</label>
               <div class="col-sm-4">
                 <input type="password" name="PASSWORD" class="form-control" id="inputPassword" placeholder="Password">
@@ -40,12 +39,12 @@
             </div>
             <div class="form-group">
               <div class="col-sm-12 text-center">
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                <button type="submit" class="btn btn-primary animated fadeInUp delay-05s">Sign in</button>
               </div>
             </div>
         </form>
-        <div class="text-center">
-        <a href="{% url "register" %}">No Account? Register here.</a>
+        <div class="text-center animated fadeInUp delay-1s">
+            <a href="{% url "register" %}">No Account? Register here.</a>
         </div>
     </body>
 </html>
