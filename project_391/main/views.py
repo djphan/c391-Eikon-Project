@@ -164,8 +164,12 @@ def temp_main_page(request):
 
     return render(request, 'main/index.html', {'temp_cookie_text':text})
             
-    
+def home_page(request):
+    return render(request, 'main/home_page.html')
         
-
+def upload(request):
+    return render(request, 'main/uploads.html')
     
+def photo_details(request):
+    return render(request, 'main/photo_details.html')
     

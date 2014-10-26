@@ -8,4 +8,7 @@ urlpatterns = patterns(
     url(r'^login/$', views.loginPage, name='loginPage'),
     url(r'^register/$', views.register, name='register'),
     url(r"^index/$", views.temp_main_page, name='index'),
+    url(r"^home/$", views.home_page, name='home'),
+    url(r"^upload/$", views.upload, name='upload'),
+    url(r"^photo_details/$", views.photo_details, name='photo_details'),
 )
