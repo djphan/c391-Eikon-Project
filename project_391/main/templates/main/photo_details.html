@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- jquery lib required for bootstrap js library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+        <!-- Date/Time picker -->
+        <script src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+
+        <!-- Date/Time picker stylesheet -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+
+        <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+
+      <title></title>
+    </head>
+    <body>
+        <!-- Navbar section -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Username</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Link</a></li>
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">One more separated link</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+              </form>
+                </li>
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+
+
+
+
+
+        <!-- Image src will be filled dynamically by django -->
+        <img src="./img/placeholder.jpg" class="center-block white-spacer-5 image-display" alt="image">
+
+        <form class="form-horizontal white-spacer-5" role="form">
+            <div class="form-group animated bounceInLeft">
+              <label for="location" class="col-sm-offset-2 col-sm-2 control-label">Location</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="location" placeholder="Location">
+              </div>
+            </div>
+
+            <div class="form-group animated bounceInRight delay-03">
+              <label for="subject" class="col-sm-offset-2 col-sm-2 control-label">Subject</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="subject" placeholder="Subject">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="date" class="col-sm-offset-2 col-sm-2 control-label">Date</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="date" placeholder="Date">
+              </div>
+            </div>
+
+            <!-- Django will need to fill in a select box with permission options -->
+            <div class="form-group">
+              <label for="permissions" class="col-sm-offset-2 col-sm-2 control-label">Permissions</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" id="permissions" placeholder="Permissions">
+              </div>
+            </div>
+
+
+
+
+
+            <div class="form-group">
+              <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+        </form>
+    </body>
+</html>

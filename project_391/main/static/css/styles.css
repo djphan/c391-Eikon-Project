@@ -26,20 +26,18 @@
 
 
 li {
-    padding-top: 3%;
+    padding-top: 5%;
     padding-bottom: 1%;
 }
 
 i {
-    padding-top: 3%;
+    padding-top: 5%;
     padding-bottom: 1%;
 }
 
 #container {
     width: 800px;
     margin: 0 auto;
-    padding-top: 10%;
-    border: 1px solid black;
 }
 
 .list-group {
@@ -56,13 +54,7 @@ i {
 
 .item {
     width: 20%;
-    height: 20%;
     background: rgb(135, 199, 135);
-}
-
-.login-warning {
-    text-align: center;
-    padding: 1.75em;
 }
 
 .editable:hover {
@@ -109,12 +101,12 @@ i {
     -webkit-animation-delay: 1s;
 }
 
-.delay-12s {
+.delay-1.2s {
     animation-delay: 1.2s;
     --webkit-animation-delay: 1.2s;
 }
 
-.delay-2s {
-    animation-delay: 2s;
-    -webkit-animation-delay: 2s;
+.delay-1.5s {
+    animation-delay: 1.5s;
+    -webkit-animation-delay: 1.5s;
 }
