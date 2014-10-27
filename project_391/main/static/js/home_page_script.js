@@ -42,7 +42,7 @@ $(function() {
     var element = $.parseHTML(
         '<div class="grid-item item center-block">' +
             '<div class="image">' +
-                '<img src="../img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">' +
+                '<img src="/static/img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">' +
             '</div>'+
             '<ul class="fa-ul">' +
                 '<li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>' +
