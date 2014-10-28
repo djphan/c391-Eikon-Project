@@ -7,27 +7,33 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
+
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-        <!-- grid library -->
-        <script src="{{ STATIC_URL }}js/masonry.pkgd.js"></script>
-        <script src="{{ STATIC_URL }}js/home_page_script.js"></script>
-
-        <!-- Date/Time picker stylesheet -->
+        <!-- Date/Time picker stuff -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script> 
 
+        <!-- Selection box stuff -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-select.css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-select.js"></script>
 
-        <!-- font awesome -->
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
+        <!-- alerts css and js -->
+        <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
+        
+        <!-- dropzone image uploader -->
         <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+        <script src="{{ STATIC_URL }}js/group_management.js"></script>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/group_management_styles.css">
       <title></title>
     </head>
     <body>
         <!-- Navbar section -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <nav class="navbar navbar-inverse  navbar-static-top" role="navigation">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -63,46 +69,49 @@
                   <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
-                <button class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal">
-                     Upload 
-                  </button>
               </form>
+                </li>
+              </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
-
-        <div class="container image-display">
+        
+        <div class="container">
             <div class="row">
-                <div class="col-sm-7">
-                    <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 large-image-display" alt="image">
+                <div class="col-sm-4">
+                    <h3>Your Groups</h3>
+                    <div class="list-group">
+                      <a href="#" class="list-group-item">
+                        Cras justo odio
+                      </a>
+                      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                      <a href="#" class="list-group-item">Morbi leo risus</a>
+                      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                      <a href="#" class="list-group-item">Vestibulum at eros</a>
+                    </div>
                 </div>
-                <div class="col-sm-5">
-                    <div id="container"></div>
-                </div>
-            </div>
-        </div> 
 
-        <div class="grid-item item center-block">
-            <div class="image">
-                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                <div class="col-sm-8">
+                    <h3>Your Group Members</h3>
+                    <div class="list-group">
+                      <a href="#" class="list-group-item">
+                        Cras justo odio
+                      </a>
+                      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                      <a href="#" class="list-group-item">Morbi leo risus</a>
+                      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                      <a href="#" class="list-group-item">Vestibulum at eros</a>
+                    <select class="list-group-item user-select form-control" id="permissions" name="permissions">
+                        <!-- Django will need to fill in a option items -->
+                        <option>Add a user</option>
+                        <option>Friends</option>
+                        <option>Family</option>
+                    </select>
+
+                    </div>
+                </div>
+                
             </div>
-            <ul class="fa-ul">
-                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-            </ul>
         </div>
-        <div class="container image-display">
-            <div class="row">
-                <div class="col-sm-5">
-                    <div id="container"></div>
-                </div>
-            </div>
-        </div> 
-
-
-        <div id="container"></div>
-       
-    </body>
+   </body>
 </html>

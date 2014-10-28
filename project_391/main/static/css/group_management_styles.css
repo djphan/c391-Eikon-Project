@@ -1,0 +1,16 @@
+.add-user {
+    padding-left: 0px;
+}
+
+.user-select {
+    background-color: #f2dede;
+}
+
+option {
+    padding: 10px 15px;
+}
+/*
+.user-select option {
+    padding: 10px 15px;
+}
+*/

@@ -37,7 +37,7 @@ $(function() {
     var nodeArray = dataManager.createNodeObjects(jsonData);
     // add the objects to the masonry grid
     var container = document.querySelector('#container');
-    var msnry = new Masonry(container, {columnWidth: 100, itemSelector: '.item'});
+    var msnry = new Masonry(container, {columnWidth: 50, itemSelector: '.item'});
     
     var element = $.parseHTML(
         '<div class="grid-item item center-block">' +

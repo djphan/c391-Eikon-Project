@@ -11,4 +11,6 @@ urlpatterns = patterns(
     url(r"^home/$", views.home_page, name='home'),
     url(r"^upload/$", views.upload, name='upload'),
     url(r"^photo_details/$", views.photo_details, name='photo_details'),
+    url(r"^group_management/$", views.group_management, name='group_management'),
+
 )

@@ -173,3 +173,5 @@ def upload(request):
 def photo_details(request):
     return render(request, 'main/photo_details.html')
     
+def group_management(request):
+    return render(request, 'main/group_management.html')
