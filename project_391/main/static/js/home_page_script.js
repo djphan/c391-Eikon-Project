@@ -37,7 +37,6 @@ $(function() {
     var nodeArray = dataManager.createNodeObjects(jsonData);
     // add the objects to the masonry grid
     var container = document.querySelector('#container');
-    var msnry = new Masonry(container, {columnWidth: 50, itemSelector: '.item'});
     
     var element = $.parseHTML(
         '<div class="grid-item item center-block">' +
@@ -52,11 +51,5 @@ $(function() {
             '</ul>' +
         '</div>');
 
-    container.appendChild(element[0]);
-    msnry.appended(element[0]);
-    for (var i = 0; i < 20; i++) {
-        var cloned = $(element[0]).clone();
-        container.appendChild(cloned.get(0));
-        msnry.appended(cloned);
-    }
+    //container.appendChild(element[0]);
 });

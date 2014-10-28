@@ -44,10 +44,15 @@ i {
     margin: 0px;
 }
 
+.image-grid {
+    height: 100%;
+    overflow-y: scroll;
+}
 .grid-item {
-    width: 40%;
+    width: 100%;
     height: auto;
     text-align: left;
+    margin-bottom: 1em;
     border: 1px solid black;
     border-radius: 2px;
 }
