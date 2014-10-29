@@ -11,14 +11,13 @@
 }
 
 .large-image-display {
-    width: 95%;
-    padding-bottom: 10%;
+    width: 80%;
 }
 
 .thumbnail-image-display {
     padding-top: 0%;
     width: 100%;
-    border-bottom: 1px solid black;
+    border-bottom: 1px  black;
 }
 
 .thumbnail-photo-details {
@@ -26,12 +25,10 @@
 
 
 li {
-    padding-top: 5%;
     padding-bottom: 1%;
 }
 
 i {
-    padding-top: 5%;
     padding-bottom: 1%;
 }
 
@@ -45,20 +42,25 @@ i {
 }
 
 .image-grid {
-    height: 100%;
+    position: absolute;
+    right: 2%;
+    height: 80%;
     overflow-y: scroll;
+    border-left: 1px solid black;
 }
 .grid-item {
-    width: 100%;
+    width: 70%;
     height: auto;
     text-align: left;
     margin-bottom: 1em;
-    border: 1px solid black;
-    border-radius: 2px;
 }
 
-.item {
-    background: rgb(135, 199, 135);
+.photo-details-wrapper {
+    display: inline-block;
+}
+
+.grid-item ul {
+    display: none;
 }
 
 .editable:hover {
