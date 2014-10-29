@@ -16,10 +16,13 @@
         <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
 
-      <title></title>
+      <title>Login</title>
     </head>
     <body>
-      <form class="form-horizontal white-spacer-20" role="form" method="post">
+        <div class ="outer">
+        <div class ="middle">
+        <div class ="inner">        
+      <form class="form-horizontal" role="form" method="post">
           {% csrf_token %}
             <div class="form-group animated bounceInLeft">
               <label for="inputUser" class="col-sm-offset-2 col-sm-2 control-label">User Name</label>
@@ -42,9 +45,13 @@
               </div>
             </div>
         </form>
+
               <div class="text-center animated fadeInUp delay-1s">
             <a href="{% url "register" %}">No Account? Register here.</a>
         </div>
+        </div>
+        </div>
+        </div>        
     </body>
 </html>
 
