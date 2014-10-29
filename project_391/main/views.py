@@ -42,7 +42,6 @@ def loginPage(request):         # how do we respond to a request for a login pag
 
 ################################################################################
 
-
 def register(request):
     if len(request.POST) == 0:  # "Register" wasn't clicked; display the empty registration page
         return render(request, 'main/register.html')
