@@ -105,5 +105,5 @@ window.onload = function() {
         groupManager.addGroupMembersToList(groupsInfo[0].groupName, groupsInfo[0].members); 
     }
     //groupManager.addGroupMembersToList(groupsInfo);
-    groupManager.addGroupMembersToList([{"name":"Jim"}]);
+    groupManager.addGroupMembersToList(["Jim"], "Beep");
 };
