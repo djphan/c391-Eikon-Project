@@ -84,6 +84,12 @@ class Images(models.Model):
 
     class Meta:
         db_table = "images"
+
+
+    def search:
+        # TODO: - Dan Implement search query based on ranking system givne in assignment specificiations
+        pass
+
         
 class Session(models.Model):
     username = models.ForeignKey(Users)
