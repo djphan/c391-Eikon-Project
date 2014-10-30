@@ -33,7 +33,7 @@
     </head>
     <body>
         <!-- Navbar section -->
-        <nav class="navbar navbar-inverse  navbar-static-top" role="navigation">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -49,8 +49,8 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
+                <li><a href="/main/home">Home</a></li>
+                <li class="active"><a href="/main/group_management">Manage Groups</a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
@@ -69,9 +69,8 @@
                   <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
+                <a class="btn btn-primary btn-default" href="/main/upload">Upload</a>
               </form>
-                </li>
-              </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
@@ -79,34 +78,36 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
-                    <h3>Your Groups</h3>
+                    <h4>Your Groups</h4>
                     <div class="list-group">
-                      <a href="#" class="list-group-item">
-                        Cras justo odio
-                      </a>
-                      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                      <a href="#" class="list-group-item">Morbi leo risus</a>
-                      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                      <a href="#" class="list-group-item">Vestibulum at eros</a>
+                        <div class="group-names">
+                          <a href="#" class="list-group-item">
+                            Cras justo odio
+                          </a>
+                          <a class="list-group-item">Dapibus ac facilisis in</a>
+                          <a class="list-group-item">Morbi leo risus</a>
+                          <a class="list-group-item">Porta ac consectetur ac</a>
+                          <a class="list-group-item">Vestibulum at eros</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-sm-8">
-                    <h3>Your Group Members</h3>
+                    <h4>Your Group Members</h4>
                     <div class="list-group">
-                      <a href="#" class="list-group-item">
-                        Cras justo odio
-                      </a>
-                      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                      <a href="#" class="list-group-item">Morbi leo risus</a>
-                      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                      <a href="#" class="list-group-item">Vestibulum at eros</a>
-                    <select class="list-group-item user-select form-control" id="permissions" name="permissions">
-                        <!-- Django will need to fill in a option items -->
-                        <option>Add a user</option>
-                        <option>Friends</option>
-                        <option>Family</option>
-                    </select>
+                        <div class="group-members">
+                          <a class="list-group-item">Cras justo odio<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+                          <a class="list-group-item">Dapibus ac facilisis in<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+                          <a class="list-group-item">Morbi leo risus<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+                          <a class="list-group-item">Porta ac consectetur ac<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+                          <a class="list-group-item">Vestibulum at eros<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+                        </div>
+                        <select class="list-group-item user-select form-control" id="permissions" name="permissions">
+                            <!-- Django will need to fill in a option items -->
+                            <option>Add a user</option>
+                            <option>Friends</option>
+                            <option>Family</option>
+                        </select>
 
                     </div>
                 </div>

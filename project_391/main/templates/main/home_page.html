@@ -27,7 +27,7 @@
     </head>
     <body>
         <!-- Navbar section -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -43,8 +43,8 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Link</a></li>
-                <li><a href="#">Link</a></li>
+                <li class="active"><a href="/main/home">Home</a></li>
+                <li><a href="/main/group_management">Manage Groups</a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
@@ -63,67 +63,80 @@
                   <input type="text" class="form-control" placeholder="Search">
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
-                <button class="btn btn-primary btn-default" data-toggle="modal" data-target="#myModal">
-                     Upload 
-                  </button>
+                <a class="btn btn-primary btn-default" href="/main/upload">Upload</a>
               </form>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
 
-        <div class="container image-display">
+        <div class="container-fluid image-display">
             <div class="row">
                 <div class="col-sm-9">
                     <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 large-image-display" alt="image">
-                </div>
-       
-            <div class="col-sm-3 image-grid">
-                <div class="row">
-                <div class="">
-                    <div class="grid-item item center-block">
-                        <div class="image">
-                            <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="col-sm-6">
+                                <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
+                                <p>Hello</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
+                            </div>
+                            <!--
+                            <ul class="fa-ul photo-details-wrapper">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-2x fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-2x fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-2x fa-calendar-o"></i>Date</li>
+                            </ul>
+                            -->
                         </div>
-                        <ul class="fa-ul">
-                            <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                            <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                            <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                            <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                        </ul>
-                    </div>
                 </div>
-                </div><!-- /grid item -->
-                <div class="row">
-                <div class="image-grid">
-                    <div class="grid-item item center-block">
-                        <div class="image">
-                            <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+           
+                <div class="col-sm-3 image-grid">
+                    <div class="row">
+                    <div class="">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
                         </div>
-                        <ul class="fa-ul">
-                            <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                            <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                            <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                            <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                        </ul>
                     </div>
-                </div>
-                </div><!-- /grid item -->
-                <div class="row">
-                <div class="image-grid">
-                    <div class="grid-item item center-block">
-                        <div class="image">
-                            <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                        </div>
-                        <ul class="fa-ul">
-                            <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                            <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                            <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                            <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                        </ul>
+
+                    </div><!-- /grid item -->
+                    <div class="row">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
                     </div>
-                </div>
-                </div><!-- /grid item -->
+
+                    </div><!-- /grid item -->
+                    <div class="row">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
+                    </div>
+                    </div><!-- /grid item -->
 
 
-    </body>
-</html>
+        </body>
+    </html>
