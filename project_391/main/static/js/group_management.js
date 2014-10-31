@@ -27,16 +27,23 @@ var groupManager = (function(){
                 groupNameElement.className = "list-group-item";
                 groupNameElement.innerHTML = userGroups[i].groupName;
                 // if we need a group remove button set it here
-                groupNameElement.addEventListener("click", function() {
-                    this.clearGroupMembersFromList();
-                    this.addGroupMembersToList(userGroups[i].memberNames, userGroups[i].groupName);
-                }, 0);
+                this.addGroupNameClickHandler(i, userGroups, groupNameElement);
+                // add element to list of groups
+                var groupList = document.getElementsByClassName("group-names")[0];
+                groupList.appendChild(groupNameElement);
             }
         },
 
+        addGroupNameClickHandler: function(i, userGroups, groupNameElement) {
+            _this = this;
+            groupNameElement.addEventListener("click", function() {
+                _this.clearGroupMembersFromList();
+                _this.addGroupMembersToList(userGroups[i].memberNames, userGroups[i].groupName);
+            }, 0);
+        },
 
         clearGroupMembersFromList: function() {
-            var groupList = document.getElementsByClassName("group-members");
+            var groupList = document.getElementsByClassName("group-members")[0];
             while (groupList.firstChild){
                 groupList.removeChild(groupList.firstChild);
             }
@@ -98,6 +105,10 @@ var groupManager = (function(){
 window.onload = function() {
     // get an array of all groups and their members
     var groupsInfo = groupManager.getGroupInformation();
+    // object should look like [{"groupName": "Brogrammers", "memberNames": ["Jon", "Carl", "Dan"]},... ]
+    groupsInfo = [{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
+                  {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}];
+
     // Populate the groups section
     // display the members of the first list if there is one
     if (groupsInfo) {
