@@ -86,7 +86,6 @@ class Images(models.Model):
         db_table = "images"
 
 
-    def search:
         # TODO: - Dan Implement search query based on ranking system givne in assignment specificiations
         pass
 
