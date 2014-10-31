@@ -109,11 +109,11 @@ window.onload = function() {
     groupsInfo = [{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
                   {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}];
 
-    // Populate the groups section
+    // Populate the groups section and
     // display the members of the first list if there is one
     if (groupsInfo) {
         groupManager.addGroupNamesToList(groupsInfo);
-        groupManager.addGroupMembersToList(groupsInfo[0].groupName, groupsInfo[0].members); 
+        groupManager.addGroupMembersToList(groupsInfo[0].members, groupsInfo[0].name); 
     }
     //groupManager.addGroupMembersToList(groupsInfo);
     groupManager.addGroupMembersToList(["Jim"], "Beep");
