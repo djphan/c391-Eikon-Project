@@ -1,9 +1,10 @@
 391_project
 ===========
-
 Django Photo-Sharing Web Application for CMPUT 391
 
 
+django Installation
+===
 Instructions to set this up on your computer:
 
 (Note: I'm working in Ubuntu 14.04, but hopefully these instructions should be
@@ -63,3 +64,60 @@ username: admin
 password: 391foo1
 You'll need this to log in to the admin side of the server.
 You can add yourselves as superusers too of course.
+
+
+postgres installation
+===
+1. After installing python3, and django install the psycopg2 library first.
+Use the command: $ pip3 install psycopg2
+
+2. Install postgres.
+Note on a Mac use the following link: http://postgresapp.com/. This package will install postgres with all the extra dependancies.
+
+Extra step. In your home directory add this line in the .bashprofile file:
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.3/bin
+
+This allows you to launch psql in terminal.
+
+Otherwise install postgres using pip3 or apt-get, etc depending on the system
+
+3. Create the database and set the following settings using the terminal commands:
+
+We named our db eikon for the greek word for icon
+$ createdb eikon
+
+Alternatively: Intitalize psql. Use this cheatsheet to help (https://manikandanmv.wordpress.com/tag/basic-psql-commands/)
+
+Note: The psql terminal interface won't echo after each line. You can enter multi line queries/commands that temrinate with a \ or ;.
+If a command doesn't seem to be working break the command with a ; and try again.
+
+#= CREATE ROLE django LOGIN password 'admin';
+#= CREATE DATABASE eikon ENCODING 'UTF8' OWNER django;
+
+
+In settings.py in project_391 change the following line of code with this:
+
+DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'eikon', # Or path to database file if using sqlite3.
+            # The following settings are not used with sqlite3:
+            'USER': 'django',
+            'PASSWORD': 'admin',
+            'HOST': 'localhost', # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
+            'PORT': '', # Set to empty string for default.
+    }
+}
+
+References:
+1. Tutorial resource (https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-django-with-postgres-nginx-and-gunicorn)
+2. Stackover Flow Troubleshooting Guide (http://stackoverflow.com/questions/5394331/how-to-setup-postgresql-database-in-django)
+3. psql cheatsheet (https://manikandanmv.wordpress.com/tag/basic-psql-commands/)
+4. Configure psql and posgres (http://stackoverflow.com/questions/1471571/how-to-configure-postgresql-for-the-first-time)
+
+
+Resources, References, and Links
+===
+. Postgres Setup in Django framework provided by Juan Pablo Arriagada Cancino (http://stackoverflow.com/questions/5394331/how-to-setup-postgresql-database-in-django)
+. Postgres psql commands (https://manikandanmv.wordpress.com/tag/basic-psql-commands/)
+. CCS Centering solution provided by Billbad (https://stackoverflow.com/questions/396145/how-to-vertically-center-a-div-for-all-browsers). The use of inner, middle, and outer was used to dynamically center elements of HTML sites
