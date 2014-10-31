@@ -39,9 +39,8 @@ var groupManager = (function(){
                 if (req.readyState==4 && req.status == 200){
                     var newGroup = {"groupName": groupName, "groupMembers":[]};
                     _this.userGroups.push(newGroup);
-                    _this.addGroupNamesToList(newGroup); 
+                    _this.addGroupNamesToList([newGroup]); 
                 } else if (req.readyState==4 && req.status != 200){
-                    var newGroup = {"groupName": groupName, "groupMembers":[]};
                     swal("Could not add group");
                 }
             };
