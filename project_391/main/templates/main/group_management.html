@@ -7,7 +7,9 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-
+        <!-- Animate stylesheet -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css">
+        
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
@@ -23,7 +25,8 @@
         <!-- alerts css and js -->
         <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
         <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
-        
+        <!-- classie for quick class addition/removal -->
+        <script src="{{ STATIC_URL }}js/classie.js"></script>
         <!-- dropzone image uploader -->
         <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
@@ -87,6 +90,12 @@
                           <a class="list-group-item">Porta ac consectetur ac</a>
                           <a class="list-group-item">Vestibulum at eros</a>
                           -->
+                        </div>
+                        <input class="list-group-item enter-group-name-field form-control" type="text" placeholder="Enter a new group name" name="enter-group-name-field">
+                            <!-- Django will need to fill in a option items -->
+                        </input>
+                        <div class="text-center">
+                            <button type="submit" id="submit-button" class="submit-new-group  btn btn-warning" >Add Group</button>
                         </div>
                     </div>
                 </div>

@@ -6,6 +6,10 @@
     background-color: #f2dede;
 }
 
+.submit-new-group {
+    margin-top: 2%;
+}
+
 option {
     padding: 10px 15px;
 }
