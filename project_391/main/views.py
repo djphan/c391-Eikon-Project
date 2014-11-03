@@ -6,6 +6,7 @@ from django.shortcuts import render, render_to_response
 from main.models import Users, Persons, Session
 from django.http import HttpResponse
 from django.forms import EmailField
+from django.views.decorators.csrf import ensure_csrf_cookie
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -173,4 +174,7 @@ def photo_details(request):
     return render(request, 'main/photo_details.html')
     
 def group_management(request):
+    return render(request, 'main/group_management.html')
+
+def remove_user_from_group(request):
     return render(request, 'main/group_management.html')

@@ -17,7 +17,8 @@
         <!-- Date/Time picker stylesheet -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
 
-
+        <!-- font -->
+        <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:700' rel='stylesheet' type='text/css'>
         <!-- font awesome -->
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -75,11 +76,15 @@
                     <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 large-image-display" alt="image">
                         <div class="col-sm-8 col-sm-offset-2">
                             <div class="col-sm-6">
-                                <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
-                                <p>Hello</p>
+                                <p class="pull-right image-subject">A Large Lake</p>
                             </div>
                             <div class="col-sm-6">
+                                <!--
                                 <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
+                                -->
+                                <div class="image-location"><span class="label label-danger">Jasper, Canada</span></div>
+                                <div class="image-date"><span class="label label-danger">Buddies</span></div>
+                                <div class="image-group"><span class="label label-danger">August 14, 2014</span></div>
                             </div>
                             <!--
                             <ul class="fa-ul photo-details-wrapper">
@@ -106,9 +111,9 @@
                                 <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
                             </ul>
                         </div>
-                    </div>
-
+                        </div>
                     </div><!-- /grid item -->
+
                     <div class="row">
                         <div class="grid-item item center-block">
                             <div class="image">
@@ -120,9 +125,9 @@
                                 <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
                                 <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
                             </ul>
-                    </div>
-
+                        </div>
                     </div><!-- /grid item -->
+
                     <div class="row">
                         <div class="grid-item item center-block">
                             <div class="image">
@@ -134,9 +139,54 @@
                                 <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
                                 <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
                             </ul>
-                    </div>
+                        </div>
                     </div><!-- /grid item -->
 
+                    <div class="row">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
+                        </div>
+                    </div><!-- /grid item -->
+
+                    <div class="row">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
+                        </div>
+                    </div><!-- /grid item -->
+
+                    <div class="row">
+                        <div class="grid-item item center-block">
+                            <div class="image">
+                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
+                            </div>
+                            <ul class="fa-ul">
+                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
+                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
+                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
+                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
+                            </ul>
+                        </div>
+                    </div><!-- /grid item -->
+
+
+
+                </div><!-- /grid -->
 
         </body>
     </html>

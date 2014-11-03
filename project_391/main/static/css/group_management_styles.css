@@ -6,8 +6,13 @@
     background-color: #f2dede;
 }
 
-.submit-new-group {
-    margin-top: 2%;
+.label-danger {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.submit-new-group, .add-user-button {
+    margin-top: 5px;
 }
 
 option {

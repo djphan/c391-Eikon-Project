@@ -12,5 +12,7 @@ urlpatterns = patterns(
     url(r"^upload/$", views.upload, name='upload'),
     url(r"^photo_details/$", views.photo_details, name='photo_details'),
     url(r"^group_management/$", views.group_management, name='group_management'),
+    url(r"^remove_user_from_group/$", views.remove_user_from_group, name='remove_user_from_group'),
+
 
 )

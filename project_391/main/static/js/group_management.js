@@ -3,6 +3,7 @@ var groupManager = (function(){
     return {
         
         userGroups: null,
+        userNames: null,
         getGroupInformation: function() {
             // make request for all groups and members
             // object should look like [{"groupName": "Brogrammers", "memberNames": ["Jon", "Carl", "Dan"]},... ]
@@ -28,11 +29,51 @@ var groupManager = (function(){
             return this.userGroups;
 
         },
-        
+        // gets a list of users who can be added to groups
+        // this is basically a list of all users.
+        // TODO request /main/get_user_information
+        getUserInformation: function(){
+            _this = this;
+            var req = new XMLHttpRequest();
+            req.onreadystatechange=function(){
+                if (req.readyState==4 && req.status == 200){
+                    // TODO get a response object {"userNames":["Bob", "Bill", ...]}
+                    _this.userNames = req.responseText;
+                    // pass an array of user names to add
+                    _this.setUserNames(userNameArray);
+                } else if (req.readyState==4 && req.status != 200){
+                    swal("Could not load user information");
+                }
+            };
+            req.open("POST","/main/get_user_information", true);
+            req.setRequestHeader("Content-type", "application/json");
+            req.send();
+ 
+        },
+        // receives a array of user names to add to the select box
+        setUserNames: function (arrayUserNames){
+            // get the select box and populate it with the names
+            var selectList = document.getElementsByClassName("user-select")[0];
+            arrayUserNames.forEach(function(name) {
+                var newUserNameNode = document.createElement("option");
+                newUserNameNode.innerHTML = name;
+                selectList.appendChild(newUserNameNode);
+            });
+        },
+        //
         // call this function when the user creates a new group
         addNewGroupNameToList: function(groupName) {
             // first make sure we can add the group on the server
             // assuming add_group endpoint
+            // TODO make sure there is not already a group by this name
+            for (var i = 0; i < this.userGroups.length; i++){
+                if (this.userGroups[i].groupName == groupName){
+                    swal("A group by this name already exists");
+                    return;
+                }
+            }
+
+            // if the name is unique proceed to add it.
             _this = this;
             var req = new XMLHttpRequest();
             req.onreadystatechange=function(){
@@ -41,7 +82,7 @@ var groupManager = (function(){
                     _this.userGroups.push(newGroup);
                     _this.addGroupNamesToList([newGroup]); 
                 } else if (req.readyState==4 && req.status != 200){
-                    swal("Could not add group");
+                    swal("Could not add group, bad response from server");
                 }
             };
 
@@ -69,7 +110,7 @@ var groupManager = (function(){
         addGroupNameClickHandler: function(i, userGroups, groupNameElement) {
             _this = this;
             groupNameElement.addEventListener("click", function() {
-                var activeElements = groupNameElement.parentNode.getElementsByClassName("active");
+                var activeElements = groupNameElement.parentNode.getElementsByClassName("active")[0];
                 for (var j = 0; j < activeElements.length; j++) {
                     classie.remove(activeElements[j], 'active');
                 }
@@ -94,27 +135,42 @@ var groupManager = (function(){
                 var groupMemberElement = document.createElement("a");
                 groupMemberElement.className = "list-group-item";
                 groupMemberElement.innerHTML = groupMembers[i];
+                groupMemberElement.setAttribute("data-member-name", groupMembers[i]);
                 // create the remove button for the element
                 var removeButtonElement = document.createElement("span");
                 removeButtonElement.className = "label label-danger pull-right member-remove-button";
                 removeButtonElement.innerHTML = "Remove";
-                var _this = this;
-                removeButtonElement.addEventListener("click", function(){
-                    // make request to remove
-                    // on success remove on failure warn
-                    swal("Remove button clicked");
-                    var memberName = this.parentNode.innerHTML;
-                    // you need to regex this now because you have the span tag in the html
-                    _this.deleteMember(memberName, groupName);
-                }, 0);
+                this.deleteGroupMemberClickHandler(groupMemberElement, removeButtonElement, groupMembers, groupName);
                 groupMemberElement.appendChild(removeButtonElement);
                 // append the created element to the list of group members
                 var groupMembersElement = document.getElementsByClassName("group-members")[0];
                 groupMembersElement.appendChild(groupMemberElement);
             }
+        },
 
-       },
+        deleteGroupMemberClickHandler: function(groupMemberElement, removeButtonElement, groupMember, groupName) {
+            _this = this;
+            removeButtonElement.addEventListener("click", function(){
+                var req = new XMLHttpRequest();
+                req.onreadystatechange=function(){
+                    // TODO uncomment the req.status == 200 snippet
+                    if (req.readyState==4 /*req.status == 200*/){
+                        _this.deleteMember(groupMember, groupName);
+                        var memberName = groupMemberElement.getAttribute("data-member-name");
+                        groupMemberElement.parentNode.removeChild(groupMemberElement); 
 
+                    } else if (req.readyState==4 && req.status != 200){
+                        swal("Could not remove the user from the group");
+                    }
+                };
+                // send post request to /main/remove_user_from_group
+                // json object passed {"groupMember": groupMember, "groupName":groupName}
+                req.open("POST","/main/remove_user_from_group/", true);
+                req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                req.send("Placeholder");
+            }, 0);
+        },
+         
         addNewGroupMember: function(groupMember, groupName){
             // make call to attempt to add member
             // if successfull add the user to the cached group
@@ -132,9 +188,11 @@ var groupManager = (function(){
         },
         
         deleteMember: function(member, groupName){
-            // make ajax request to remove
-            // main/delete_user_groups post {"delete": {"group":"friends", "groupMember":"Jim"}}
-            var postBody = "{'delete': {'group':" + groupName + ", groupMember:" + member + "}}";
+            // find the group that is currently active
+            // TODO Ensure no groups of the same name
+            var group = this.userGroups.filter(function(obj){return obj.groupName == groupName;});
+            // TODO Ensure no groups with > 1 member of the same name
+            group[0].memberNames.filter(function (e) { return e == member;});
         }
    };
 })();
@@ -142,7 +200,9 @@ var groupManager = (function(){
 window.onload = function() {
     // get an array of all groups and their members
     var groupsInfo = groupManager.getGroupInformation();
-        // Populate the groups section and
+    // get an array of all users who could be added to the list
+    var getUserInfo = groupManager.getUserInformation();
+    // Populate the groups section and
     // display the members of the first list if there is one
     if (groupsInfo) {
         groupManager.addGroupNamesToList(groupsInfo);
@@ -160,6 +220,22 @@ window.onload = function() {
         groupManager.addNewGroupNameToList(groupNameTextField.value);
     });
     var addGroupSelectionBox = document.getElementsByClassName("group-select")[0];
-
+    
+    // get the select box and add a listener for when the user changes the box
+    var addUserButton = document.getElementsByClassName("add-user-button")[0];
+//    addUserButton.addEventListener("click", function() {
+//        // get the value of the select box
+//        var userSelectList = document.getElementsByClassName("user-select")[0];
+//        var userNameSelected = userSelectList.options[userSelectList.selectedIndex].innerHTML;
+//        // get the currently selected group name
+//        var activeGroup = document.getElementsByClassName("active")[0];
+//        activeGroupName = activeGroup.innerHTML;
+//        // get the group members
+//
+//        // if they chose the "select a user option tell them to chose a name from the lsit
+//        if (userSelectList.selectedIndex == 0) {
+//            swal("Choose a username from the list");
+//        // make sure the user isn't already in the group
+//        } else if (userNameSelected in  {
 };
 
