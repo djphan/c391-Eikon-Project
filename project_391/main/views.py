@@ -7,6 +7,8 @@ from main.models import Users, Persons, Session
 from django.http import HttpResponse
 from django.forms import EmailField
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
+import simplejson as json
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -164,6 +166,8 @@ def temp_main_page(request):
 
     return render(request, 'main/index.html', {'temp_cookie_text':text})
             
+################################################################################
+
 def home_page(request):
     return render(request, 'main/home_page.html')
         
@@ -178,3 +182,24 @@ def group_management(request):
 
 def remove_user_from_group(request):
     return render(request, 'main/group_management.html')
+
+@csrf_exempt
+def add_group(request):
+    # TODO authenticate user
+    if request.POST:
+        # receives a json object {"newGroupName":"nameOfNewGroup"}
+        try:
+            request_body = json.loads(request.body)
+        except e:
+            print (e)
+            return HttpResponse(status=400)
+        newGroupName = request_body["newGroupName"]
+        # TODO add the new group name to the model
+        # TODO on success return 200 if can't be added return error
+        # import pdb; pdb.set_trace()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=400)
+    
+def add_user_to_group(request):
+    return

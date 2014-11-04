@@ -71,12 +71,15 @@ var groupManager = (function(){
                     swal("Could not add group, bad response from server");
                 }
             };
-
-            // req.open("POST","/main/add_group", true);
-            req.open("POST","http://requestb.in/1638wbs1");
-            req.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+            
+            // get the csrf token
+            // var token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+            req.open("POST","/main/add_group/", true);
+            // req.open("POST","http://requestb.in/1l8s2rv1");
+            // req.setRequestHeader("X-CSRF-Token", token);
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             // TODO body is not being set.
-            req.send(groupName);
+            req.send(JSON.stringify({newGroupName: groupName}));
         },
 
         // call this function when adding a group that already exists to the list

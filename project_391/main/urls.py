@@ -13,6 +13,7 @@ urlpatterns = patterns(
     url(r"^photo_details/$", views.photo_details, name='photo_details'),
     url(r"^group_management/$", views.group_management, name='group_management'),
     url(r"^remove_user_from_group/$", views.remove_user_from_group, name='remove_user_from_group'),
-
+    url(r"^add_group/$", views.add_group, name='add_group'),
+    url(r"^add_user_to_group/$", views.add_user_to_group, name='add_user_to_group'),
 
 )
