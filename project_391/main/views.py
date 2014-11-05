@@ -3,12 +3,13 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
-from main.models import Users, Persons, Session
+from main.models import Users, Persons, Session, Groups
 from django.http import HttpResponse
 from django.forms import EmailField
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
+import logging
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -185,21 +186,64 @@ def remove_user_from_group(request):
 
 @csrf_exempt
 def add_group(request):
-    # TODO authenticate user
+    logger = logging.getLogger(__name__)
+    # TODO Build an authenticate user function
+    # user_name = authenticate_user(request)
+    user_name = 'jonnyc'
     if request.POST:
         # receives a json object {"newGroupName":"nameOfNewGroup"}
         try:
             request_body = json.loads(request.body)
         except e:
-            print (e)
-            return HttpResponse(status=400)
-        newGroupName = request_body["newGroupName"]
-        # TODO add the new group name to the model
-        # TODO on success return 200 if can't be added return error
-        # import pdb; pdb.set_trace()
-        return HttpResponse(status=200)
+            logger.error(e)
+            return HttpResponse("Could not parse JSON add user request. \
+                                new group requests should contain a request body \
+                                formatted as {'newGroupName': 'nameOfNewGroup'}",
+                                content_type="Apllication/json",
+                                status=400)
+        try:
+            newGroupName = request_body["newGroupName"]
+        except e:
+            logger.error(e)
+            return HttpResponse("Could not find property 'newGroupName' \
+                                on the json request object. Ensure you pass a \
+                                json object formatted like \
+                                {'newGroupName': 'nameOfNewGroup'}",
+                                status=400)
+        
+        # TODO set user_name to the users name based on session/cookie
+
+        # Add the group to the Groups model
+        user = Users.objects.get(username=user_name)
+        try:
+            new_group = Groups.objects.create(user_name=user, group_name=newGroupName)
+        except IntegrityError as e:
+            logger.error(e)
+            return HttpResponse("A Group by this name already exists", status=400)
+
+        # Ensure group was added
+        try:
+            assert isinstance(Groups.objects.get(user_name=user_name, group_name=newGroupName), Groups)
+        except AssertionError as e:
+            logger.error(e)
+            return HttpResponse("Valid request but server errored when adding group" + "\n" + e,
+                                status=500)
+
+        # Return success response
+        return HttpResponse("Groups succesfully added to server: " + request.body.decode("utf-8"),
+                                status=200)
     else:
-        return HttpResponse(status=400)
+        return HttpResponse("Only POST requests can be used to add groups",
+                                status=400)
     
 def add_user_to_group(request):
     return
+
+
+
+
+def authenticat_user(request):
+    # if user can't be authenticated
+    # if authenticated 
+    # return username string
+    return HttpResponse("Could not authenticate")

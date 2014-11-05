@@ -62,13 +62,14 @@ var groupManager = (function(){
             _this = this;
             var req = new XMLHttpRequest();
             req.onreadystatechange=function(){
-                if (req.readyState==4 /* && req.status == 200*/){
+                if (req.readyState==4 && req.status == 200){
                     var newGroup = {"groupName": groupName, "memberNames":[]};
                     _this.userGroups.push(newGroup);
                     _this.addGroupNamesToList([newGroup]); 
                     // TODO make sure to add the new group to this.userGroups
                 } else if (req.readyState==4 && req.status != 200){
-                    swal("Could not add group, bad response from server");
+                    swal("Could not add group, bad response from server" + "\n" +
+                            req.responseText);
                 }
             };
             
@@ -78,7 +79,6 @@ var groupManager = (function(){
             // req.open("POST","http://requestb.in/1l8s2rv1");
             // req.setRequestHeader("X-CSRF-Token", token);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            // TODO body is not being set.
             req.send(JSON.stringify({newGroupName: groupName}));
         },
 
