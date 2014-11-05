@@ -174,3 +174,9 @@ def photo_details(request):
     
 def group_management(request):
     return render(request, 'main/group_management.html')
+
+
+#########################
+
+def searchView(request):
+    return None
