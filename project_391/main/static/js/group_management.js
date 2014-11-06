@@ -194,8 +194,7 @@ var groupManager = (function(){
             var req = new XMLHttpRequest();
             _this = this;
             req.onreadystatechange=function(){
-                // TODO uncomment the req.status == 200 snippet
-                if (req.readyState==4 /*req.status == 200*/){
+                if (req.readyState==4 && req.status == 200){
                     group.memberNames.push(member);
                     // update the list of users
                     _this.addGroupMembersToList([member], groupName);

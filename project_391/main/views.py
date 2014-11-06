@@ -293,7 +293,7 @@ def add_user_to_group(request):
                             json object formatted like: \
                             {'memberName': 'member', 'groupName': 'groupName'}",
                             status=400)
-    import pdb; pdb.set_trace()
+
     # Get the group and user to add to it
     try:
         users_groups = Groups.objects.filter(user_name=user_name)
