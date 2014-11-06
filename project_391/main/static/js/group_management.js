@@ -11,25 +11,25 @@ var groupManager = (function(){
             // endpoint /main/get_user_groups post {"username":"name"}
 
             // for testing purposes only once post request is working delete all of this.
-            groupsInfo = { "userGroups":[{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
-                  {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}],
-                  "userNames":['Spot', 'Sport', 'Spill', 'Spike', 'Jack', 'Tony']};
-            this.userGroups = groupsInfo.userGroups;
-            this.userNames = groupsInfo.userNames;
+            //groupsInfo = { "userGroups":[{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
+            //      {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}],
+            //      "userNames":['Spot', 'Sport', 'Spill', 'Spike', 'Jack', 'Tony']};
+            //this.userGroups = groupsInfo.userGroups;
+            //this.userNames = groupsInfo.userNames;
 
             _this = this;
             var req = new XMLHttpRequest();
             req.onreadystatechange=function(){
                 if (req.readyState==4 /*&& req.status == 200*/){
-                    // _this.userGroups = req.responseText.userGroups;
-                    // _this.userNames = req.responseText.userNames;
+                    _this.userGroups = JSON.parse(req.responseText).userGroups;
+                    _this.userNames = JSON.parse(req.responseText).userNames;
                     // TODO rewrite window.onload replace with content loaded
                     onDataResponse();
                 } else if (req.readyState==4 && req.status != 200){
                     // swal("Could not get group info");
                 }
             };
-            req.open("POST","/main/get_user_groups", true);
+            req.open("POST","/main/get_user_groups/", true);
             req.setRequestHeader("Content-type", "application/json");
             req.send();
                         return;
@@ -215,7 +215,7 @@ var groupManager = (function(){
             // TODO add /main/add_user_to_group pass {"memberName":"member", "groupName":"groupName"}
             req.open("POST","/main/add_user_to_group/", true);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send("Placeholder");
+            req.send(JSON.stringify({memberName: member, groupName: groupName}));
         },
 
         addUsersToSelectBox: function(userNames) {
