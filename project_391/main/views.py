@@ -227,8 +227,8 @@ def add_group(request):
     # receives a json object {"newGroupName":"nameOfNewGroup"}
     try:
         request_body = json.loads(request.body)
-    except e:
-        logger.error(e)
+    except:
+        logger.error(sys.exc_info()[0])
         return HttpResponse("Could not parse JSON add user request. \
                             new group requests should contain a request body \
                             formatted as {'newGroupName': 'nameOfNewGroup'}",
@@ -236,8 +236,8 @@ def add_group(request):
                             status=400)
     try:
         newGroupName = request_body["newGroupName"]
-    except e:
-        logger.error(e)
+    except:
+        logger.error(sys.exc_info()[0])
         return HttpResponse("Could not find property 'newGroupName' \
                             on the json request object. Ensure you pass a \
                             json object formatted like \
@@ -263,7 +263,7 @@ def add_group(request):
     # Return success response
     return HttpResponse("Groups succesfully added to server: " + request.body.decode("utf-8"),
                             status=200)
-       
+@csrf_exempt       
 def add_user_to_group(request):
     if not request.POST:
         return HttpResponse("Only POST requests can be used to add group members", status=400)
@@ -275,8 +275,8 @@ def add_user_to_group(request):
     # receives a json object {"newGroupName":"nameOfNewGroup"}
     try:
         request_body = json.loads(request.body)
-    except e:
-        logger.error(e)
+    except:
+        logger.error(sys.exc_info()[0])
         return HttpResponse("Could not parse JSON. \
                             add group member requests should contain a request body \
                             formatted as \
@@ -284,27 +284,27 @@ def add_user_to_group(request):
                             content_type="Apllication/json",
                             status=400)
     try:
-        groupName = request_body["newGroupName"]
-        memberName = request_body["groupName"]
-    except e:
-        logger.error(e)
+        groupName = request_body["groupName"]
+        memberName = request_body["memberName"]
+    except:
+        logger.error(sys.exc_info()[0])
         return HttpResponse("Could not find property 'groupName' or memberName \
                             on the json request object. Ensure you pass a \
                             json object formatted like: \
                             {'memberName': 'member', 'groupName': 'groupName'}",
                             status=400)
-
+    import pdb; pdb.set_trace()
     # Get the group and user to add to it
     try:
-        users_groups = Groups.objects.get(user_name=user_name)
+        users_groups = Groups.objects.filter(user_name=user_name)
         group_to_add_user_to = users_groups.get(group_name=groupName)
         user_to_add = Users.objects.get(username=memberName)
-    except e:
-        logger.error(e) 
+    except:
+        logger.error(sys.exc_info()[0]) 
         return HttpResponse("Could not add user to group" + groupName, status=500)
 
     try:
-        new_group_list = GroupsLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
+        new_group_list = GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
     except IntegrityError as e:
         logger.error(e)
         return HttpResponse("This member is already part of the group: " + groupName, status=400)

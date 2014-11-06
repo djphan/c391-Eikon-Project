@@ -10,13 +10,6 @@ var groupManager = (function(){
             // object should look like {"userGroups":[{"groupName": "Brogrammers", "memberNames": ["Jon", "Carl", "Dan"]},... ], "userNames": ["jim", "jed"]}
             // endpoint /main/get_user_groups post {"username":"name"}
 
-            // for testing purposes only once post request is working delete all of this.
-            //groupsInfo = { "userGroups":[{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
-            //      {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}],
-            //      "userNames":['Spot', 'Sport', 'Spill', 'Spike', 'Jack', 'Tony']};
-            //this.userGroups = groupsInfo.userGroups;
-            //this.userNames = groupsInfo.userNames;
-
             _this = this;
             var req = new XMLHttpRequest();
             req.onreadystatechange=function(){
