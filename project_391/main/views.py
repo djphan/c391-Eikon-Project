@@ -182,8 +182,35 @@ def photo_details(request):
 def group_management(request):
     return render(request, 'main/group_management.html')
 
+@csrf_exempt
 def remove_user_from_group(request):
-    return render(request, 'main/group_management.html')
+    if not request.POST:
+        return HttpResponse("Only POST requests are accepted", status=400)
+    import pdb; pdb.set_trace()
+    # user_name = authenticate_user(request)
+    user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    # passed in {"groupMember": groupMember, "groupName":groupName}
+    # to be removed from group
+    # get the group
+    try:
+        request_body = json.loads(request.body)
+        group_name = request_body["groupName"]
+        group_member_to_remove = request_body["groupMember"]
+    except:
+        return HttpResponse("Could not parse JSON object" \
+                            "{'groupMember': groupMember, 'groupName':groupName}" \
+                            "To remove a user from a group",
+                            status=400)
+    
+
+    group = Groups.objects.get(group_name=group_name)
+    user_to_remove = Users.objects.get(username=group_member_to_remove)
+    group_list = GroupLists.objects.get(group_id=group, friend_id=user_to_remove)
+    group_list.delete()
+    return HttpResponse("The user " + group_member_to_remove + " has been deleted from " \
+                            + group_name + " successfully",
+                            status=200)
+
 
 @csrf_exempt
 def get_user_groups(request):
@@ -213,6 +240,8 @@ def get_user_groups(request):
         response["userGroups"].append(group_data)
     # get a list of all users
     response["userNames"] = [user.username for user in Users.objects.all()]
+    # TODO check for the current username in the list comprehension and remove the following line.
+    response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)
 
 @csrf_exempt

@@ -122,7 +122,7 @@ var groupManager = (function(){
                 var removeButtonElement = document.createElement("span");
                 removeButtonElement.className = "label label-danger pull-right member-remove-button";
                 removeButtonElement.innerHTML = "Remove";
-                this.deleteGroupMemberClickHandler(groupMemberElement, removeButtonElement, groupMembers, groupName);
+                this.deleteGroupMemberClickHandler(groupMemberElement, removeButtonElement, groupMembers[i], groupName);
                 groupMemberElement.appendChild(removeButtonElement);
                 // append the created element to the list of group members
                 var groupMembersElement = document.getElementsByClassName("group-members")[0];
@@ -153,7 +153,7 @@ var groupManager = (function(){
                 // json object passed {"groupMember": groupMember, "groupName":groupName}
                 req.open("POST","/main/remove_user_from_group/", true);
                 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                req.send("Placeholder");
+                req.send(JSON.stringify({groupMember: groupMember, groupName: groupName}));
             }, 0);
         },
          
@@ -202,7 +202,7 @@ var groupManager = (function(){
                     swal("Could not add the user to the group");
                 }
             };
-            // send post request to /main/remove_user_from_group
+            // send post request to /main/add_user_to_group
             // json object passed {"groupMember": groupMember, "groupName":groupName}
             // TODO add /main/add_user_to_group pass {"memberName":"member", "groupName":"groupName"}
             req.open("POST","/main/add_user_to_group/", true);
