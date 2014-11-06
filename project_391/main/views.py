@@ -186,7 +186,6 @@ def group_management(request):
 def remove_user_from_group(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
-    import pdb; pdb.set_trace()
     # user_name = authenticate_user(request)
     user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     # passed in {"groupMember": groupMember, "groupName":groupName}
