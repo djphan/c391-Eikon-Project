@@ -1,14 +1,16 @@
 import random
+from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
-from main.models import Users, Persons, Session
-from django.http import HttpResponse
+from main.models import Users, Persons, Session, Groups, GroupLists
+from django.http import HttpResponse, JsonResponse
 from django.forms import EmailField
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
+import logging
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -184,29 +186,177 @@ def group_management(request):
 
 #########################
 
-def searchView(request):
-    return None
-
+@csrf_exempt
 def remove_user_from_group(request):
-    return render(request, 'main/group_management.html')
+    if not request.POST:
+        return HttpResponse("Only POST requests are accepted", status=400)
+    # user_name = authenticate_user(request)
+    user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    # passed in {"groupMember": groupMember, "groupName":groupName}
+    # to be removed from group
+    # get the group
+    try:
+        request_body = json.loads(request.body)
+        group_name = request_body["groupName"]
+        group_member_to_remove = request_body["groupMember"]
+    except:
+        return HttpResponse("Could not parse JSON object" \
+                            "{'groupMember': groupMember, 'groupName':groupName}" \
+                            "To remove a user from a group",
+                            status=400)
+    
+
+    group = Groups.objects.get(group_name=group_name)
+    user_to_remove = Users.objects.get(username=group_member_to_remove)
+    group_list = GroupLists.objects.get(group_id=group, friend_id=user_to_remove)
+    group_list.delete()
+    return HttpResponse("The user " + group_member_to_remove + " has been deleted from " \
+                            + group_name + " successfully",
+                            status=200)
+
+
+@csrf_exempt
+def get_user_groups(request):
+    # this method should pass back a list of the users groups, and a list of all usernames
+    # formatted like the object below
+    '''
+    {"userGroups":
+         [{"groupName": "Warriors", "memberNames": ["Jon", "Jim", "Jacob", "Jason", "Jimmy", "Jill"]},
+         {"groupName": "Pets", "memberNames": ["Spot", "Speck", "Spike", "Spearmint", "Speedy", "Splash"]}],
+     "userNames":
+         ['Spot', 'Sport', 'Spill', 'Spike', 'Jack', 'Tony']
+    } 
+    '''
+
+    # TODO Build an authenticate user function
+    # user_name = authenticate_user(request)
+    user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    response = {}
+    # look through each group of the users and find the members
+    response["userGroups"] = []
+    for group in Groups.objects.filter(user_name=user_name):
+        group_data = {}
+        group_data["groupName"] = group.group_name
+        # Find the members in the group 
+        group_data["memberNames"] = [group_members.friend_id.username for 
+                                group_members in GroupLists.objects.filter(group_id=group.group_id)] 
+        response["userGroups"].append(group_data)
+    # get a list of all users
+    response["userNames"] = [user.username for user in Users.objects.all()]
+    # TODO check for the current username in the list comprehension and remove the following line.
+    response["userNames"].remove(user_name.username)
+    return JsonResponse(data=response)
 
 @csrf_exempt
 def add_group(request):
-    # TODO authenticate user
-    if request.POST:
-        # receives a json object {"newGroupName":"nameOfNewGroup"}
-        try:
-            request_body = json.loads(request.body)
-        except e:
-            print (e)
-            return HttpResponse(status=400)
+    if not request.POST:
+        return HttpResponse("Only POST requests can be used to add group members", status=400)
+
+    logger = logging.getLogger(__name__)
+    # TODO Build an authenticate user function
+    # user_name = authenticate_user(request).user_name
+    user_name = 'jonnyc'
+    # receives a json object {"newGroupName":"nameOfNewGroup"}
+    try:
+        request_body = json.loads(request.body)
+    except:
+        logger.error(sys.exc_info()[0])
+        return HttpResponse("Could not parse JSON add user request. \
+                            new group requests should contain a request body \
+                            formatted as {'newGroupName': 'nameOfNewGroup'}",
+                            content_type="Apllication/json",
+                            status=400)
+    try:
         newGroupName = request_body["newGroupName"]
-        # TODO add the new group name to the model
-        # TODO on success return 200 if can't be added return error
-        # import pdb; pdb.set_trace()
-        return HttpResponse(status=200)
-    else:
-        return HttpResponse(status=400)
-    
+    except:
+        logger.error(sys.exc_info()[0])
+        return HttpResponse("Could not find property 'newGroupName' \
+                            on the json request object. Ensure you pass a \
+                            json object formatted like \
+                            {'newGroupName': 'nameOfNewGroup'}",
+                            status=400)
+
+    # Add the group to the Groups model
+    user = Users.objects.get(username=user_name)
+    try:
+        new_group = Groups.objects.create(user_name=user, group_name=newGroupName)
+    except IntegrityError as e:
+        logger.error(e)
+        return HttpResponse("A Group by this name already exists", status=400)
+
+    # Ensure group was added
+    try:
+        assert isinstance(Groups.objects.get(user_name=user_name, group_name=newGroupName), Groups)
+    except AssertionError as e:
+        logger.error(e)
+        return HttpResponse("Valid request but server errored when adding group" + "\n" + e,
+                            status=500)
+
+    # Return success response
+    return HttpResponse("Groups succesfully added to server: " + request.body.decode("utf-8"),
+                            status=200)
+@csrf_exempt       
 def add_user_to_group(request):
-    return
+    if not request.POST:
+        return HttpResponse("Only POST requests can be used to add group members", status=400)
+
+    logger = logging.getLogger(__name__)
+    # TODO Build an authenticate user function
+    # user_name = authenticate_user(request).user_name
+    user_name = 'jonnyc'
+    # receives a json object {"newGroupName":"nameOfNewGroup"}
+    try:
+        request_body = json.loads(request.body)
+    except:
+        logger.error(sys.exc_info()[0])
+        return HttpResponse("Could not parse JSON. \
+                            add group member requests should contain a request body \
+                            formatted as \
+                            {'memberName': 'member', 'groupName': 'groupName'}: ",
+                            content_type="Apllication/json",
+                            status=400)
+    try:
+        groupName = request_body["groupName"]
+        memberName = request_body["memberName"]
+    except:
+        logger.error(sys.exc_info()[0])
+        return HttpResponse("Could not find property 'groupName' or memberName \
+                            on the json request object. Ensure you pass a \
+                            json object formatted like: \
+                            {'memberName': 'member', 'groupName': 'groupName'}",
+                            status=400)
+
+    # Get the group and user to add to it
+    try:
+        users_groups = Groups.objects.filter(user_name=user_name)
+        group_to_add_user_to = users_groups.get(group_name=groupName)
+        user_to_add = Users.objects.get(username=memberName)
+    except:
+        logger.error(sys.exc_info()[0]) 
+        return HttpResponse("Could not add user to group" + groupName, status=500)
+
+    try:
+        new_group_list = GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
+    except IntegrityError as e:
+        logger.error(e)
+        return HttpResponse("This member is already part of the group: " + groupName, status=400)
+
+    # Ensure user was added to the group list
+    try:
+        assert isinstance(GroupLists.objects.get(friend_id=user_to_add, group_id=group_to_add_user_to), GroupLists)
+    except AssertionError as e:
+        logger.error(e)
+        return HttpResponse("Valid request but server errored when adding the user to the group" + "\n" + e,
+                            status=500)
+
+    # Return success response
+    return HttpResponse("New member succesfully added to group: " + request.body.decode("utf-8"),
+                            status=200)
+
+
+
+def authenticate_user(request):
+    # if user can't be authenticated
+    # if authenticated 
+    # return user object
+    return HttpResponse("Could not authenticate")

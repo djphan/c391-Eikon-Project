@@ -15,5 +15,5 @@ urlpatterns = patterns(
     url(r"^remove_user_from_group/$", views.remove_user_from_group, name='remove_user_from_group'),
     url(r"^add_group/$", views.add_group, name='add_group'),
     url(r"^add_user_to_group/$", views.add_user_to_group, name='add_user_to_group'),
-
+    url(r"^get_user_groups/$", views.get_user_groups, name='get_user_groups'),
 )
