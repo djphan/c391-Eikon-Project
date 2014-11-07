@@ -188,7 +188,7 @@ def group_management(request):
 def upload_images(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     # user_name = authenticat_user(request)
     user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     new_image_entry = Images()
