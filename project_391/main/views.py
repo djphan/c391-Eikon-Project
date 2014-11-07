@@ -1,10 +1,11 @@
 import random
+import datetime
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
-from main.models import Users, Persons, Session, Groups, GroupLists
+from main.models import Users, Persons, Session, Groups, GroupLists, Images
 from django.http import HttpResponse, JsonResponse
 from django.forms import EmailField
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -181,6 +182,49 @@ def photo_details(request):
     
 def group_management(request):
     return render(request, 'main/group_management.html')
+
+
+@csrf_exempt
+def upload_images(request):
+    if not request.POST:
+        return HttpResponse("Only POST requests are accepted", status=400)
+    import pdb; pdb.set_trace()
+    # user_name = authenticat_user(request)
+    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    new_image_entry = Images()
+    new_image_entry.owner_name = user
+
+    # ensure an image is attached.
+    if "file" in request.FILES:
+        uploaded_image = request.FILES["file"]
+    else:
+        return HttpResponse("No image file was provided", status=400)
+
+    # Get the information posted with the image
+    if "permissions" in request.POST:
+        new_image_entry.permitted = Groups.objects.get(user_name=user.username, group_name=request.POST['permissions'])
+    else:
+        return HttpResponse("You must provide the group the image belongs to.", status=400)
+
+    if "date" in request.POST:
+        new_image_entry.timing = request.POST["date"]
+    else:
+        new_image_entry.timing = datetime.datetime.now()
+
+    if "location" in request.POST:
+        new_image_entry.place = request.POST["location"]
+
+    if "subject" in request.POST:
+        new_image_entry.subject = request.POST["subject"]
+    
+    if 'description' in request.POST:
+        new_image_entry.description = request.POST["description"]
+
+    new_image_entry.photo.save('placeholder',uploaded_image)
+    # TODO resize the image for thumbnail
+    new_image_entry.save()
+    # pass a link back to the new image in the success response.
+    return HttpResponse("Image saved", status=200)
 
 @csrf_exempt
 def remove_user_from_group(request):

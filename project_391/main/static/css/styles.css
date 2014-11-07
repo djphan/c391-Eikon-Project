@@ -22,10 +22,22 @@
     vertical-align: middle;
 }
 
+[contenteditable]:focus {
+    outline-width: 0px solid transparent !important;
+    outline:0px solid transparent !important;
+    -webkit-appearance:none !important;
+}
+
+.save-edit-button {
+    padding-left: 3px;
+    padding-top: 7px;
+    padding-bottom: -7px;
+}
+
 .inner {
-    margin-left: auto;
-    margin-right: auto;
-    width: 500 px; 
+margin-left: auto;
+margin-right: auto;
+width: 500 px; 
 }
 
 .large-image-display {
