@@ -207,7 +207,9 @@ def upload_images(request):
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
     if "date" in request.POST:
-        new_image_entry.timing = request.POST["date"]
+        # TODO figure out a way to send the date, that can be relied on to parse correctly here.
+        # new_image_entry.timing = request.POST["date"]
+        new_image_entry.timing = datetime.datetime.now()
     else:
         new_image_entry.timing = datetime.datetime.now()
 
@@ -220,7 +222,7 @@ def upload_images(request):
     if 'description' in request.POST:
         new_image_entry.description = request.POST["description"]
 
-    new_image_entry.photo.save('placeholder',uploaded_image)
+    new_image_entry.photo.save(str(new_image_entry.timing), uploaded_image)
     # TODO resize the image for thumbnail
     new_image_entry.save()
     # pass a link back to the new image in the success response.
