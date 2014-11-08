@@ -77,6 +77,16 @@ i {
     font-size: 25px;
 }
 
+.image-description {
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: right;
+    margin-top: -7px;
+}
+
+.pic-loc-group-date {
+    margin-top: 8px;
+}
+
 .image-grid {
     background: black;
     position: fixed;
