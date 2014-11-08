@@ -127,10 +127,10 @@
               <label for="permissions" class="col-sm-offset-2 col-sm-2 control-label">Permissions</label>
               <div class="col-sm-4">
                 <select class="selectpicker form-control" id="permissions" name="permissions">
-                    <!-- Django will need to fill in a option items -->
                     <option>Private</option>
-                    <option>Friends</option>
-                    <option>Family</option>
+                    {% for name in group_names %}
+                    <option>{{ name }}</option>
+                    {% endfor %}
                 </select>
               </div>
             </div>

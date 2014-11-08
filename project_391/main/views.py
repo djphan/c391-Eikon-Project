@@ -1,5 +1,7 @@
 import random
 import datetime
+from django.template.loader import get_template
+from django.template import Context
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -165,7 +167,7 @@ def temp_main_page(request):
             text += 'no session object with that id exists in database.\n'
         else:
             text += 'this corresponds to user %s'%user
-        
+      
 
     return render(request, 'main/index.html', {'temp_cookie_text':text})
             
@@ -174,8 +176,14 @@ def temp_main_page(request):
 def home_page(request):
     return render(request, 'main/home_page.html')
         
+@csrf_exempt
 def upload(request):
-    return render(request, 'main/uploads.html')
+    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user_groups = Groups.objects.filter(user_name=user)
+    data = {}
+    data["group_names"] = [group.group_name for group in user_groups]
+    return render_to_response('main/uploads.html', data, 
+            RequestContext(request))
     
 def photo_details(request):
     return render(request, 'main/photo_details.html')
