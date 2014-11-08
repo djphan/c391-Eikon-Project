@@ -188,6 +188,7 @@ def group_management(request):
 def upload_images(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
+
     # import pdb; pdb.set_trace()
     # user_name = authenticat_user(request)
     user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
@@ -222,11 +223,13 @@ def upload_images(request):
     if 'description' in request.POST:
         new_image_entry.description = request.POST["description"]
 
-    new_image_entry.photo.save(str(new_image_entry.timing), uploaded_image)
+    # TODO work on better image naming, although this will suffice.
+    # Name confilicts are dealt with automatically
+    new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     # TODO resize the image for thumbnail
     new_image_entry.save()
-    # pass a link back to the new image in the success response.
-    return HttpResponse("Image saved", status=200)
+    # TODO once thumbnail resiging is done add thumb address to respone object
+    return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
 
 @csrf_exempt
 def remove_user_from_group(request):

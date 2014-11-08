@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-
+from django.conf import settings
 from main import views
 
 urlpatterns = patterns(
@@ -18,3 +18,10 @@ urlpatterns = patterns(
     url(r"^get_user_groups/$", views.get_user_groups, name='get_user_groups'),
     url(r"^upload_images/$", views.upload_images, name='upload_images'),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns(
+        'django.views.static',
+        (r'media/(?P<path>.*)',
+        'serve',
+        {'document_root': settings.MEDIA_ROOT}), )

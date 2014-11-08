@@ -79,8 +79,8 @@ class Images(models.Model):
     # allow Django to store all the files there, but it may be more complicated
     # than that. For now, I'll just have it make the default ImageField so we
     # can use the class/tables in the templates.
-    thumbnail = models.ImageField()
-    photo = models.ImageField()
+    thumbnail = models.ImageField(upload_to="Thumbnails/")
+    photo = models.ImageField(upload_to="Images")
 
     class Meta:
         db_table = "images"

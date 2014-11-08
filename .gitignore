@@ -55,3 +55,9 @@ target/
 
 # Vim
 *.swp
+
+# Mac
+*.DS_Store
+
+# Media files
+**/media
