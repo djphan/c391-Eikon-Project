@@ -59,7 +59,15 @@ var groupManager = (function(){
                     var newGroup = {"groupName": groupName, "memberNames":[]};
                     _this.userGroups.push(newGroup);
                     _this.addGroupNamesToList([newGroup]); 
-                    // TODO make sure to add the new group to this.userGroups
+                    // make the newly added group the active group
+                    var groupList = document.getElementsByClassName("group-names")[0];
+                    for (var i = 0; i < groupList.children.length; i++){
+                        classie.remove(groupList.children[i], "active");
+                    }
+                    classie.add(groupList.lastChild, 'active');
+                    // add the usernames to the select box
+                    _this.clearGroupMembersFromList();
+                    groupManager.addGroupMembersToList(newGroup.memberNames, newGroup.groupName);
                 } else if (req.readyState==4 && req.status != 200){
                     swal("Could not add group, bad response from server" + "\n" +
                             req.responseText);
@@ -233,9 +241,10 @@ onDataResponse = function() {
             groupManager.addGroupMembersToList(groupManager.userGroups[0].memberNames, 
                                                 groupManager.userGroups[0].groupName); 
         }
+        // Make sure theres a group to show.
         // toggle first group as active since we show the first grouplist 
-        // by default. Make sure theres a group to show.
-        if (document.getElementsByClassName("group-name")[0]){
+        // by default. 
+        if (document.getElementsByClassName("group-names")[0]){
             var displayGroupElement = document.getElementsByClassName("group-names")[0];
             classie.add(displayGroupElement.children[0], 'active');
             // add the usernames to the select box
