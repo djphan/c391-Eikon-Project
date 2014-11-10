@@ -4,7 +4,7 @@
         <!-- jquery lib required for bootstrap js library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-        <!-- Latest compiled and minified CSS -->
+       <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
         <!-- Latest compiled and minified JavaScript -->
@@ -17,6 +17,10 @@
         <!-- Date/Time picker stylesheet -->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
 
+        <!-- in place editing plugin -->
+        <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+ 
         <!-- font -->
         <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:700' rel='stylesheet' type='text/css'>
         <!-- font awesome -->
@@ -76,8 +80,15 @@
                     <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 large-image-display" alt="image">
                         <div class="col-sm-8 col-sm-offset-2">
                             <div class="col-sm-6">
-                                <p class="pull-right image-subject" contenteditable="true">A Large Lake</p>
-                                <p class="pull-right image-description" contenteditable="true">
+                                <p class="pull-right image-subject" 
+                                    id="image-subject" 
+                                    data-type="text" 
+                                    data-pk="1" 
+                                    data-url="/main/modify_image_details/" 
+                                    data-title="subject">
+                                    A Large Lake
+                                </p>
+                                <p class="pull-right image-description">
                                     This is a lake, but not a great lake. Not sure where it is but it looks really nice.
                                     If you look closely you can see a body floating in the water.
                                 </p>
@@ -86,8 +97,8 @@
                                 <!--
                                 <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
                                 -->
-                                <div class="image-location" contenteditable="true"><span class="label label-danger">Jasper, Canada</span><i class="fa fa-check-circle-o fa-lg save-edit-button" contenteditable="false"></i></div>
-                                <div class="image-date" contenteditable="true"><span class="label label-danger">Buddies</span></div>
+                                <div class="image-location"><span class="label label-danger">Jasper, Canada</span><i class="fa fa-check-circle-o fa-lg save-edit-button"></i></div>
+                                <div class="image-date"><span class="label label-danger">Buddies</span></div>
                                 <div class="image-group"><span class="label label-danger">August 14, 2014</span></div>
                             </div>
                             <!--

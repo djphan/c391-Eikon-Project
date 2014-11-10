@@ -58,3 +58,7 @@ window.onload = function() {
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = navBarHeight + "px";
 };
+
+$(document).ready(function() {
+    $('#image-subject').editable();
+});

@@ -1,4 +1,6 @@
 import random
+import PIL
+from PIL import Image
 import datetime
 from django.template.loader import get_template
 from django.template import Context
@@ -173,6 +175,18 @@ def temp_main_page(request):
             
 ################################################################################
 
+
+@csrf_exempt
+def modify_image_details(request):
+    import pdb; pdb.set_trace()
+    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user_groups = Groups.objects.filter(user_name=user)
+    data = {}
+    data["group_names"] = [group.group_name for group in user_groups]
+    return render_to_response('main/uploads.html', data, 
+            RequestContext(request))
+ 
+
 def home_page(request):
     return render(request, 'main/home_page.html')
         
@@ -235,6 +249,13 @@ def upload_images(request):
     # Name confilicts are dealt with automatically
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     # TODO resize the image for thumbnail
+    #base_width = 250
+    #img = uploaded_image
+    #wpercent = (base_width/float(new_image_entry.photo.width))
+    #hsize = int((float(new_image_entry.photo.height)*float(wpercent)))
+    #img = img.resize((base_width,hsize), PIL.Image.ANTIALIAS)
+    #new_image_entry.thumbnail.save(uploaded_image.name + "_thumbnail", img)
+
     new_image_entry.save()
     # TODO once thumbnail resiging is done add thumb address to respone object
     return JsonResponse({"Image": new_image_entry.photo.url} , status=200)

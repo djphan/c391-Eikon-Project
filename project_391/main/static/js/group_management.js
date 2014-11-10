@@ -228,15 +228,19 @@ onDataResponse = function() {
     // display the members of the first list if there is one
     if (groupManager.userGroups) {
         groupManager.addGroupNamesToList(groupManager.userGroups);
-        // show the members of the first group
-        groupManager.addGroupMembersToList(groupManager.userGroups[0].memberNames, 
-                                            groupManager.userGroups[0].groupName); 
+        // show the members of the first group if there is a group
+        if (groupManager.userGroups[0]){
+            groupManager.addGroupMembersToList(groupManager.userGroups[0].memberNames, 
+                                                groupManager.userGroups[0].groupName); 
+        }
         // toggle first group as active since we show the first grouplist 
-        // by default.
-        var displayGroupElement = document.getElementsByClassName("group-names")[0];
-        classie.add(displayGroupElement.children[0], 'active');
-        // add the usernames to the select box
-        groupManager.addUsersToSelectBox(groupManager.userNames);
+        // by default. Make sure theres a group to show.
+        if (document.getElementsByClassName("group-name")[0]){
+            var displayGroupElement = document.getElementsByClassName("group-names")[0];
+            classie.add(displayGroupElement.children[0], 'active');
+            // add the usernames to the select box
+            groupManager.addUsersToSelectBox(groupManager.userNames);
+        }
     }
 
     // set up the add group button

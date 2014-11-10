@@ -17,6 +17,7 @@ urlpatterns = patterns(
     url(r"^add_user_to_group/$", views.add_user_to_group, name='add_user_to_group'),
     url(r"^get_user_groups/$", views.get_user_groups, name='get_user_groups'),
     url(r"^upload_images/$", views.upload_images, name='upload_images'),
+    url(r"^modify_image_details/$", views.modify_image_details, name='modify_image_details'),
 )
 
 if settings.DEBUG:
