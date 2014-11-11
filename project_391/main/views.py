@@ -234,21 +234,40 @@ def modify_image_details(request):
     user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     if request.POST["name"] == "image-subject":
         # we are editing the subject of the image.
+        image = Images.objects.get(photo_id=request.POST["pk"])
+        image.subject = request.POST["value"]
+        image.save()
         pass
 
     if request.POST["name"] == "image-description":
         # we are editing the image description
+        image = Images.objects.get(photo_id=request.POST["pk"])
+        image.description = request.POST["value"]
+        image.save()
         pass
 
     if request.POST["name"] == "image-date":
+        image = Images.objects.get(photo_id=request.POST["pk"])
+        # TODO format as date field before setting
+        image.timing = request.POST["value"]
+        image.save()
         # we are editing the image date
         pass
 
     if request.POST["name"] == "image-group":
-        # we are editing the image date
+        # we are editing the image group
+        # get the new group
+        new_group = Groups.objects.get(user_name=user.username,
+                            group_name=request.POST["value"])
+        image = Images.objects.get(photo_id=request.POST["pk"])
+        image.permitted = new_group
+        image.save()
         pass
 
     if request.POST["name"] == "image-location":
+        image = Images.objects.get(photo_id=request.POST["pk"])
+        image.place = request.POST["value"]
+        image.save()
         # we are editing the image date
         pass
 
@@ -258,9 +277,9 @@ def modify_image_details(request):
 
 def home_page(request):
     # user = authenticate_user(request)
-    if user is None:
-        return redirect(loginPage)
-    return render(request, 'main/home_page.html', {'username' : user.username})
+    # if user is None:
+        # return redirect(loginPage)
+    return render(request, 'main/home_page.html') #, {'username' : user.username})
         
 @csrf_exempt
 def upload(request):
@@ -403,8 +422,9 @@ def add_group(request):
     logger = logging.getLogger(__name__)
     # TODO Build an authenticate user function
     # user_name = authenticate_user(request).user_name
-    user_name = 'jonnyc'
+    user_name = Users.objects.get(username='jonnyc')
     # receives a json object {"newGroupName":"nameOfNewGroup"}
+    import pdb; pdb.set_trace()
     try:
         request_body = json.loads(request.body)
     except:

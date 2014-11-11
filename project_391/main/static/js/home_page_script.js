@@ -98,20 +98,20 @@ var imageManager = (function(){
             // if so set up the editing functions.
             if (image.editable) {
                 image_subject.dataset.pk = image.imageID; 
-                $('#image-subject').editable();
+                $('#image-subject').editable({placement: "top"});
                 image_description.dataset.pk = image.imageID; 
-                $('#image-description').editable();
+                $('#image-description').editable({placement: "top"});
                 image_location.dataset.pk = image.imageID; 
-                $('#image-location').editable();
+                $('#image-location').editable({placement:"top"});
                 image_group.dataset.pk = image.imageID; 
                 // create a list of groups formatted for the editable plugin
                 xeditable_formatted_grouplist = [];
                 for (var i = 0; i < this.groupsData.length; i++){
-                    xeditable_formatted_grouplist.push({value: 1, text: this.groupsData[i]});
+                    xeditable_formatted_grouplist.push({value: this.groupsData[i], text: this.groupsData[i]});
                 }
-                $('#image-group').editable({source: xeditable_formatted_grouplist});
+                $('#image-group').editable({source: xeditable_formatted_grouplist, placement: "top"});
                 image_date.dataset.pk = image.imageID; 
-                $('#image-date').editable();
+                $('#image-date').editable({placement: "top"});
             }
         }
     };

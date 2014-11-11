@@ -90,6 +90,8 @@ var groupManager = (function(){
                 groupNameElement.className = "list-group-item";
                 groupNameElement.innerHTML = userGroups[i].groupName;
                 // if we need a group remove button set it here
+                removeeButton = document.createElement("span");
+
                 this.addGroupNameClickHandler(i, userGroups, groupNameElement);
                 // add element to list of groups
                 var groupList = document.getElementsByClassName("group-names")[0];

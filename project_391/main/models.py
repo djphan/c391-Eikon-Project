@@ -30,7 +30,7 @@ class Persons(models.Model):
 
 
 class Groups(models.Model):
-    group_id = models.IntegerField(primary_key=True)
+    group_id = models.AutoField(primary_key=True)
     user_name = models.ForeignKey(Users, db_column="user_name")
     group_name = models.CharField(max_length=24, db_column="group_name")
     date_created = models.DateField(auto_now_add=True)
@@ -66,7 +66,7 @@ class GroupLists(models.Model):
 
 
 class Images(models.Model):
-    photo_id = models.IntegerField(primary_key=True)
+    photo_id = models.AutoField(primary_key=True)
     owner_name = models.ForeignKey(Users, db_column="owner_name")
     permitted = models.ForeignKey(Groups, db_column="permitted")
     subject = models.CharField(max_length=128)
