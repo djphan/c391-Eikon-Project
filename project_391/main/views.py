@@ -15,6 +15,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
 import logging
+from django.shortcuts import redirect
+
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -31,15 +33,21 @@ def loginPage(request):         # how do we respond to a request for a login pag
         try:
             user = Users.objects.get(username=POST_username)
         except ObjectDoesNotExist:
-            error_msg = "User %s does not exist." % username
+            error_msg = "User %s does not exist." % POST_username
         else:
             if user.password == POST_password:
                 # Send them to the index page, and store a unique sessiontracker for this session.
                 response = render_to_response('main/index.html',
                                               {'password':POST_password, 'username':POST_username},
                                               RequestContext(request))
-                response.set_cookie('sessiontracker', str(hash(POST_username+str(random.random()))))
-                # TODO store cookie in database
+                st = str(hash(POST_username+str(random.random()))) # generate sessiontracker
+                response.set_cookie('sessiontracker', st)                
+                
+                # delete any old sessions. NOTE: this means only one user account may be logged in
+                # at once. we can fix this later if need be.
+                Session.objects.filter(username=user).delete()
+                Session.objects.create(username=user, sessiontracker=st)
+                
                 return response
             else:
                 error_msg = "Incorrect Password, please try again."
@@ -121,6 +129,7 @@ def register(request):
     if any(errors.values()):
         return render(request, 'main/register.html', errors)
     else:
+        # Create the newly registered user
         new_user = Users.objects.create(username=username,
                                         password=password)
         new_person = Persons.objects.create(user_name=new_user,
@@ -135,15 +144,20 @@ def register(request):
         response = render_to_response('main/index.html',
                                       {'password':password, 'username':username},
                                       RequestContext(request))
-        response.set_cookie('sessiontracker', str(hash(username+str(random.random()))))
+
+        # Generate a session
+        new_sessiontracker = str(hash(username+str(random.random())))
+        response.set_cookie('sessiontracker', new_sessiontracker)
         
         try:
+            # get the session associated with the new user
             session = Session.objects.get(username__username=username)
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist: # which it shouldn't
             Session.objects.create(username=new_user,
-                                   sessiontracker=hash(username+str(random.random())))
+                                   sessiontracker=new_sessiontracker)
         else:
-            session.sessiontracker=hash(username+str(random.random()))
+            # set the session
+            session.sessiontracker = new_sessiontracker
             session.save()
 
         return response
@@ -155,7 +169,7 @@ def temp_main_page(request):
     Sandbox for Carl to test cookies/sessions. Beware: garbage lies below.
     """
     text = ""
-    shash = int(request.COOKIES.get('sessiontracker', '0'))
+    shash = request.COOKIES.get('sessiontracker', '0')
     if shash == 1:
         text += 'session tracker is marked as expired (logged out)!'
     if shash == 0:
@@ -243,7 +257,10 @@ def modify_image_details(request):
  
 
 def home_page(request):
-    return render(request, 'main/home_page.html')
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
+    return render(request, 'main/home_page.html', {'username' : user.username})
         
 @csrf_exempt
 def upload(request):
@@ -485,9 +502,17 @@ def add_user_to_group(request):
                             status=200)
 
 
-
 def authenticate_user(request):
-    # if user can't be authenticated
-    # if authenticated 
-    # return user object
-    return HttpResponse("Could not authenticate")
+    st = request.COOKIES.get('sessiontracker', 'nope')
+    try:
+        return Session.objects.get(sessiontracker=st).username
+    except ObjectDoesNotExist:
+        return None
+
+def logout(request):
+    st = request.COOKIES.get('sessiontracker', '0')
+    try:
+        Session.objects.get(sessiontracker=st).delete()
+    except ObjectDoesNotExist:
+        pass
+    return loginPage(request)
