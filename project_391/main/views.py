@@ -16,6 +16,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
 import logging
+from django.shortcuts import redirect
+
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -200,7 +202,10 @@ def modify_image_details(request):
  
 
 def home_page(request):
-    return render(request, 'main/home_page.html')
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
+    return render(request, 'main/home_page.html', {'username' : user.username})
         
 @csrf_exempt
 def upload(request):

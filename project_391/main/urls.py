@@ -19,7 +19,7 @@ urlpatterns = patterns(
     url(r"^upload_images/$", views.upload_images, name='upload_images'),
     url(r"^modify_image_details/$", views.modify_image_details, name='modify_image_details'),
     url(r"logout/$", views.logout, name='logout'),
-    
+     
 )
 
 if settings.DEBUG:
