@@ -83,124 +83,55 @@
                                 <p class="pull-right image-subject" 
                                     id="image-subject" 
                                     data-type="text" 
-                                    data-pk="1" 
+                                    data-pk="" 
                                     data-url="/main/modify_image_details/" 
                                     data-title="subject">
-                                    A Large Lake
                                 </p>
-                                <p class="pull-right image-description">
-                                    This is a lake, but not a great lake. Not sure where it is but it looks really nice.
-                                    If you look closely you can see a body floating in the water.
+                                <p class="pull-right image-description" 
+                                    id="image-description"
+                                    data-type="textarea" 
+                                    data-pk="" 
+                                    data-url="/main/modify_image_details/" 
+                                    data-title="description">
                                 </p>
                             </div>
                             <div class="col-sm-6 pic-loc-group-date">
                                 <!--
                                 <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
                                 -->
-                                <div class="image-location"><span class="label label-danger">Jasper, Canada</span><i class="fa fa-check-circle-o fa-lg save-edit-button"></i></div>
-                                <div class="image-date"><span class="label label-danger">Buddies</span></div>
-                                <div class="image-group"><span class="label label-danger">August 14, 2014</span></div>
+                                <div class="image-location">
+                                    <span class="label label-danger" 
+                                        id="image-location"
+                                        data-type="text" 
+                                        data-pk="" 
+                                        data-url="/main/modify_image_details/" 
+                                        data-title="location">
+                                    </span></div>
+
+                                <div class="image-group">
+                                    <span class="label label-danger" 
+                                        id="image-group"
+                                        data-type="select" 
+                                        data-pk="" 
+                                        data-url="/main/modify_image_details/" 
+                                        data-title="group">
+                                    </span>
+                                </div>
+
+                                <div class="image-date">
+                                    <span class="label label-danger" 
+                                        id="image-date"
+                                        data-type="date" 
+                                        data-pk="" 
+                                        data-url="/main/modify_image_details/" 
+                                        data-title="date">
+                                    </span>
+                                </div>
                             </div>
-                            <!--
-                            <ul class="fa-ul photo-details-wrapper">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-2x fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-2x fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-2x fa-calendar-o"></i>Date</li>
-                            </ul>
-                            -->
-                        </div>
+                       </div>
                 </div>
            
                 <div class="col-sm-3 image-grid">
-                    <div class="row">
-                    <div class="">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                        </div>
-                    </div><!-- /grid item -->
-
-                    <div class="row">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                    </div><!-- /grid item -->
-
-                    <div class="row">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                    </div><!-- /grid item -->
-
-                    <div class="row">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                    </div><!-- /grid item -->
-
-                    <div class="row">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                    </div><!-- /grid item -->
-
-                    <div class="row">
-                        <div class="grid-item item center-block">
-                            <div class="image">
-                                <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 thumbnail-image-display" alt="image">
-                            </div>
-                            <ul class="fa-ul">
-                                <li><i class="fa-li subject thumbnail-photo-details fa fa-comment-o"></i>Mountains</li>
-                                <li><i class="fa-li location thumbnail-photo-details fa fa-bullseye"></i>Jasper</li>
-                                <li><i class="fa-li group thumbnail-photo-details fa fa-group"></i>Group</li>
-                                <li><i class="fa-li date thumbnail-photo-details fa fa-calendar-o"></i>Date</li>
-                            </ul>
-                        </div>
-                    </div><!-- /grid item -->
-
-
-
                 </div><!-- /grid -->
 
         </body>

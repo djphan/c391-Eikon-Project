@@ -1,5 +1,4 @@
 import random
-import PIL
 from PIL import Image
 import datetime
 from django.template.loader import get_template
@@ -175,14 +174,70 @@ def temp_main_page(request):
             
 ################################################################################
 
+@csrf_exempt
+def get_image_data(request):
+    # This view returns all required data for displaying users images
+    # and for image searches.
+    # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id
+    # also need to include a list of the users groups
+    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    sample_response = {}
+    sample_response["images"] = []
+    image_sample = {}
+    image_sample["thumbnail"] = "../media/thumbnails/1.jpg"
+    image_sample["image"] = "../media/images/1.jpg"
+    image_sample["subject"] = "Bananas"
+    image_sample["description"] = "A nice mountain range in the middle of the park"
+    image_sample["location"] = "Jasper, Canada"
+    image_sample["group"] = "Private"
+    image_sample["date"] = "February 11, 2001"
+    image_sample["owner"] = "jonnyc"
+    image_sample["imageID"] = "1234"
+    image_sample["editable"] = "true"
+    
+    image_sample_2 = {}
+    image_sample_2["thumbnail"] = "../media/thumbnails/2.jpg"
+    image_sample_2["image"] = "../media/images/2.jpg"
+    image_sample_2["subject"] = "Baked Beans"
+    image_sample_2["description"] = "A nice fountain range in the middle of the lark"
+    image_sample_2["location"] = "Banff, Canada"
+    image_sample_2["group"] = "Private"
+    image_sample_2["date"] = "February 11, 1999"
+    image_sample_2["owner"] = "jonnyc"
+    image_sample_2["imageID"] = "1235"
+    image_sample_2["editable"] = "true"
+
+    # editable indicates whether the user can edit the details of the image.
+    # if the image belongs to the user its editable.
+    sample_response["images"].append(image_sample)
+    sample_response["images"].append(image_sample_2)
+    sample_response["userGroups"] = ["Private", "Beeps", "Bips"] 
+    return JsonResponse(sample_response, status=200)
 
 @csrf_exempt
 def modify_image_details(request):
     import pdb; pdb.set_trace()
     user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
-    user_groups = Groups.objects.filter(user_name=user)
-    data = {}
-    data["group_names"] = [group.group_name for group in user_groups]
+    if request.POST["name"] == "image-subject":
+        # we are editing the subject of the image.
+        pass
+
+    if request.POST["name"] == "image-description":
+        # we are editing the image description
+        pass
+
+    if request.POST["name"] == "image-date":
+        # we are editing the image date
+        pass
+
+    if request.POST["name"] == "image-group":
+        # we are editing the image date
+        pass
+
+    if request.POST["name"] == "image-location":
+        # we are editing the image date
+        pass
+
     return render_to_response('main/uploads.html', data, 
             RequestContext(request))
  
@@ -211,7 +266,7 @@ def upload_images(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
 
-    # import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
     # user_name = authenticat_user(request)
     user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     new_image_entry = Images()
@@ -250,7 +305,9 @@ def upload_images(request):
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     # TODO resize the image for thumbnail
     #base_width = 250
-    #img = uploaded_image
+    #import pdb; pdb.set_trace()
+    #img = get_thumbnail(request.FILES["file"], "250x", quality=99)
+    #img = request.FILES["file"]
     #wpercent = (base_width/float(new_image_entry.photo.width))
     #hsize = int((float(new_image_entry.photo.height)*float(wpercent)))
     #img = img.resize((base_width,hsize), PIL.Image.ANTIALIAS)

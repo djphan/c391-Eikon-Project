@@ -99,13 +99,14 @@ i {
     padding-top: 2%;
     padding-bottom: 2%;
 }
-.grid-item {
-    text-align: left;
-    margin-bottom: 1em;
-}
 
 .photo-details-wrapper {
     display: inline-block;
+}
+
+.thumbnail-image {
+    padding-top: 1em;
+    width: 100%;
 }
 
 .grid-item ul {
