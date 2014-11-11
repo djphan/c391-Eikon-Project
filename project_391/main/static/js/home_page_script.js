@@ -15,7 +15,7 @@ var imageManager = (function(){
                     _this.groupsData = JSON.parse(req.responseText).userGroups;
                     onDataResponse();
                 } else if (req.readyState==4 && req.status != 200){
-                    swal("Could not get image data");
+                    // swal("Could not get image data");
                 }
             };
             req.open("POST","/main/get_image_data/", true);
@@ -137,7 +137,7 @@ window.onload = function() {
             } else if (req.readyState==4 && req.status != 200){
                 // TODO handle no search results. Either keep user images displayed or
                 // clear all images.
-                swal("Could not get search image data, no images available");
+                // swal("Could not get search image data, no images available");
             }
         };
         req.open("POST","/main/get_image_data/", true);

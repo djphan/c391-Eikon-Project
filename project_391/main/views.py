@@ -229,14 +229,14 @@ def get_image_data(request):
     sample_response["images"].append(image_sample)
     sample_response["images"].append(image_sample_2)
     sample_response["userGroups"] = ["Private", "Beeps", "Bips"] 
-    if request.POST["searchTerm"]:
-        # if theres a searcTerm value on the request we are doing a search
-        # if no value exists for search term we are just returning all the current users images.
-        search_term = request.POST["searchTerm"].split
-        # TODO run the search
-    else:
-        # get all the curent users images
-        images = Images.objects.filter(owner_name=user)
+    #if request.POST["searchTerm"]:
+    #    # if theres a searcTerm value on the request we are doing a search
+    #    # if no value exists for search term we are just returning all the current users images.
+    #    search_term = request.POST["searchTerm"].split
+    #    # TODO run the search
+    #else:
+    #    # get all the curent users images
+    #    images = Images.objects.filter(owner_name=user)
     return JsonResponse(sample_response, status=200)
 
 @csrf_exempt
