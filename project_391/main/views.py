@@ -257,7 +257,7 @@ def modify_image_details(request):
  
 
 def home_page(request):
-    user = authenticate_user(request)
+    # user = authenticate_user(request)
     if user is None:
         return redirect(loginPage)
     return render(request, 'main/home_page.html', {'username' : user.username})

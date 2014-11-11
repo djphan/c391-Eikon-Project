@@ -234,7 +234,7 @@ var groupManager = (function(){
 onDataResponse = function() {
     // Populate the groups section and
     // display the members of the first list if there is one
-    if (groupManager.userGroups) {
+    if (groupManager.userGroups.length > 0) {
         groupManager.addGroupNamesToList(groupManager.userGroups);
         // show the members of the first group if there is a group
         if (groupManager.userGroups[0]){
