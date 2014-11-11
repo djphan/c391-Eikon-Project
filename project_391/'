@@ -233,7 +233,7 @@ def get_image_data(request):
         # TODO run the search
     else:
         # get all the curent users images
-        images = Images.objects.filter(owner_name=user)
+        pass
     return JsonResponse(sample_response, status=200)
 
 @csrf_exempt
