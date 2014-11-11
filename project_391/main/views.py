@@ -16,7 +16,9 @@ from django.views.decorators.csrf import csrf_exempt
 import simplejson as json
 import logging
 from django.shortcuts import redirect
-
+# import pdb
+import sys
+from django.db import IntegrityError
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -194,7 +196,8 @@ def get_image_data(request):
     # and for image searches.
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id
     # also need to include a list of the users groups
-    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user = authenticate_user(request)
+    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     sample_response = {}
     sample_response["images"] = []
     image_sample = {}
@@ -230,21 +233,23 @@ def get_image_data(request):
 
 @csrf_exempt
 def modify_image_details(request):
-    import pdb; pdb.set_trace()
-    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    # import pdb; pdb.set_trace()
+    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user = authenticate_user(request)
+    
     if request.POST["name"] == "image-subject":
         # we are editing the subject of the image.
         image = Images.objects.get(photo_id=request.POST["pk"])
         image.subject = request.POST["value"]
         image.save()
-        pass
+
 
     if request.POST["name"] == "image-description":
         # we are editing the image description
         image = Images.objects.get(photo_id=request.POST["pk"])
         image.description = request.POST["value"]
         image.save()
-        pass
+
 
     if request.POST["name"] == "image-date":
         image = Images.objects.get(photo_id=request.POST["pk"])
@@ -252,7 +257,7 @@ def modify_image_details(request):
         image.timing = request.POST["value"]
         image.save()
         # we are editing the image date
-        pass
+
 
     if request.POST["name"] == "image-group":
         # we are editing the image group
@@ -262,49 +267,60 @@ def modify_image_details(request):
         image = Images.objects.get(photo_id=request.POST["pk"])
         image.permitted = new_group
         image.save()
-        pass
+
 
     if request.POST["name"] == "image-location":
         image = Images.objects.get(photo_id=request.POST["pk"])
         image.place = request.POST["value"]
         image.save()
         # we are editing the image date
-        pass
 
-    return render_to_response('main/uploads.html', data, 
-            RequestContext(request))
+
+    # return render_to_response('main/uploads.html', data, 
+    #         RequestContext(request))
  
 
 def home_page(request):
-    # user = authenticate_user(request)
-    # if user is None:
-        # return redirect(loginPage)
-    return render(request, 'main/home_page.html') #, {'username' : user.username})
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
+    return render(request, 'main/home_page.html', {'username' : user.username})
         
 @csrf_exempt
 def upload(request):
-    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
+    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     user_groups = Groups.objects.filter(user_name=user)
+    
     data = {}
     data["group_names"] = [group.group_name for group in user_groups]
+    data["group_names"].append('public')
+    data["group_names"].append('private')
     return render_to_response('main/uploads.html', data, 
             RequestContext(request))
     
 def photo_details(request):
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
     return render(request, 'main/photo_details.html')
     
 def group_management(request):
+    user = authenticate_user(request)
+    if user is None:
+        return redirect(loginPage)
     return render(request, 'main/group_management.html')
-
 
 @csrf_exempt
 def upload_images(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
 
-    import pdb; pdb.set_trace()
-    # user_name = authenticat_user(request)
-    user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    # import pdb; pdb.set_trace()
+    user = authenticate_user(request)
+    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     new_image_entry = Images()
     new_image_entry.owner_name = user
 
@@ -316,7 +332,7 @@ def upload_images(request):
 
     # Get the information posted with the image
     if "permissions" in request.POST:
-        new_image_entry.permitted = Groups.objects.get(user_name=user.username, group_name=request.POST['permissions'])
+        new_image_entry.permitted = Groups.objects.get(group_name=request.POST['permissions'])
     else:
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
@@ -357,8 +373,7 @@ def upload_images(request):
 def remove_user_from_group(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
-    # user_name = authenticate_user(request)
-    user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+
     # passed in {"groupMember": groupMember, "groupName":groupName}
     # to be removed from group
     # get the group
@@ -396,8 +411,8 @@ def get_user_groups(request):
     '''
 
     # TODO Build an authenticate user function
-    # user_name = authenticate_user(request)
-    user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
+    user_name = authenticate_user(request)
+    # user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     response = {}
     # look through each group of the users and find the members
     response["userGroups"] = []
@@ -420,11 +435,13 @@ def add_group(request):
         return HttpResponse("Only POST requests can be used to add group members", status=400)
 
     logger = logging.getLogger(__name__)
-    # TODO Build an authenticate user function
-    # user_name = authenticate_user(request).user_name
-    user_name = Users.objects.get(username='jonnyc')
+
+    # import pdb; pdb.set_trace()
+    user_name = authenticate_user(request).username
+    # user_name = Users.objects.get(username='jonnyc')
+
     # receives a json object {"newGroupName":"nameOfNewGroup"}
-    import pdb; pdb.set_trace()
+
     try:
         request_body = json.loads(request.body)
     except:
@@ -469,9 +486,9 @@ def add_user_to_group(request):
         return HttpResponse("Only POST requests can be used to add group members", status=400)
 
     logger = logging.getLogger(__name__)
-    # TODO Build an authenticate user function
-    # user_name = authenticate_user(request).user_name
-    user_name = 'jonnyc'
+
+    user_name = authenticate_user(request).username
+    
     # receives a json object {"newGroupName":"nameOfNewGroup"}
     try:
         request_body = json.loads(request.body)
@@ -504,7 +521,7 @@ def add_user_to_group(request):
         return HttpResponse("Could not add user to group" + groupName, status=500)
 
     try:
-        new_group_list = GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
+        GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
     except IntegrityError as e:
         logger.error(e)
         return HttpResponse("This member is already part of the group: " + groupName, status=400)
@@ -525,6 +542,7 @@ def add_user_to_group(request):
 def authenticate_user(request):
     st = request.COOKIES.get('sessiontracker', 'nope')
     try:
+        # pdb.set_trace()
         return Session.objects.get(sessiontracker=st).username
     except ObjectDoesNotExist:
         return None
