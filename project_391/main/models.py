@@ -11,7 +11,7 @@ class Users(models.Model):
         db_table = "users"
 
     def __str__(self):
-        return self.username
+        return (self.username + ' ' + self.password + ' ' + str(self.date_registered))
         
 
 class Persons(models.Model):
@@ -30,7 +30,7 @@ class Persons(models.Model):
 
 
 class Groups(models.Model):
-    group_id = models.IntegerField(primary_key=True)
+    group_id = models.AutoField(primary_key=True)
     user_name = models.ForeignKey(Users, db_column="user_name")
     group_name = models.CharField(max_length=24, db_column="group_name")
     date_created = models.DateField(auto_now_add=True)
@@ -92,9 +92,8 @@ class Images(models.Model):
         
 class Session(models.Model):
     username = models.ForeignKey(Users)
-    sessiontracker = models.IntegerField(primary_key=True)
+    sessiontracker = models.CharField(max_length=32, primary_key=True)
     # expiry = models.DateField()  # implement later?
-    
     
     class Meta:
         db_table = "session"
