@@ -42,18 +42,6 @@ class Groups(models.Model):
 
 class GroupLists(models.Model):
     """
-    Note: I'm not specifying a primary key here, so Django will automatically
-    create its own.  For all intents and purposes we can ignore this column in
-    the table.  The reason I'm doing this is Django does not support
-    multiple-column "composite" primary keys, as specified in the assignment
-    specs. Instead I'll make group_id and friend_id "unique_together", which
-    will make them a candidate key for the table. This achieves the same
-    behaviour as making them the primary key, so to anyone testing queries on
-    our database it will act as expected.
-
-    There may be another way to do this, I will check it out when I have
-    time. This'll work for now though :-)
-    -Carl
     """
     group_id = models.ForeignKey(Groups, db_column="group_id")
     friend_id = models.ForeignKey(Users, db_column="friend_id")
@@ -74,17 +62,12 @@ class Images(models.Model):
     timing = models.DateField(auto_now_add=False)
     description = models.CharField(max_length=2048)
     
-    # This will create a VARCHAR(100) field which will store the URL of the file
-    # I _believe_ once we specify a MEDIA_ROOT settings variable then this will
-    # allow Django to store all the files there, but it may be more complicated
-    # than that. For now, I'll just have it make the default ImageField so we
-    # can use the class/tables in the templates.
-    thumbnail = models.ImageField(upload_to="Thumbnails/")
-    photo = models.ImageField(upload_to="Images")
+    thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
+    photo = models.ImageField(upload_to="Images", max_length=250)
 
     class Meta:
         db_table = "images"
-
+ 
 
         # TODO: - Dan Implement search query based on ranking system givne in assignment specificiations
         pass

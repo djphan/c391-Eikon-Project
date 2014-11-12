@@ -19,6 +19,8 @@ from django.shortcuts import redirect
 # import pdb
 import sys
 from django.db import IntegrityError
+import os
+from project_391.settings import PROJECT_PATH
 # Create your views here.
 
 def loginPage(request):         # how do we respond to a request for a login page?
@@ -355,18 +357,15 @@ def upload_images(request):
     # TODO work on better image naming, although this will suffice.
     # Name confilicts are dealt with automatically
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
-    # TODO resize the image for thumbnail
-    #base_width = 250
-    #import pdb; pdb.set_trace()
-    #img = get_thumbnail(request.FILES["file"], "250x", quality=99)
-    #img = request.FILES["file"]
-    #wpercent = (base_width/float(new_image_entry.photo.width))
-    #hsize = int((float(new_image_entry.photo.height)*float(wpercent)))
-    #img = img.resize((base_width,hsize), PIL.Image.ANTIALIAS)
-    #new_image_entry.thumbnail.save(uploaded_image.name + "_thumbnail", img)
-
     new_image_entry.save()
-    # TODO once thumbnail resiging is done add thumb address to respone object
+    
+    # make thumbnail
+    photo_url = new_image_entry.photo.url # .../example.png
+    thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
+    make_thumbnail(photo_url, thumb_url)
+    new_image_entry.thumbnail = thumb_url[6:] # [6:] cuts off the redundant "Images/" prefix
+    
+    new_image_entry.save()
     return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
 
 @csrf_exempt
@@ -554,3 +553,13 @@ def logout(request):
     except ObjectDoesNotExist:
         pass
     return loginPage(request)
+
+# make a fixed-width thumbnail from the image at in_path and save it to out_path
+def make_thumbnail(in_path, out_path):
+    width = 300
+    img = Image.open(PROJECT_PATH + in_path)
+    scale = width / img.size[0] # by how much do we need to scale to get to <width>
+    height = int(img.size[1] * scale) # determine the new height
+    thumb = img.resize((width, height), Image.ANTIALIAS) # Antialias provides best scaling quality
+    thumb.save(PROJECT_PATH + out_path)
+    
