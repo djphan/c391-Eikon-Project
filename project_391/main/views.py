@@ -371,7 +371,7 @@ def upload_images(request):
     photo_url = new_image_entry.photo.url # .../example.png
     thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
     make_thumbnail(photo_url, thumb_url)
-    new_image_entry.thumbnail = thumb_url[6:] # [6:] cuts off the redundant "Images/" prefix
+    new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
     
     new_image_entry.save()
     return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
