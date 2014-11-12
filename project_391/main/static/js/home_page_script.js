@@ -15,7 +15,7 @@ var imageManager = (function(){
                     _this.groupsData = JSON.parse(req.responseText).userGroups;
                     onDataResponse();
                 } else if (req.readyState==4 && req.status != 200){
-                    swal("Could not get image data");
+                    // swal("Could not get image data");
                 }
             };
             req.open("POST","/main/get_image_data/", true);
@@ -124,6 +124,28 @@ window.onload = function() {
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = navBarHeight + "px";
+
+    // set up the search click handler
+    var searchButton = document.getElementsByClassName("search-button")[0];
+    searchButton.addEventListener("click", function(){
+        // Get the search query and send to 
+        req.onreadystatechange=function(){
+            if (req.readyState==4 && req.status == 200){
+                imageManager.imageData = JSON.parse(req.responseText).images;
+                imageManager.groupsData = JSON.parse(req.responseText).userGroups;
+                onDataResponse();
+            } else if (req.readyState==4 && req.status != 200){
+                // TODO handle no search results. Either keep user images displayed or
+                // clear all images.
+                // swal("Could not get search image data, no images available");
+            }
+        };
+        req.open("POST","/main/get_image_data/", true);
+        // get the search terms, TODO name the search box.
+        searchTerm = document.getElementsByClassName("")[0].value;
+        req.setRequestHeader("Content-type", "application/json");
+        req.send(JSON.stringify({searchTerm: searchTerm}));
+    }, 0);
 };
 
 // called when image data has been received from server
