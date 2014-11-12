@@ -228,8 +228,13 @@ def get_image_data(request):
     # if the image belongs to the user its editable.
     sample_response["images"].append(image_sample)
     sample_response["images"].append(image_sample_2)
-    sample_response["userGroups"] = ["Private", "Beeps", "Bips"] 
-    #if request.POST["searchTerm"]:
+    sample_response["userGroups"] = ["Private", "Beeps", "Bips"]
+    #import pdb; pdb.set_trace()
+    #groups = Groups.objects.filter(grouplists__friend_id=user.username)# 
+    #sample_response["userGroups"] = [group.group_name for group in groups]   
+    #sample_response["userGroups"].append('public')
+    #sample_response["userGroups"].append('private')
+    #t if request.POST["searchTerm"]:
     #    # if theres a searcTerm value on the request we are doing a search
     #    # if no value exists for search term we are just returning all the current users images.
     #    search_term = request.POST["searchTerm"].split
