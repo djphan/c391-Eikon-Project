@@ -229,9 +229,10 @@ def get_image_data(request):
         response["images"].append(img)
     
     # get all the groups the user belongs to.
-    response["userGroups"] = []
-    #for group in Groups.objects.filter(grouplists__friend_id=user):
-    #    pass
+    response["userGroups"] = [group.group_name for group in Groups.objects.filter(grouplists__friend_id=user)]
+    # since currently group owners aren't members we have to also add the groups they own
+    user_owned_groups = [group.group_name for group in Groups.objects.filter(user_name=user)]
+    response["userGroups"] = response["userGroups"] +  user_owned_groups
     return JsonResponse(response, status=200)
 
 @csrf_exempt
@@ -364,7 +365,7 @@ def upload_images(request):
     make_thumbnail(photo_url, thumb_url)
     new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
     # before saving check that both the image and thumbnail have a file path associated
-    if new_image_entry.photo.path and new_image_entry.thumbnail.path:
+    if len(new_image_entry.photo.path) > 5  and len(new_image_entry.thumbnail.path) > 5:
         new_image_entry.save()
         return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
     else:
@@ -424,6 +425,7 @@ def get_user_groups(request):
                                 group_members in GroupLists.objects.filter(group_id=group.group_id)] 
         response["userGroups"].append(group_data)
     # get a list of all users
+    import pdb; pdb.set_trace()
     response["userNames"] = [user.username for user in Users.objects.all()]
     # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
