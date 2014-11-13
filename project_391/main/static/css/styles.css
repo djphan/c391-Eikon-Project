@@ -74,6 +74,7 @@ i {
 .image-subject {
     border-top: 5px solid black;
     font-family: 'Josefin Sans', sans-serif;
+    text-align: right;
     font-size: 25px;
 }
 
@@ -109,12 +110,18 @@ i {
     width: 100%;
 }
 
+/* this is applied to the red labelled fields that have no value */
+.empty-value {
+    color: white;
+}
+
 .grid-item ul {
     display: none;
 }
 
-.editable:hover {
-
+#datetimepicker6[readonly] {
+    cursor: hand;
+    cursor: pointer;
 }
 
 .delay-01s {

@@ -40,27 +40,35 @@
     <div class="row">
       <div class="col-sm-9">
         <img src="{{ STATIC_URL }}img/placeholder.jpg" class="center-block white-spacer-5 large-image-display" alt="image">
+
         <div class="col-sm-8 col-sm-offset-2">
+          <!-- left column with subject and description -->
           <div class="col-sm-6">
-            <p class="pull-right image-subject"
-               id="image-subject"
-               data-type="text"
-               data-pk=""
-               data-url="/main/modify_image_details/"
-               data-title="Subject">
-            </p>
-            <p class="pull-right image-description"
-               id="image-description"
-               data-type="textarea"
-               data-pk=""
-               data-url="/main/modify_image_details/"
-               data-title="Description">
-            </p>
+            <div class="row">
+                <p class="pull-right image-subject"
+                   id="image-subject"
+                   data-type="text"
+                   data-pk=""
+                   data-url="/main/modify_image_details/"
+                   data-title="Subject">
+                </p>
+            </div>
+
+            <div class="row">
+                <p class="pull-right image-description"
+                   id="image-description"
+                   data-type="textarea"
+                   data-pk=""
+                   data-url="/main/modify_image_details/"
+                   data-title="Description">
+                </p>
+            </div>
           </div>
+          <!-- end left column with subject and description -->
+
+          <!-- right column with location, date, group -->
           <div class="col-sm-6 pic-loc-group-date">
-            <!--
-            <i class="fa-li subject thumbnail-photo-details fa fa-2x fa-comment-o"></i>
-            -->
+
             <div class="image-location">
               <span class="label label-danger"
                     id="image-location"
@@ -68,7 +76,9 @@
                     data-pk=""
                     data-url="/main/modify_image_details/"
                     data-title="Location">
-              </span></div>
+              </span>
+            </div>
+
             <div class="image-group">
               <span class="label label-danger"
                     id="image-group"
@@ -78,6 +88,7 @@
                     data-title="Group">
               </span>
             </div>
+
             <div class="image-date">
               <span class="label label-danger"
                     id="image-date"
@@ -87,11 +98,15 @@
                     data-title="Date">
               </span>
             </div>
+
           </div>
         </div>
       </div>
+        
+      <!-- image thumnnail grid -->
       <div class="col-sm-3 image-grid">
       </div><!-- /grid -->
+
     </body>
   </html>
 {% endblock %}

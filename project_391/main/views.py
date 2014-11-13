@@ -199,101 +199,89 @@ def get_image_data(request):
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
     user = authenticate_user(request)
-    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
-    sample_response = {}
-    sample_response["images"] = []
-    image_sample = {}
-    image_sample["thumbnail"] = "../media/thumbnails/1.jpg"
-    image_sample["image"] = "../media/images/1.jpg"
-    image_sample["subject"] = "Bananas"
-    image_sample["description"] = "A nice mountain range in the middle of the park"
-    image_sample["location"] = "Jasper, Canada"
-    image_sample["group"] = "Private"
-    image_sample["date"] = "February 11, 2001"
-    image_sample["owner"] = "jonnyc"
-    image_sample["imageID"] = "1234"
-    image_sample["editable"] = "true"
-    
-    image_sample_2 = {}
-    image_sample_2["thumbnail"] = "../media/thumbnails/2.jpg"
-    image_sample_2["image"] = "../media/images/2.jpg"
-    image_sample_2["subject"] = "Baked Beans"
-    image_sample_2["description"] = "A nice fountain range in the middle of the lark"
-    image_sample_2["location"] = "Banff, Canada"
-    image_sample_2["group"] = "Private"
-    image_sample_2["date"] = "February 11, 1999"
-    image_sample_2["owner"] = "jonnyc"
-    image_sample_2["imageID"] = "1235"
-    image_sample_2["editable"] = "true"
+    if "searchTerm" in request.POST:
+        # if theres a searcTerm value on the request we are doing a search
+        search_term = request.POST["searchTerm"].split
+        # TODO run the search
+        # images = Images.object.filter(search)
+    else:
+        # if no value exists for search term we are just returning all the current users images.
+        # get all the curent users images
+        images = Images.objects.filter(owner_name=user)
 
-    # editable indicates whether the user can edit the details of the image.
-    # if the image belongs to the user its editable.
-    sample_response["images"].append(image_sample)
-    sample_response["images"].append(image_sample_2)
-    sample_response["userGroups"] = ["Private", "Beeps", "Bips"]
-    #import pdb; pdb.set_trace()
-    #groups = Groups.objects.filter(grouplists__friend_id=user.username)# 
-    #sample_response["userGroups"] = [group.group_name for group in groups]   
-    #sample_response["userGroups"].append('public')
-    #sample_response["userGroups"].append('private')
-    #t if request.POST["searchTerm"]:
-    #    # if theres a searcTerm value on the request we are doing a search
-    #    # if no value exists for search term we are just returning all the current users images.
-    #    search_term = request.POST["searchTerm"].split
-    #    # TODO run the search
-    #else:
-    #    # get all the curent users images
-    #    images = Images.objects.filter(owner_name=user)
-    return JsonResponse(sample_response, status=200)
+    # build the json response for each image
+    response = {}
+    response["images"] = []
+    for image in images:
+        img = {}
+        img["thumbnail"] = ".." + image.thumbnail.path
+        img["image"] = ".." + image.photo.path
+        img["subject"] = image.subject
+        img["description"] = image.description
+        img["location"] = image.place
+        img["group"] = image.permitted.group_name
+        img["date"] = image.timing.strftime("%B %d, %Y")
+        img["owner"] = user.username
+        img["imageID"] = image.photo_id
+        # editable indicates whether the user can edit the details of the image.
+        # if the image belongs to the user its editable.
+        img["editable"] = image.owner_name.username == user.username
+        response["images"].append(img)
+    
+    # get all the groups the user belongs to.
+    response["userGroups"] = []
+    #for group in Groups.objects.filter(grouplists__friend_id=user):
+    #    pass
+    return JsonResponse(response, status=200)
 
 @csrf_exempt
 def modify_image_details(request):
-    # import pdb; pdb.set_trace()
-    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     user = authenticate_user(request)
-    
+    # import pdb; pdb.set_trace()    
     if request.POST["name"] == "image-subject":
         # we are editing the subject of the image.
-        image = Images.objects.get(photo_id=request.POST["pk"])
+        image = Images.objects.get(photo_id=request.POST["key"])
         image.subject = request.POST["value"]
         image.save()
-
+        return HttpResponse("Image subject changed to " + request.POST["value"], status=200)
 
     if request.POST["name"] == "image-description":
         # we are editing the image description
-        image = Images.objects.get(photo_id=request.POST["pk"])
+        image = Images.objects.get(photo_id=request.POST["key"])
         image.description = request.POST["value"]
         image.save()
-
+        return HttpResponse("Image description changed to " + request.POST["value"], status=200)
 
     if request.POST["name"] == "image-date":
-        image = Images.objects.get(photo_id=request.POST["pk"])
+        image = Images.objects.get(photo_id=request.POST["key"])
         # TODO format as date field before setting
-        image.timing = request.POST["value"]
+        image.timing = datetime.datetime.strptime(request.POST["value"], "%Y-%m-%d")
         image.save()
-        # we are editing the image date
-
+        response = {}
+        response["formattedDate"] = image.timing.strftime("%B %d, %Y")
+        return JsonResponse(response, status=200)
 
     if request.POST["name"] == "image-group":
         # we are editing the image group
         # get the new group
         new_group = Groups.objects.get(user_name=user.username,
                             group_name=request.POST["value"])
-        image = Images.objects.get(photo_id=request.POST["pk"])
+        image = Images.objects.get(photo_id=request.POST["key"])
         image.permitted = new_group
         image.save()
-
+        return HttpResponse("Image group changed to " + request.POST["value"], status=200)
 
     if request.POST["name"] == "image-location":
-        image = Images.objects.get(photo_id=request.POST["pk"])
+        image = Images.objects.get(photo_id=request.POST["key"])
         image.place = request.POST["value"]
         image.save()
+        return HttpResponse("Image location changed to " + request.POST["value"], status=200)
         # we are editing the image date
 
+    else:
+        return HttpResponse("Did no receive an appropriate field to edit", status=400)
+    
 
-    # return render_to_response('main/uploads.html', data, 
-    #         RequestContext(request))
- 
 
 def home_page(request):
     user = authenticate_user(request)
@@ -333,9 +321,7 @@ def upload_images(request):
     if not request.POST:
         return HttpResponse("Only POST requests are accepted", status=400)
 
-    # import pdb; pdb.set_trace()
     user = authenticate_user(request)
-    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     new_image_entry = Images()
     new_image_entry.owner_name = user
 
@@ -352,9 +338,9 @@ def upload_images(request):
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
     if "date" in request.POST:
-        # TODO figure out a way to send the date, that can be relied on to parse correctly here.
-        # new_image_entry.timing = request.POST["date"]
-        new_image_entry.timing = datetime.datetime.now()
+        # TODO figure out whether we need to enforce a not null constraint on the date.
+        # the provided create statements don't but I can't enter images with a null date.
+        new_image_entry.timing = datetime.datetime.strptime(request.POST["date"], "%m/%d/%Y")
     else:
         new_image_entry.timing = datetime.datetime.now()
 
@@ -377,10 +363,12 @@ def upload_images(request):
     thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
     make_thumbnail(photo_url, thumb_url)
     new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
-    
-    new_image_entry.save()
-    return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
-
+    # before saving check that both the image and thumbnail have a file path associated
+    if new_image_entry.photo.path and new_image_entry.thumbnail.path:
+        new_image_entry.save()
+        return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
+    else:
+        return HttpResponse("Could not save image, either the photo or the thumbnail has no image associated with it", status=500)
 @csrf_exempt
 def remove_user_from_group(request):
     if not request.POST:

@@ -74,6 +74,15 @@ var imageManager = (function(){
             if (!image){
                 image = this.imageData[0];
             }
+
+            // clear the old xeditable fields so they can be reinitialized with the
+            //  new image data
+            $('#image-subject').editable("destroy");
+            $('#image-description').editable("destroy");
+            $('#image-location').editable("destroy");
+            $('#image-group').editable("destroy");
+            $('#image-date').editable("destroy");
+
             var image_display = document.getElementsByClassName("large-image-display")[0]; 
             image_display.src = image.image;
             // place the image UID on the image div for reference
@@ -96,22 +105,102 @@ var imageManager = (function(){
 
             // check if the image is one of the users
             // if so set up the editing functions.
+            _this = this;
             if (image.editable) {
                 image_subject.dataset.pk = image.imageID; 
-                $('#image-subject').editable({placement: "top"});
+                $('#image-subject').editable({placement: "top", emptytext: "Enter a subject.",
+                                            params: function(params) {
+                                                data = {};
+                                                data["name"] = params.name;
+                                                data["value"] = params.value;
+                                                data["key"] = image.imageID;
+                                                return data;
+                                            },
+
+                                            success: function(response, newValue){
+                                                _this.setImageData(image.imageID, "subject", newValue);
+                                            }    
+                                            });
+
                 image_description.dataset.pk = image.imageID; 
-                $('#image-description').editable({placement: "top"});
+                $('#image-description').editable({placement: "top", emptytext: "Enter a description.",
+                                            params: function(params) {
+                                                data = {};
+                                                data["name"] = params.name;
+                                                data["value"] = params.value;
+                                                data["key"] = image.imageID;
+                                                return data;
+                                            },
+
+                                            success: function(response, newValue){
+                                                _this.setImageData(image.imageID, "description", newValue);
+                                            }    
+                                            });
+
                 image_location.dataset.pk = image.imageID; 
-                $('#image-location').editable({placement:"top"});
+                $('#image-location').editable({placement:"top", emptytext: "Enter a location.",
+                                          emptyclass: "empty",
+                                          params: function(params) {
+                                                data = {};
+                                                data["name"] = params.name;
+                                                data["value"] = params.value;
+                                                data["key"] = image.imageID;
+                                                return data;
+                                            },
+
+                                            success: function(response, newValue){
+                                                _this.setImageData(image.imageID, "location", newValue);
+                                            }    
+                                            });
+
                 image_group.dataset.pk = image.imageID; 
                 // create a list of groups formatted for the editable plugin
                 xeditable_formatted_grouplist = [];
                 for (var i = 0; i < this.groupsData.length; i++){
                     xeditable_formatted_grouplist.push({value: this.groupsData[i], text: this.groupsData[i]});
                 }
-                $('#image-group').editable({source: xeditable_formatted_grouplist, placement: "top"});
+                $('#image-group').editable({source: xeditable_formatted_grouplist, placement: "top", emptytext: "Select a group.",
+                                            emptyclass: "empty",
+                                            params: function(params) {
+                                                data = {};
+                                                data["name"] = params.name;
+                                                data["value"] = params.value;
+                                                data["key"] = image.imageID;
+                                                return data;
+                                            },
+
+                                            success: function(response, newValue){
+                                                _this.setImageData(image.imageID, "group", newValue);
+                                            }   
+                                            });
                 image_date.dataset.pk = image.imageID; 
-                $('#image-date').editable({placement: "top"});
+                $('#image-date').editable({placement: "top", emptytext: "Select a date.",
+                                            display: false,
+                                            emptyclass: "empty",
+                                            params: function(params) {
+                                                data = {};
+                                                data["name"] = params.name;
+                                                data["value"] = params.value;
+                                                data["key"] = image.imageID;
+                                                return data;
+                                            },
+
+                                            success: function(response, newValue){
+                                                _this.setImageData(image.imageID, "date", response.formattedDate);
+                                                this.innerHTML = response.formattedDate;
+                                            }   
+                                            });
+            }
+        },
+
+        // resets a value on the stored ImageData when its changed 
+        // by the user, after being updated on the server.
+        setImageData: function(imageID, property, newValue) {
+           for (var i = 0; i < _this.imageData.length; i++){
+                if (this.imageData[i].imageID === imageID){
+                    this.imageData[i][property] = newValue;
+                    break;
+                }
             }
         }
     };

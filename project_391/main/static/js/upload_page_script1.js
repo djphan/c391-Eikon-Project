@@ -1,6 +1,6 @@
 window.onload = function(){
     // instantiate the date time picker
-    $('#datetimepicker6').datetimepicker();
+    $('#datetimepicker6').datetimepicker({pickTime: false});
     swal("If you wish to submit photo details please place them in the fields before choosing files");
     var dropzone = window.Dropzone.instances[0];
     // set the options
