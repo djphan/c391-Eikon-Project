@@ -4,6 +4,9 @@ var imageManager = (function(){
         imageData: null,
         // contains a list of all groups a photo could belong to.
         groupsData: null,
+        
+        // holds the type of search
+        searchType: null,
 
         // get image information
         getImageData: function(search_terms) {
@@ -193,6 +196,11 @@ var imageManager = (function(){
             }
         },
 
+        // set the search type
+        setSearchType: function(searchType) {
+            this.searchType = searchType;
+        },
+
         // resets a value on the stored ImageData when its changed 
         // by the user, after being updated on the server.
         setImageData: function(imageID, property, newValue) {
@@ -213,6 +221,15 @@ window.onload = function() {
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = navBarHeight + "px";
+
+    // set up tracking of search box drop down selection
+    searchSelectionOptions = document.getElementsByClassName("search-options")[0].childNodes;
+    for (var i = 0; i < searchSelectionOptions.length; i++){
+        searchSelectionOptions[i].addEventListener("click", function(){
+            // set the search type
+            imageManager.setSearchType(this.dataset.searchType);
+        }
+    )};
 
     // set up the search click handler
     var searchButton = document.getElementsByClassName("search-button")[0];
