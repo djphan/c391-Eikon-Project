@@ -33,7 +33,7 @@ var imageManager = (function(){
 
         // checks whether any images exist to display
         hasImages: function(){
-            if (this.imageData){
+            if (this.imageData.length > 0){
                 return true;
             } else {
                 return false;
@@ -267,9 +267,16 @@ window.onload = function() {
 var onDataResponse = function() {
     // display the first image
     if (imageManager.hasImages()){
+        // unhide the image display elements
+        $(".image-display").show();
+        // and hide the upload image info
+        document.getElementsByClassName("image-display")[0].style.display = "show";
         // display the first image
         imageManager.displayImage();
         imageManager.populateThumbnails(imageManager.imageData);
+    } else {
+        swal("You have no uploaded images, click upload to start");
+        $(".image-display").hide();
     }
 };
 // called when all image data has been received.
