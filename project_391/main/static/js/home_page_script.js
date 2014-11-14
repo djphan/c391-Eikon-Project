@@ -244,6 +244,7 @@ window.onload = function() {
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
         // Get the search query and send to 
+        var req = new XMLHttpRequest();
         req.onreadystatechange=function(){
             if (req.readyState==4 && req.status == 200){
                 imageManager.searchImageData = JSON.parse(req.responseText).images;
@@ -257,7 +258,7 @@ window.onload = function() {
         };
         req.open("POST","/main/get_image_data/", true);
         // get the search terms, TODO name the search box.
-        searchTerm = document.getElementsByClassName("")[0].value;
+        searchTerm = document.getElementsByClassName("search-term")[0].value;
         req.setRequestHeader("Content-type", "application/json");
         req.send(JSON.stringify({searchTerm: searchTerm, searchOption: imageManager.searchOption}));
     }, 0);

@@ -41,7 +41,7 @@ def loginPage(request):         # how do we respond to a request for a login pag
         else:
             if user.password == POST_password:
                 # Send them to the index page, and store a unique sessiontracker for this session.
-                response = render_to_response('main/index.html',
+                response = render_to_response('main/home_page.html',
                                               {'password':POST_password, 'username':POST_username},
                                               RequestContext(request))
                 st = str(hash(POST_username+str(random.random()))) # generate sessiontracker
