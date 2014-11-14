@@ -110,6 +110,19 @@ i {
     width: 100%;
 }
 
+/* styles for search info box that pops up on search */
+.search-info {
+    position: fixed;
+    top:53;
+    left: 25%;
+    right: 0;
+    height: 100px;
+    width: 100%;
+    background-color: #4cae4c;
+    color: white;
+    border-bottom: 5px solid black;
+}
+
 /* this is applied to the red labelled fields that have no value */
 .empty-value {
     color: white;

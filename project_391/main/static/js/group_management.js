@@ -68,6 +68,8 @@ var groupManager = (function(){
                     // add the usernames to the select box
                     _this.clearGroupMembersFromList();
                     groupManager.addGroupMembersToList(newGroup.memberNames, newGroup.groupName);
+                    // clear the group name
+                    document.getElementsByClassName("enter-group-name-field")[0].value = "";
                 } else if (req.readyState==4 && req.status != 200){
                     swal("Could not add group, bad response from server" + "\n" +
                             req.responseText);
@@ -89,26 +91,86 @@ var groupManager = (function(){
                 var groupNameElement = document.createElement("a");
                 groupNameElement.className = "list-group-item";
                 groupNameElement.innerHTML = userGroups[i].groupName;
+                groupNameElement.dataset.groupName = userGroups[i].groupName;
                 // if we need a group remove button set it here
-                removeeButton = document.createElement("span");
-
-                this.addGroupNameClickHandler(i, userGroups, groupNameElement);
+                var removeButtonElement = document.createElement("span");
+                removeButtonElement.className = "label label-danger pull-right member-remove-button";
+                removeButtonElement.innerHTML = "Remove";
+                this.addGroupNameClickHandler(userGroups[i], groupNameElement);
+                this.deleteGroupClickHandler(removeButtonElement, userGroups[i].groupName); 
+                groupNameElement.appendChild(removeButtonElement);
                 // add element to list of groups
                 var groupList = document.getElementsByClassName("group-names")[0];
                 groupList.appendChild(groupNameElement);
             }
         },
 
-        addGroupNameClickHandler: function(i, userGroups, groupNameElement) {
+        deleteGroupClickHandler: function(removeButtonElement, groupName){
+            // add the remove click listener
+            removeButtonElement.addEventListener("click", function(event) {
+                event.stopPropagation();
+                // Make request to delete group
+                var req = new XMLHttpRequest();
+                req.onreadystatechange=function(){
+                    if (req.readyState==4 && req.status == 200){
+                        // on success remove the group element and its info
+                        // if its the currently active group display the next one in the list
+                        // if there is no next, display one before, if ther is none before display
+                        // nothing.
+                        var groupList = document.getElementsByClassName("group-names")[0];
+                        groupList.removeChild(removeButtonElement.parentElement);
+                        if (classie.has(removeButtonElement.parentElement, "active")) {
+                            _this.clearGroupMembersFromList();
+                            // if there are groups left to display show the first group
+                            if(groupList.firstElementChild){
+                                classie.add(groupList.firstElementChild, 'active');
+                                // find the members of the first chld
+                                var group = groupManager.userGroups.filter(function(obj){ 
+                                            return obj.groupName === groupList.firstElementChild.dataset.groupName;
+                                })[0];
+                                groupManager.addGroupMembersToList(group.memberNames, group.groupName);
+                            }
+                        }
+                        // remove the group from the cache
+                        groupManager.removeObjectWithAttr(groupManager.userGroups, "groupName", groupName);
+                    } else if (req.readyState==4 && req.status != 200){
+                        swal("Could not delete group, bad response from server" + "\n" +
+                                req.responseText);
+                    }
+                };
+                req.open("POST","/main/delete_group/", true);
+                req.send(JSON.stringify({groupName: groupName}));
+
+             });
+        },
+        
+        // finds an object in an array of objects with a specified property value and removes it
+        // values must be unique to the property
+        removeObjectWithAttr: function(array, property, value){
+            var index;
+            // find the index of the element
+            for (var i = 0; i < array.length; i++) {
+                if (array[i][property] === value){
+                    index = i;
+                    array.splice(index, 1);
+                    return true;
+                }
+            }
+            // if value not found return false
+            return false;
+        },
+
+        addGroupNameClickHandler: function(userGroups, groupNameElement) {
             _this = this;
-            groupNameElement.addEventListener("click", function() {
+            groupNameElement.addEventListener("click", function(event) {
+                event.stopPropagation();
                 var activeElements = groupNameElement.parentNode.getElementsByClassName("active");
                 for (var j = 0; j < activeElements.length; j++) {
                     classie.remove(activeElements[j], 'active');
                 }
                 classie.add(groupNameElement, 'active');
                 _this.clearGroupMembersFromList();
-                _this.addGroupMembersToList(userGroups[i].memberNames, userGroups[i].groupName);
+                _this.addGroupMembersToList(userGroups.memberNames, userGroups.groupName);
             }, 0);
         },
 
@@ -271,8 +333,10 @@ onDataResponse = function() {
         // get the currently selected group name
         var groupList = document.getElementsByClassName("group-names")[0];
         var activeGroup = groupList.getElementsByClassName("active")[0];
-        activeGroupName = activeGroup.innerHTML;
+        activeGroupName = activeGroup.dataset.groupName;
         groupManager.addUserToGroup(userNameSelected, activeGroupName);
+        // reset the select box to show "Select a user"
+        userSelectList.value = "Select a user";
     });
 };
 

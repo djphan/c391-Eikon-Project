@@ -20,6 +20,7 @@ urlpatterns = patterns(
     url(r"^modify_image_details/$", views.modify_image_details, name='modify_image_details'),
     url(r"logout/$", views.logout, name='logout'),
     url(r"^get_image_data/$", views.get_image_data, name='get_image_data'),
+    url(r"^delete_group/$", views.delete_group, name='delete_group'),
      
 )
 

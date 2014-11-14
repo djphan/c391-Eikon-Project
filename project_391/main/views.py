@@ -235,6 +235,18 @@ def get_image_data(request):
     response["userGroups"] = response["userGroups"] +  user_owned_groups
     return JsonResponse(response, status=200)
 
+
+@csrf_exempt
+def delete_group(request):
+    user = authenticate_user(request)
+    group_name_to_delete = json.loads(request.body)["groupName"]
+    group = Groups.objects.get(user_name=user, group_name=group_name_to_delete)
+    group.delete()
+    if len(Groups.objects.filter(user_name=user, group_name=group_name_to_delete)) == 0:
+        return JsonResponse({"deletedGroup": group_name_to_delete}, status=200)
+    else:
+        return HttpResponse("Could not delete group: " + group_name_to_delete)
+
 @csrf_exempt
 def modify_image_details(request):
     user = authenticate_user(request)
@@ -425,7 +437,6 @@ def get_user_groups(request):
                                 group_members in GroupLists.objects.filter(group_id=group.group_id)] 
         response["userGroups"].append(group_data)
     # get a list of all users
-    import pdb; pdb.set_trace()
     response["userNames"] = [user.username for user in Users.objects.all()]
     # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)

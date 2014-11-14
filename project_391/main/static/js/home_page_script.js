@@ -1,7 +1,11 @@
 var imageManager = (function(){
     return {
-        // contains all image data.
+        // contains all the users image files.
         imageData: null,
+        
+        // contains the latest searches image files
+        searchImageData: null,
+
         // contains a list of all groups a photo could belong to.
         groupsData: null,
         
@@ -196,9 +200,17 @@ var imageManager = (function(){
             }
         },
 
-        // set the search type
-        setSearchType: function(searchType) {
-            this.searchType = searchType;
+        // Search type event listener to sets the user selected search type
+        addSearchTypeEventListener: function(element){
+            _this = this;
+            element.addEventListener("click", function() {
+                imageManager.searchType = element.dataset.searchtype;
+            }, 0);
+        },
+        
+        // Display search info shows a notification about the search
+        displaySearchInfo: function(content) {
+            
         },
 
         // resets a value on the stored ImageData when its changed 
@@ -223,13 +235,10 @@ window.onload = function() {
     document.getElementsByClassName("image-grid")[0].style.top = navBarHeight + "px";
 
     // set up tracking of search box drop down selection
-    searchSelectionOptions = document.getElementsByClassName("search-options")[0].childNodes;
+    searchSelectionOptions = document.getElementsByClassName("search-option");
     for (var i = 0; i < searchSelectionOptions.length; i++){
-        searchSelectionOptions[i].addEventListener("click", function(){
-            // set the search type
-            imageManager.setSearchType(this.dataset.searchType);
-        }
-    )};
+        imageManager.addSearchTypeEventListener(searchSelectionOptions[i]);
+    }
 
     // set up the search click handler
     var searchButton = document.getElementsByClassName("search-button")[0];
@@ -237,9 +246,9 @@ window.onload = function() {
         // Get the search query and send to 
         req.onreadystatechange=function(){
             if (req.readyState==4 && req.status == 200){
-                imageManager.imageData = JSON.parse(req.responseText).images;
-                imageManager.groupsData = JSON.parse(req.responseText).userGroups;
-                onDataResponse();
+                imageManager.searchImageData = JSON.parse(req.responseText).images;
+                imageManager.populateThumbnails(imageManager.searchImageData);
+                imageManager.displaySearchInfo();
             } else if (req.readyState==4 && req.status != 200){
                 // TODO handle no search results. Either keep user images displayed or
                 // clear all images.
@@ -250,7 +259,7 @@ window.onload = function() {
         // get the search terms, TODO name the search box.
         searchTerm = document.getElementsByClassName("")[0].value;
         req.setRequestHeader("Content-type", "application/json");
-        req.send(JSON.stringify({searchTerm: searchTerm}));
+        req.send(JSON.stringify({searchTerm: searchTerm, searchOption: imageManager.searchOption}));
     }, 0);
 };
 
