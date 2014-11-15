@@ -259,8 +259,8 @@ window.onload = function() {
         req.open("POST","/main/get_image_data/", true);
         // get the search terms, TODO name the search box.
         searchTerm = document.getElementsByClassName("search-term")[0].value;
-        req.setRequestHeader("Content-type", "application/json");
-        req.send(JSON.stringify({searchTerm: searchTerm, searchOption: imageManager.searchOption}));
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        req.send(JSON.stringify({searchTerm: searchTerm, searchType: imageManager.searchType}));
     }, 0);
 };
 

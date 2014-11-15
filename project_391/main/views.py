@@ -198,10 +198,12 @@ def get_image_data(request):
     # and for image searches.
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
+    # import pdb; pdb.set_trace()
     user = authenticate_user(request)
-    if "searchTerm" in request.POST:
+    if "searchTerm" in request.POST and searchType in request.POST:
         # if theres a searcTerm value on the request we are doing a search
         search_term = request.POST["searchTerm"].split
+        search_type = request.POST["searchType"]
         # TODO run the search
         # images = Images.object.filter(search)
     else:
