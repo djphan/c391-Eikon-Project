@@ -324,13 +324,18 @@ def upload(request):
     user = authenticate_user(request)
     if user is None:
         return redirect(loginPage)
-    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
-    user_groups = Groups.objects.filter(user_name=user)
-    
+
+    # get all the groups the user owns
     data = {}
-    data["group_names"] = [group.group_name for group in user_groups]
-    data["group_names"].append('public')
-    data["group_names"].append('private')
+    user_groups = Groups.objects.filter(user_name=user)
+    data["group_names"] = [group.group_name + "@" + user.username for group in user_groups]
+    # find the groups not owned by the user but that they belong to
+    friend_groups = Groups.objects.filter(grouplists__friend_id=user)
+    friend_groups = [group.group_name + "@" + group.user_name.username for group in friend_groups]
+    # aggregate all the groups including private/public
+    data["group_names"] = data["group_names"] + friend_groups
+    data["group_names"].append('public' + '@' + user.username)
+    data["group_names"].append('private'+ '@' + user.username)
     return render_to_response('main/uploads.html', data, 
             RequestContext(request))
     
@@ -363,7 +368,8 @@ def upload_images(request):
 
     # Get the information posted with the image
     if "permissions" in request.POST:
-        new_image_entry.permitted = Groups.objects.get(group_name=request.POST['permissions'])
+        group_name, group_owner = request.POST["permissions"].split("@")
+        new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
