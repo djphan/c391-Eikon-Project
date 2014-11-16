@@ -198,15 +198,19 @@ def get_image_data(request):
     # and for image searches.
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
-    # import pdb; pdb.set_trace()
     user = authenticate_user(request)
-    if "searchTerm" in request.POST and searchType in request.POST:
+    import pdb; pdb.set_trace()
+    try:
+        request_body = json.loads(request.body)
         # if theres a searcTerm value on the request we are doing a search
-        search_term = request.POST["searchTerm"].split
-        search_type = request.POST["searchType"]
+        search_term = request_body["searchTerm"]
+        search_type = request_body["searchType"]
         # TODO run the search
+        # dummy search 
+        images = Images.objects.filter(description__icontains=search_term)
         # images = Images.object.filter(search)
-    else:
+    except:
+        pass
         # if no value exists for search term we are just returning all the current users images.
         # get all the curent users images
         images = Images.objects.filter(owner_name=user)
@@ -237,6 +241,13 @@ def get_image_data(request):
     response["userGroups"] = response["userGroups"] +  user_owned_groups
     return JsonResponse(response, status=200)
 
+@csrf_exempt
+def delete_image(request):
+    user = authenticate_user(request)
+    imageID = int(json.loads(request.body)["imageID"])
+    image_to_delete = Images.objects.get(photo_id=imageID)
+    image_to_delete.delete()
+    return HttpResponse("Image with ID: " + str(imageID) + " deleted")
 
 @csrf_exempt
 def delete_group(request):
@@ -373,17 +384,20 @@ def upload_images(request):
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     new_image_entry.save()
     
+    import pdb; pdb.set_trace()
     # make thumbnail
     photo_url = new_image_entry.photo.url # .../example.png
     thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
     make_thumbnail(photo_url, thumb_url)
     new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
     # before saving check that both the image and thumbnail have a file path associated
-    if len(new_image_entry.photo.path) > 5  and len(new_image_entry.thumbnail.path) > 5:
-        new_image_entry.save()
+    new_image_entry.save()
+    if new_image_entry.photo.path and new_image_entry.thumbnail.path:
         return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
     else:
+        new_image_entry.delete()
         return HttpResponse("Could not save image, either the photo or the thumbnail has no image associated with it", status=500)
+
 @csrf_exempt
 def remove_user_from_group(request):
     if not request.POST:

@@ -5,7 +5,10 @@ var imageManager = (function(){
         
         // contains the latest searches image files
         searchImageData: null,
-
+        
+        // boolean to determine whether search results or the users
+        // images are currently being displayed
+        displayingSearchResults: false,
         // contains a list of all groups a photo could belong to.
         groupsData: null,
         
@@ -42,11 +45,19 @@ var imageManager = (function(){
         
         // populate the thumbnail grid with all available images.
         // pass in a list of image objects to populate the grid with
-        populateThumbnails: function(images) {
+        // searchResultsFlag should be set to true if showing search results
+        // otherwise should be set to false
+        populateThumbnails: function(images, searchResultsFlag) {
+            if (searchResultsFlag){
+                this.displayingSearchResults = true;
+            } else if (!searchResultsFlag) {
+                this.displayingSearchResults = false;
+            }
+
             this.clearThumbnails();
             for (var i = 0; i < images.length; i++){
                 row_container = document.createElement("div");
-                row_container.className = "row";
+                //row_container.className = "row";
                 thumb_wrapper = document.createElement("div");
                 thumb_wrapper.className = "thumbnail-wrapper";
                 thumb_image = document.createElement("img");
@@ -71,7 +82,10 @@ var imageManager = (function(){
 
         // clear all thumbnails from the grid
         clearThumbnails: function() {
-
+            imageGrid = document.getElementsByClassName("image-grid")[0];
+            while (imageGrid.firstChild) {
+                imageGrid.removeChild(imageGrid.firstChild);
+            }
         },
         // displays an image 
         // pass in an image object as downloaded from server
@@ -79,7 +93,11 @@ var imageManager = (function(){
         displayImage: function(image){
             // if no image is passed display the first image
             if (!image){
-                image = this.imageData[0];
+                if (!this.displayingSearchResults){
+                    image = this.imageData[0];
+                } else if (this.displayingSearchResults) {
+                    image = this.searchImageData[0];
+                }
             }
 
             // clear the old xeditable fields so they can be reinitialized with the
@@ -212,6 +230,24 @@ var imageManager = (function(){
         displaySearchInfo: function(content) {
             
         },
+    
+        removeObjectWithAttr: function(array, property, value){
+            var index;
+            // find the index of the element
+            if (array === null || array === undefined) {
+                return;
+            }
+            for (var i = 0; i < array.length; i++) {
+                if (array[i][property] == value){
+                    index = i;
+                    array.splice(index, 1);
+                    return true;
+                }
+            }
+            // if value not found return false
+            return false;
+        },
+
 
         // resets a value on the stored ImageData when its changed 
         // by the user, after being updated on the server.
@@ -232,13 +268,48 @@ window.onload = function() {
 
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
-    document.getElementsByClassName("image-grid")[0].style.top = navBarHeight + "px";
+    document.getElementsByClassName("image-grid")[0].style.top = 100 + "px";
 
     // set up tracking of search box drop down selection
     searchSelectionOptions = document.getElementsByClassName("search-option");
     for (var i = 0; i < searchSelectionOptions.length; i++){
         imageManager.addSearchTypeEventListener(searchSelectionOptions[i]);
     }
+    
+    // set up the delete photo button
+    deletePhotoButton = document.getElementsByClassName("delete-button")[0];
+    // get the image id we wanna delete
+    deletePhotoButton.addEventListener("click", function(){
+        var req = new XMLHttpRequest();
+        var imageID = document.getElementsByClassName("large-image-display")[0].dataset.photo_id;
+        req.onreadystatechange=function(){
+            if (req.readyState==4 && req.status == 200){
+                // remove the image thumbnail from the image grid
+                imageManager.removeObjectWithAttr(imageManager.imageData, "imageID", imageID);
+                imageManager.removeObjectWithAttr(imageManager.searchImageData, "imageID", imageID);
+                
+                // re display the thumbnails
+                imageManager.clearThumbnails();
+                if (imageManager.displayingSearchResults){
+                    imageManager.populateThumbnails(imageManager.searchImageData, true);
+                } else {
+                    imageManager.populateThumbnails(imageManager.imageData, false);
+                }
+                imageManager.displayImage();
+                
+                // depending on whether we are looking at search results
+                // or user data display the next image  in the large image display
+
+            } else if (req.readyState==4 && req.status != 200){
+                swal("Could not delete the image");
+            }
+        };
+        req.open("POST","/main/delete_image/", true);
+        // get the search terms, TODO name the search box.
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        req.send(JSON.stringify({imageID: imageID}));
+    }, 0);
+
 
     // set up the search click handler
     var searchButton = document.getElementsByClassName("search-button")[0];
@@ -248,7 +319,7 @@ window.onload = function() {
         req.onreadystatechange=function(){
             if (req.readyState==4 && req.status == 200){
                 imageManager.searchImageData = JSON.parse(req.responseText).images;
-                imageManager.populateThumbnails(imageManager.searchImageData);
+                imageManager.populateThumbnails(imageManager.searchImageData, true);
                 imageManager.displaySearchInfo();
             } else if (req.readyState==4 && req.status != 200){
                 // TODO handle no search results. Either keep user images displayed or
@@ -274,7 +345,7 @@ var onDataResponse = function() {
         document.getElementsByClassName("image-display")[0].style.display = "show";
         // display the first image
         imageManager.displayImage();
-        imageManager.populateThumbnails(imageManager.imageData);
+        imageManager.populateThumbnails(imageManager.imageData, false);
     } else {
         swal("You have no uploaded images, click upload to start");
         $(".image-display").hide();

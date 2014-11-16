@@ -40,8 +40,13 @@ margin-right: auto;
 width: 500 px; 
 }
 
+
 .large-image-display {
-    width: 90%;
+    width: 100%;
+}
+
+.large-image-wrapper:hover .delete-button{
+    display: block;
 }
 
 .thumbnail-image-display {
@@ -52,7 +57,6 @@ width: 500 px;
 
 .thumbnail-photo-details {
 }
-
 
 li {
     padding-bottom: 1%;
@@ -85,7 +89,8 @@ i {
 }
 
 .pic-loc-group-date {
-    margin-top: 8px;
+    margin-top: 4px;
+    padding-left: 20px;
 }
 
 .image-grid {
@@ -97,30 +102,41 @@ i {
     width: 25%;
     overflow-y: scroll;
     border-left: 1px solid black;
-    padding-top: 2%;
-    padding-bottom: 2%;
 }
 
-.photo-details-wrapper {
-    display: inline-block;
-}
 
+/*
+.mod-row {
+    margin-left:0px;
+    margin-right:0px;
+}
+*/
 .thumbnail-image {
-    padding-top: 1em;
+    padding-top: 1px;
     width: 100%;
 }
+
 
 /* styles for search info box that pops up on search */
 .search-info {
+    vertical-align: middle;
     position: fixed;
-    top:53;
-    left: 25%;
-    right: 0;
-    height: 100px;
-    width: 100%;
+    width: 25%;
+    top: 53px;
+    bottom: 100px;
     background-color: #4cae4c;
     color: white;
-    border-bottom: 5px solid black;
+    text-align: center;
+    border-left: 1px solid black;
+}
+
+
+
+.delete-button {
+    position:absolute;
+    top: 15px;
+    left: 30px;
+    display: none;
 }
 
 /* this is applied to the red labelled fields that have no value */
