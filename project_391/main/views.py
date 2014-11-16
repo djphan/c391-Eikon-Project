@@ -199,7 +199,7 @@ def get_image_data(request):
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
     user = authenticate_user(request)
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     try:
         request_body = json.loads(request.body)
         # if theres a searcTerm value on the request we are doing a search
@@ -225,7 +225,7 @@ def get_image_data(request):
         img["subject"] = image.subject
         img["description"] = image.description
         img["location"] = image.place
-        img["group"] = image.permitted.group_name
+        img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
         img["date"] = image.timing.strftime("%B %d, %Y")
         img["owner"] = user.username
         img["imageID"] = image.photo_id
@@ -235,9 +235,9 @@ def get_image_data(request):
         response["images"].append(img)
     
     # get all the groups the user belongs to.
-    response["userGroups"] = [group.group_name for group in Groups.objects.filter(grouplists__friend_id=user)]
+    response["userGroups"] = [group.group_name + "@"  + group.user_name.username for group in Groups.objects.filter(grouplists__friend_id=user)]
     # since currently group owners aren't members we have to also add the groups they own
-    user_owned_groups = [group.group_name for group in Groups.objects.filter(user_name=user)]
+    user_owned_groups = [group.group_name + "@" + user.username for group in Groups.objects.filter(user_name=user)]
     response["userGroups"] = response["userGroups"] +  user_owned_groups
     return JsonResponse(response, status=200)
 
@@ -290,8 +290,9 @@ def modify_image_details(request):
     if request.POST["name"] == "image-group":
         # we are editing the image group
         # get the new group
-        new_group = Groups.objects.get(user_name=user.username,
-                            group_name=request.POST["value"])
+        group_name, group_owner = request.POST["value"].split("@")
+        new_group = Groups.objects.get(user_name=group_owner,
+                            group_name=group_name)
         image = Images.objects.get(photo_id=request.POST["key"])
         image.permitted = new_group
         image.save()
