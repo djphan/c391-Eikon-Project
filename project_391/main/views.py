@@ -239,6 +239,9 @@ def get_image_data(request):
     # since currently group owners aren't members we have to also add the groups they own
     user_owned_groups = [group.group_name + "@" + user.username for group in Groups.objects.filter(user_name=user)]
     response["userGroups"] = response["userGroups"] +  user_owned_groups
+    import pdb; pdb.set_trace()
+    response["userGroups"].append("private" + "@" + user.username)
+    response["userGroups"].append("public" + "@" + user.username)
     return JsonResponse(response, status=200)
 
 @csrf_exempt
