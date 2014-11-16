@@ -239,7 +239,6 @@ def get_image_data(request):
     # since currently group owners aren't members we have to also add the groups they own
     user_owned_groups = [group.group_name + "@" + user.username for group in Groups.objects.filter(user_name=user)]
     response["userGroups"] = response["userGroups"] +  user_owned_groups
-    import pdb; pdb.set_trace()
     response["userGroups"].append("private" + "@" + user.username)
     response["userGroups"].append("public" + "@" + user.username)
     return JsonResponse(response, status=200)
@@ -394,7 +393,6 @@ def upload_images(request):
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     new_image_entry.save()
     
-    import pdb; pdb.set_trace()
     # make thumbnail
     photo_url = new_image_entry.photo.url # .../example.png
     thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
