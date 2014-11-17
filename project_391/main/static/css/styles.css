@@ -45,7 +45,7 @@ width: 500 px;
     width: 100%;
 }
 
-.large-image-wrapper:hover .delete-button{
+.large-image-wrapper:hover .delete-button.editable{
     display: block;
 }
 

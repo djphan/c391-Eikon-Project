@@ -17,6 +17,9 @@
 
     <script src="{{ STATIC_URL }}js/home_page_script.js"></script>
 
+    <!-- classie for quick class addition/removal -->
+    <script src="{{ STATIC_URL }}js/classie.js"></script>
+
     <!-- Date/Time picker stylesheet -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
     <!-- in place editing plugin -->
@@ -46,7 +49,7 @@
             <!-- Main image -->
             <div class="large-image-wrapper">
                 <img class="center-block large-image-display" alt="image">
-                <button type="submit" id="submit-button" class="delete-button btn btn-danger">Delete</button>
+                <button type="submit" class="delete-button btn btn-danger">Delete</button>
             </div> 
             <!-- image information secton -->
             <div class="col-sm-8 col-sm-offset-2">

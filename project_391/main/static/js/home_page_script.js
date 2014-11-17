@@ -131,7 +131,17 @@ var imageManager = (function(){
             // check if the image is one of the users
             // if so set up the editing functions.
             _this = this;
+            deleteButton = document.getElementsByClassName("delete-button")[0]; 
             if (image.editable) {
+                // insert the edit button
+                //editButton = document.createElement("button");
+                //editButton.type = "submit";
+                //editButton.className = "delete-button btn btn-danger";
+                //editButton.innerHTML = "Delete";
+                //imageWrapper = document.getElementsByClassName("large-image-wrapper")[0];
+                //imageWrapper.appendChild(editButton);
+                classie.add(deleteButton, "editable");
+
                 image_subject.dataset.pk = image.imageID; 
                 $('#image-subject').editable({placement: "top", emptytext: "Enter a subject.",
                                             params: function(params) {
@@ -215,6 +225,8 @@ var imageManager = (function(){
                                                 this.innerHTML = response.formattedDate;
                                             }   
                                             });
+            } else {
+                classie.remove(deleteButton, "editable"); 
             }
         },
 
