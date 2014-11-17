@@ -417,7 +417,7 @@ def remove_user_from_group(request):
     try:
         request_body = json.loads(request.body)
         group_name = request_body["groupName"]
-        group_member_to_remove = request_body["groupMember"]
+        group_member_to_remove = request_body["groupMember"].split(":")[0]
     except:
         return HttpResponse("Could not parse JSON object" \
                             "{'groupMember': groupMember, 'groupName':groupName}" \
@@ -457,9 +457,15 @@ def get_user_groups(request):
         group_data = {}
         group_data["groupName"] = group.group_name
         # Find the members in the group 
-        group_data["memberNames"] = [group_members.friend_id.username for 
-                                group_members in GroupLists.objects.filter(group_id=group.group_id)] 
+        group_data["memberNames"] = []
+        # if the member has a notice field append it to their name for display
+        for group_member in GroupLists.objects.filter(group_id=group.group_id):
+            if group_member.notice:
+                group_data["memberNames"].append(group_member.friend_id.username + ": " + group_member.notice)
+            else:
+                group_data["memberNames"].append(group_member.friend_id.username)
         response["userGroups"].append(group_data)
+
     # get a list of all users
     response["userNames"] = [user.username for user in Users.objects.all()]
     # TODO check for the current username in the list comprehension and remove the following line.
@@ -557,8 +563,12 @@ def add_user_to_group(request):
         logger.error(sys.exc_info()[0]) 
         return HttpResponse("Could not add user to group" + groupName, status=500)
 
+    import pdb; pdb.set_trace()
     try:
-        GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
+        if request_body["memberDescription"] != '':
+            GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to, notice=request_body["memberDescription"])
+        else:
+            GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
     except IntegrityError as e:
         logger.error(e)
         return HttpResponse("This member is already part of the group: " + groupName, status=400)
