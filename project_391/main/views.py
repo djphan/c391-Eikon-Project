@@ -395,7 +395,7 @@ def upload_images(request):
     
     # make thumbnail
     photo_url = new_image_entry.photo.url # .../example.png
-    thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
+    thumb_url = photo_url[:-5] + '_thumbnail' + photo_url[-5:] # .../example.png_thumbnail.png
     make_thumbnail(photo_url, thumb_url)
     new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
     # before saving check that both the image and thumbnail have a file path associated
@@ -563,7 +563,6 @@ def add_user_to_group(request):
         logger.error(sys.exc_info()[0]) 
         return HttpResponse("Could not add user to group" + groupName, status=500)
 
-    import pdb; pdb.set_trace()
     try:
         if request_body["memberDescription"] != '':
             GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to, notice=request_body["memberDescription"])
