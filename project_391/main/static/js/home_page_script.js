@@ -393,8 +393,25 @@ var onDataResponse = function() {
         // display the first image
         imageManager.populateThumbnails(imageManager.imageData, false);
     } else {
-        swal("You have no uploaded images, click upload to start");
         $(".left-side").hide();
+        swal({
+            title: "No Images to Display",
+            text: "You have no images. Upload some?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Take me to your uploader.",
+            cancelButtonText: "No, let me do nothing.",
+            closeOnConfirm: false,   
+            closeOnCancel: true
+        },
+        function(isConfirm){
+            if(isConfirm){
+                window.location.replace("/main/upload/");
+            } else {
+                
+            }
+        });
+
     }
 };
 // called when all image data has been received.
