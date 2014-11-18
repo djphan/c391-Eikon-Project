@@ -13,7 +13,7 @@ var imageManager = (function(){
         groupsData: null,
         
         // holds the type of search
-        searchType: null,
+        searchType: "Newest",
 
         // get image information
         getImageData: function(search_terms) {
@@ -47,11 +47,18 @@ var imageManager = (function(){
         // pass in a list of image objects to populate the grid with
         // searchResultsFlag should be set to true if showing search results
         // otherwise should be set to false
-        populateThumbnails: function(images, searchResultsFlag) {
+        populateThumbnails: function(images, searchResultsFlag, searchTerm) {
             if (searchResultsFlag){
                 this.displayingSearchResults = true;
+                imageManager.displayImage(imageManager.searchImageData[0]);
+                // show the search info dialog box
+                imageManager.displaySearchInfo(searchTerm);
+                sizeOfSearchInfo = $(".search-info").height();
+                document.getElementsByClassName("image-grid")[0].style.top = 53 + sizeOfSearchInfo + "px";
             } else if (!searchResultsFlag) {
                 this.displayingSearchResults = false;
+                // set the height of the image grid to match to be underneath the nav bar.
+                document.getElementsByClassName("image-grid")[0].style.top = 53 + "px";
             }
 
             this.clearThumbnails();
@@ -70,6 +77,7 @@ var imageManager = (function(){
                 // add the image to the thumbnail display
                 document.getElementsByClassName("image-grid")[0].appendChild(row_container);
             }
+            this.displayImage();
         },
         
         // when thumbnail clicked, display as main image.
@@ -78,6 +86,11 @@ var imageManager = (function(){
             clicked_element.addEventListener("click", function() {
                 _this.displayImage(image);
             }, 0);
+        },
+
+        // clear out main image display
+        clearMainImageDisplay: function() {
+
         },
 
         // clear all thumbnails from the grid
@@ -94,9 +107,20 @@ var imageManager = (function(){
             // if no image is passed display the first image
             if (!image){
                 if (!this.displayingSearchResults){
-                    image = this.imageData[0];
+                    // check that there is an image to display
+                    if (this.imageData.length > 0){
+                        image = this.imageData[0];
+                    } else {
+                        swal ("No images to display");
+                        $(".left-side").hide();
+                    }
                 } else if (this.displayingSearchResults) {
-                    image = this.searchImageData[0];
+                    if (this.searchImageData.length > 0){
+                        image = this.searchImageData[0];
+                    } else {
+                        swal("No images to display");
+                        $(".left-side").hide();
+                    }
                 }
             }
 
@@ -235,12 +259,15 @@ var imageManager = (function(){
             _this = this;
             element.addEventListener("click", function() {
                 imageManager.searchType = element.dataset.searchtype;
+                searchButton = document.getElementsByClassName("search-button")[0];
+                searchButton.innerHTML = "Search:  " + element.dataset.searchtype + " First";
             }, 0);
         },
         
         // Display search info shows a notification about the search
         displaySearchInfo: function(content) {
-            
+            searchInfo = document.getElementsByClassName("search-phrase")[0]; 
+            searchInfo.innerHTML = content;
         },
     
         removeObjectWithAttr: function(array, property, value){
@@ -280,7 +307,7 @@ window.onload = function() {
 
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
-    document.getElementsByClassName("image-grid")[0].style.top = 100 + "px";
+    document.getElementsByClassName("image-grid")[0].style.top = 53 + "px";
 
     // set up tracking of search box drop down selection
     searchSelectionOptions = document.getElementsByClassName("search-option");
@@ -307,7 +334,6 @@ window.onload = function() {
                 } else {
                     imageManager.populateThumbnails(imageManager.imageData, false);
                 }
-                imageManager.displayImage();
                 
                 // depending on whether we are looking at search results
                 // or user data display the next image  in the large image display
@@ -321,27 +347,36 @@ window.onload = function() {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         req.send(JSON.stringify({imageID: imageID}));
     }, 0);
-
+    
+    // set up the button that takes users back to their own images after they
+    // they have done a search.
+    backToYourImages = document.getElementsByClassName("back-to-user-images")[0];
+    backToYourImages.addEventListener("click", function() {
+        // display the user thumbnails
+        imageManager.populateThumbnails(imageManager.imageData, false, null);
+    }, 0);
 
     // set up the search click handler
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
+        searchTerm = document.getElementsByClassName("search-term")[0].value;
         // Get the search query and send to 
         var req = new XMLHttpRequest();
         req.onreadystatechange=function(){
             if (req.readyState==4 && req.status == 200){
                 imageManager.searchImageData = JSON.parse(req.responseText).images;
-                imageManager.populateThumbnails(imageManager.searchImageData, true);
-                imageManager.displaySearchInfo();
+                if (imageManager.searchImageData.length > 0) {
+                    imageManager.populateThumbnails(imageManager.searchImageData, true, searchTerm);
+                } else {
+                    swal("There were no results for your query.");
+                }
             } else if (req.readyState==4 && req.status != 200){
-                // TODO handle no search results. Either keep user images displayed or
                 // clear all images.
-                // swal("Could not get search image data, no images available");
+                swal("Could not get search image data from server");
             }
         };
         req.open("POST","/main/get_image_data/", true);
         // get the search terms, TODO name the search box.
-        searchTerm = document.getElementsByClassName("search-term")[0].value;
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         req.send(JSON.stringify({searchTerm: searchTerm, searchType: imageManager.searchType}));
     }, 0);
@@ -352,15 +387,14 @@ var onDataResponse = function() {
     // display the first image
     if (imageManager.hasImages()){
         // unhide the image display elements
-        $(".image-display").show();
+        $(".left-side").show();
         // and hide the upload image info
         document.getElementsByClassName("image-display")[0].style.display = "show";
         // display the first image
-        imageManager.displayImage();
         imageManager.populateThumbnails(imageManager.imageData, false);
     } else {
         swal("You have no uploaded images, click upload to start");
-        $(".image-display").hide();
+        $(".left-side").hide();
     }
 };
 // called when all image data has been received.

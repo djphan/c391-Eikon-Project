@@ -28,6 +28,11 @@
     -webkit-appearance:none !important;
 }
 
+.back-to-user-images {
+    cursor: hand;
+    cursor: pointer;
+}
+
 .save-edit-button {
     padding-left: 3px;
     padding-top: 7px;
@@ -116,6 +121,11 @@ i {
     width: 100%;
 }
 
+.alert {
+    margin-bottom: 0px;
+    border-radius: 0px;
+
+}
 
 /* styles for search info box that pops up on search */
 .search-info {
@@ -123,11 +133,9 @@ i {
     position: fixed;
     width: 25%;
     top: 53px;
-    bottom: 100px;
-    background-color: #4cae4c;
-    color: white;
     text-align: center;
-    border-left: 1px solid black;
+    margin-bottom:0px;
+    border-left: 1px dotted black;
 }
 
 

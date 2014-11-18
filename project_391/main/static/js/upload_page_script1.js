@@ -26,4 +26,24 @@ window.onload = function(){
         formData.append("permissions", permissions);
 
     });
+
+    dropzone.on("queuecomplete", function() {
+        swal({
+            title: "Upload complete",
+            text: "Check out your uploaded images?",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, take me to my images",
+            cancelButtonText: "No, let me upload more",
+            closeOnConfirm: false,   
+            closeOnCancel: true
+        },
+        function(isConfirm){
+            if(isConfirm){
+                window.location.replace("/main/home/");
+            } else {
+                
+            }
+        });
+});
 };
