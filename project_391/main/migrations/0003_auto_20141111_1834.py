@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0003_auto_20141009_2126'),
+        ('main', '0002_auto_20141111_1834'),
     ]
 
     operations = [
-        migrations.RenameField(
-            model_name='session',
-            old_name='sessionid',
-            new_name='sessiontracker',
+        migrations.AlterField(
+            model_name='images',
+            name='photo',
+            field=models.ImageField(upload_to='Images', max_length=200),
         ),
     ]

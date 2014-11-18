@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GroupLists',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, primary_key=True, serialize=False)),
                 ('date_added', models.DateField(auto_now_add=True)),
                 ('notice', models.CharField(max_length=1024)),
             ],
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Groups',
             fields=[
-                ('group_id', models.IntegerField(primary_key=True, serialize=False)),
+                ('group_id', models.AutoField(primary_key=True, serialize=False)),
                 ('group_name', models.CharField(db_column='group_name', max_length=24)),
                 ('date_created', models.DateField(auto_now_add=True)),
             ],
@@ -37,13 +37,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Images',
             fields=[
-                ('photo_id', models.IntegerField(primary_key=True, serialize=False)),
+                ('photo_id', models.AutoField(primary_key=True, serialize=False)),
                 ('subject', models.CharField(max_length=128)),
                 ('place', models.CharField(max_length=128)),
                 ('timing', models.DateField()),
                 ('description', models.CharField(max_length=2048)),
-                ('thumbnail', models.ImageField(upload_to='')),
-                ('photo', models.ImageField(upload_to='')),
+                ('thumbnail', models.ImageField(upload_to='Thumbnails/', max_length=200)),
+                ('photo', models.ImageField(upload_to='Images', max_length=200)),
             ],
             options={
                 'db_table': 'images',
@@ -53,16 +53,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Session',
             fields=[
-                ('sessionid', models.IntegerField(primary_key=True, serialize=False)),
+                ('sessiontracker', models.CharField(primary_key=True, max_length=32, serialize=False)),
             ],
             options={
+                'db_table': 'session',
             },
             bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Users',
             fields=[
-                ('username', models.CharField(db_column='user_name', primary_key=True, serialize=False, max_length=24)),
+                ('username', models.CharField(db_column='user_name', primary_key=True, max_length=24, serialize=False)),
                 ('password', models.CharField(max_length=24)),
                 ('date_registered', models.DateField(auto_now_add=True)),
             ],

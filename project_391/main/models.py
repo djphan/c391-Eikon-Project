@@ -30,7 +30,7 @@ class Persons(models.Model):
 
 
 class Groups(models.Model):
-    group_id = models.IntegerField(primary_key=True)
+    group_id = models.AutoField(primary_key=True)
     user_name = models.ForeignKey(Users, db_column="user_name")
     group_name = models.CharField(max_length=24, db_column="group_name")
     date_created = models.DateField(auto_now_add=True)
@@ -42,18 +42,6 @@ class Groups(models.Model):
 
 class GroupLists(models.Model):
     """
-    Note: I'm not specifying a primary key here, so Django will automatically
-    create its own.  For all intents and purposes we can ignore this column in
-    the table.  The reason I'm doing this is Django does not support
-    multiple-column "composite" primary keys, as specified in the assignment
-    specs. Instead I'll make group_id and friend_id "unique_together", which
-    will make them a candidate key for the table. This achieves the same
-    behaviour as making them the primary key, so to anyone testing queries on
-    our database it will act as expected.
-
-    There may be another way to do this, I will check it out when I have
-    time. This'll work for now though :-)
-    -Carl
     """
     group_id = models.ForeignKey(Groups, db_column="group_id")
     friend_id = models.ForeignKey(Users, db_column="friend_id")
@@ -66,7 +54,7 @@ class GroupLists(models.Model):
 
 
 class Images(models.Model):
-    photo_id = models.IntegerField(primary_key=True)
+    photo_id = models.AutoField(primary_key=True)
     owner_name = models.ForeignKey(Users, db_column="owner_name")
     permitted = models.ForeignKey(Groups, db_column="permitted")
     subject = models.CharField(max_length=128)
@@ -74,17 +62,12 @@ class Images(models.Model):
     timing = models.DateField(auto_now_add=False)
     description = models.CharField(max_length=2048)
     
-    # This will create a VARCHAR(100) field which will store the URL of the file
-    # I _believe_ once we specify a MEDIA_ROOT settings variable then this will
-    # allow Django to store all the files there, but it may be more complicated
-    # than that. For now, I'll just have it make the default ImageField so we
-    # can use the class/tables in the templates.
-    thumbnail = models.ImageField()
-    photo = models.ImageField()
+    thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
+    photo = models.ImageField(upload_to="Images", max_length=250)
 
     class Meta:
         db_table = "images"
-
+ 
 
         # TODO: - Dan Implement search query based on ranking system givne in assignment specificiations
         pass
@@ -92,7 +75,7 @@ class Images(models.Model):
         
 class Session(models.Model):
     username = models.ForeignKey(Users)
-    sessiontracker = models.IntegerField(primary_key=True)
+    sessiontracker = models.CharField(max_length=32, primary_key=True)
     # expiry = models.DateField()  # implement later?
     
     
@@ -102,3 +85,75 @@ class Session(models.Model):
     def __str__(self):
         # String form is username plus last 4 digits of sessiontracker
         return ("(%s:...%s)"%(self.username.username, str(self.sessiontracker)[-4:]))
+
+        
+# /*
+#  *  File name:  setup.sql
+#  *  Function:   to create the intial database schema for the CMPUT 391 project,
+#  *              Fall, 2014
+#  *  Author:     Prof. Li-Yan Yuan
+#  */
+# DROP TABLE images;
+# DROP TABLE group_lists;
+# DROP TABLE groups;
+# DROP TABLE persons;
+# DROP TABLE users;
+
+
+# CREATE TABLE users (
+#    user_name varchar(24),
+#    password  varchar(24),
+#    date_registered date,
+#    primary key(user_name)
+# );
+
+# CREATE TABLE persons (
+#    user_name  varchar(24),
+#    first_name varchar(24),
+#    last_name  varchar(24),
+#    address    varchar(128),
+#    email      varchar(128),
+#    phone      char(10),
+#    PRIMARY KEY(user_name),
+#    UNIQUE (email),
+#    FOREIGN KEY (user_name) REFERENCES users
+# );
+
+
+# CREATE TABLE groups (
+#    group_id   int,
+#    user_name  varchar(24),
+#    group_name varchar(24),
+#    date_created date,
+#    PRIMARY KEY (group_id),
+#    UNIQUE (user_name, group_name),
+#    FOREIGN KEY(user_name) REFERENCES users
+# );
+
+# INSERT INTO groups values(1,null,'public', sysdate);
+# INSERT INTO groups values(2,null,'private',sysdate);
+
+# CREATE TABLE group_lists (
+#    group_id    int,
+#    friend_id   varchar(24),
+#    date_added  date,
+#    notice      varchar(1024),
+#    PRIMARY KEY(group_id, friend_id),
+#    FOREIGN KEY(group_id) REFERENCES groups,
+#    FOREIGN KEY(friend_id) REFERENCES users
+# );
+
+# CREATE TABLE images (
+#    photo_id    int,
+#    owner_name  varchar(24),
+#    permitted   int,
+#    subject     varchar(128),
+#    place       varchar(128),
+#    timing      date,
+#    description varchar(2048),
+#    thumbnail   blob,
+#    photo       blob,
+#    PRIMARY KEY(photo_id),
+#    FOREIGN KEY(owner_name) REFERENCES users,
+#    FOREIGN KEY(permitted) REFERENCES groups
+# );

@@ -1,129 +1,88 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block head %}
+  <!DOCTYPE html>
+  <html>
     <head>
-        <!-- jquery lib required for bootstrap js library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-        <!-- Animate stylesheet -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css">
-        
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-        <!-- Date/Time picker stuff -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
-        <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script> 
-
-        <!-- Selection box stuff -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-select.css">
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-select.js"></script>
-
-        <!-- alerts css and js -->
-        <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
-        <!-- classie for quick class addition/removal -->
-        <script src="{{ STATIC_URL }}js/classie.js"></script>
-        <!-- dropzone image uploader -->
-        <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
-        <script src="{{ STATIC_URL }}js/group_management.js"></script>
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/group_management_styles.css">
+      <!-- jquery lib required for bootstrap js library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+      <!-- Animate stylesheet -->
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/animate.css">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+      <!-- Date/Time picker stuff -->
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+      <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
+      <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+      <!-- Selection box stuff -->
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-select.css">
+      <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-select.js"></script>
+      <!-- alerts css and js -->
+      <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
+      <!-- classie for quick class addition/removal -->
+      <script src="{{ STATIC_URL }}js/classie.js"></script>
+      <!-- dropzone image uploader -->
+      <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+      <script src="{{ STATIC_URL }}js/group_management.js"></script>
+      <link rel="stylesheet" href="{{ STATIC_URL }}css/group_management_styles.css">
       <title></title>
     </head>
     <body>
-        <!-- Navbar section -->
-        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">Username</a>
-            </div>
+{% endblock %}    
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li><a href="/main/home">Home</a></li>
-                <li class="active"><a href="/main/group_management">Manage Groups</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-              <form class="navbar-form navbar-right" role="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-                <a class="btn btn-primary btn-default" href="/main/upload">Upload</a>
-              </form>
-            </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <h4>Your Groups</h4>
-                    <div class="list-group">
-                        <div class="group-names">
-                          <!-- TO BE DELETED SAMPLE DATA
-                          <a class="list-group-item">Dapibus ac facilisis in</a>
-                          <a class="list-group-item">Morbi leo risus</a>
-                          <a class="list-group-item">Porta ac consectetur ac</a>
-                          <a class="list-group-item">Vestibulum at eros</a>
-                          -->
-                        </div>
-                        <input class="list-group-item enter-group-name-field form-control" type="text" placeholder="Enter a new group name" name="enter-group-name-field">
-                            <!-- Django will need to fill in a option items -->
-                        </input>
-                        <div class="text-center">
-                            <button type="submit" id="submit-button" class="submit-new-group  btn btn-warning" >Add New Group</button>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-sm-8">
-                    <h4>Your Group Members</h4>
-                    <div class="list-group">
-                        <div class="group-members">
-                          <!-- TO BE DELETED SAMPLE DATA
-                          <a class="list-group-item">Cras justo odio<span class="label label-danger pull-right member-remove-button">Remove</span></a>
-                          <a class="list-group-item">Dapibus ac facilisis in<span class="label label-danger pull-right member-remove-button">Remove</span></a>
-                          <a class="list-group-item">Morbi leo risus<span class="label label-danger pull-right member-remove-button">Remove</span></a>
-                          <a class="list-group-item">Porta ac consectetur ac<span class="label label-danger pull-right member-remove-button">Remove</span></a>
-                          <a class="list-group-item">Vestibulum at eros<span class="label label-danger pull-right member-remove-button">Remove</span></a>
-                          -->
-                        </div>
-                        <select class="list-group-item user-select form-control" id="permissions" name="permissions">
-                            <!-- Django will need to fill in a option items -->
-                            <option>Select a user</option>
-                        </select>
-                        <div class="text-center">
-                            <button type="submit"  class="add-user-button  btn btn-warning" >Add User To Group</button>
-                        </div>
+{% block nav %}
+  {{ block.super }}
+{% endblock %}
 
-                    </div>
-                </div>
-                
-            </div>
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <h4>Your Groups</h4>
+        <div class="list-group">
+          <div class="group-names">
+            <!-- TO BE DELETED SAMPLE DATA
+            <a class="list-group-item">Dapibus ac facilisis in</a>
+            <a class="list-group-item">Morbi leo risus</a>
+            <a class="list-group-item">Porta ac consectetur ac</a>
+            <a class="list-group-item">Vestibulum at eros</a>
+            -->
+          </div>
+          <input class="list-group-item enter-group-name-field form-control" type="text" placeholder="Enter a new group name" name="enter-group-name-field">
+          <!-- Django will need to fill in a option items -->
+          </input>
+          <div class="text-center">
+            <button type="submit" id="submit-button" class="submit-new-group btn btn-warning" >Add New Group</button>
+          </div>
         </div>
-   </body>
-</html>
+      </div>
+      <div class="col-sm-8">
+        <h4>Your Group Members</h4>
+        <div class="list-group">
+          <div class="group-members">
+            <!-- TO BE DELETED SAMPLE DATA
+            <a class="list-group-item">Cras justo odio<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+            <a class="list-group-item">Dapibus ac facilisis in<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+            <a class="list-group-item">Morbi leo risus<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+            <a class="list-group-item">Porta ac consectetur ac<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+            <a class="list-group-item">Vestibulum at eros<span class="label label-danger pull-right member-remove-button">Remove</span></a>
+            -->
+          </div>
+          <select class="list-group-item user-select form-control" id="permissions" name="permissions">
+            <!-- Django will need to fill in a option items -->
+            <option>Select a user</option>
+          </select>
+          <div class="text-center">
+            <button type="submit" class="add-user-button btn btn-warning" >Add User To Group</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </body>
+  </html>
+{% endblock %}

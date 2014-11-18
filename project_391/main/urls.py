@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-
+from django.conf import settings
 from main import views
 
 urlpatterns = patterns(
@@ -16,4 +16,17 @@ urlpatterns = patterns(
     url(r"^add_group/$", views.add_group, name='add_group'),
     url(r"^add_user_to_group/$", views.add_user_to_group, name='add_user_to_group'),
     url(r"^get_user_groups/$", views.get_user_groups, name='get_user_groups'),
+    url(r"^upload_images/$", views.upload_images, name='upload_images'),
+    url(r"^modify_image_details/$", views.modify_image_details, name='modify_image_details'),
+    url(r"logout/$", views.logout, name='logout'),
+    url(r"^get_image_data/$", views.get_image_data, name='get_image_data'),
+    url(r"^delete_group/$", views.delete_group, name='delete_group'),
+     
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns(
+        'django.views.static',
+        (r'media/(?P<path>.*)',
+        'serve',
+        {'document_root': settings.MEDIA_ROOT}), )
