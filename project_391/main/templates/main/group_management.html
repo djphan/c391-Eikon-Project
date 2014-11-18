@@ -45,16 +45,11 @@
         <h4>Your Groups</h4>
         <div class="list-group">
           <div class="group-names">
-            <!-- TO BE DELETED SAMPLE DATA
-            <a class="list-group-item">Dapibus ac facilisis in</a>
-            <a class="list-group-item">Morbi leo risus</a>
-            <a class="list-group-item">Porta ac consectetur ac</a>
-            <a class="list-group-item">Vestibulum at eros</a>
-            -->
           </div>
           <input class="list-group-item enter-group-name-field form-control" type="text" placeholder="Enter a new group name" name="enter-group-name-field">
           <!-- Django will need to fill in a option items -->
           </input>
+          
           <div class="text-center">
             <button type="submit" id="submit-button" class="submit-new-group btn btn-warning" >Add New Group</button>
           </div>
@@ -76,6 +71,9 @@
             <!-- Django will need to fill in a option items -->
             <option>Select a user</option>
           </select>
+          <input class="list-group-item enter-user-description-field form-control" type="text" placeholder="Enter group member description" name="enter-group-description-field">
+          </input>
+
           <div class="text-center">
             <button type="submit" class="add-user-button btn btn-warning" >Add User To Group</button>
           </div>

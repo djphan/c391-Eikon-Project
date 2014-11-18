@@ -41,7 +41,7 @@ def loginPage(request):         # how do we respond to a request for a login pag
         else:
             if user.password == POST_password:
                 # Send them to the index page, and store a unique sessiontracker for this session.
-                response = render_to_response('main/index.html',
+                response = render_to_response('main/home_page.html',
                                               {'password':POST_password, 'username':POST_username},
                                               RequestContext(request))
                 st = str(hash(POST_username+str(random.random()))) # generate sessiontracker
@@ -199,12 +199,18 @@ def get_image_data(request):
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
     user = authenticate_user(request)
-    if "searchTerm" in request.POST:
+    # import pdb; pdb.set_trace()
+    try:
+        request_body = json.loads(request.body)
         # if theres a searcTerm value on the request we are doing a search
-        search_term = request.POST["searchTerm"].split
+        search_term = request_body["searchTerm"]
+        search_type = request_body["searchType"]
         # TODO run the search
+        # dummy search 
+        images = Images.objects.filter(description__icontains=search_term)
         # images = Images.object.filter(search)
-    else:
+    except:
+        pass
         # if no value exists for search term we are just returning all the current users images.
         # get all the curent users images
         images = Images.objects.filter(owner_name=user)
@@ -219,7 +225,7 @@ def get_image_data(request):
         img["subject"] = image.subject
         img["description"] = image.description
         img["location"] = image.place
-        img["group"] = image.permitted.group_name
+        img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
         img["date"] = image.timing.strftime("%B %d, %Y")
         img["owner"] = user.username
         img["imageID"] = image.photo_id
@@ -229,12 +235,21 @@ def get_image_data(request):
         response["images"].append(img)
     
     # get all the groups the user belongs to.
-    response["userGroups"] = [group.group_name for group in Groups.objects.filter(grouplists__friend_id=user)]
+    response["userGroups"] = [group.group_name + "@"  + group.user_name.username for group in Groups.objects.filter(grouplists__friend_id=user)]
     # since currently group owners aren't members we have to also add the groups they own
-    user_owned_groups = [group.group_name for group in Groups.objects.filter(user_name=user)]
+    user_owned_groups = [group.group_name + "@" + user.username for group in Groups.objects.filter(user_name=user)]
     response["userGroups"] = response["userGroups"] +  user_owned_groups
+    response["userGroups"].append("private" + "@" + user.username)
+    response["userGroups"].append("public" + "@" + user.username)
     return JsonResponse(response, status=200)
 
+@csrf_exempt
+def delete_image(request):
+    user = authenticate_user(request)
+    imageID = int(json.loads(request.body)["imageID"])
+    image_to_delete = Images.objects.get(photo_id=imageID)
+    image_to_delete.delete()
+    return HttpResponse("Image with ID: " + str(imageID) + " deleted")
 
 @csrf_exempt
 def delete_group(request):
@@ -277,8 +292,9 @@ def modify_image_details(request):
     if request.POST["name"] == "image-group":
         # we are editing the image group
         # get the new group
-        new_group = Groups.objects.get(user_name=user.username,
-                            group_name=request.POST["value"])
+        group_name, group_owner = request.POST["value"].split("@")
+        new_group = Groups.objects.get(user_name=group_owner,
+                            group_name=group_name)
         image = Images.objects.get(photo_id=request.POST["key"])
         image.permitted = new_group
         image.save()
@@ -307,13 +323,18 @@ def upload(request):
     user = authenticate_user(request)
     if user is None:
         return redirect(loginPage)
-    # user = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
-    user_groups = Groups.objects.filter(user_name=user)
-    
+
+    # get all the groups the user owns
     data = {}
-    data["group_names"] = [group.group_name for group in user_groups]
-    data["group_names"].append('public')
-    data["group_names"].append('private')
+    user_groups = Groups.objects.filter(user_name=user)
+    data["group_names"] = [group.group_name + "@" + user.username for group in user_groups]
+    # find the groups not owned by the user but that they belong to
+    friend_groups = Groups.objects.filter(grouplists__friend_id=user)
+    friend_groups = [group.group_name + "@" + group.user_name.username for group in friend_groups]
+    # aggregate all the groups including private/public
+    data["group_names"] = data["group_names"] + friend_groups
+    data["group_names"].append('public' + '@' + user.username)
+    data["group_names"].append('private'+ '@' + user.username)
     return render_to_response('main/uploads.html', data, 
             RequestContext(request))
     
@@ -350,7 +371,8 @@ def upload_images(request):
 
     # Get the information posted with the image
     if "permissions" in request.POST:
-        new_image_entry.permitted = Groups.objects.get(group_name=request.POST['permissions'])
+        group_name, group_owner = request.POST["permissions"].split("@")
+        new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
@@ -377,15 +399,17 @@ def upload_images(request):
     
     # make thumbnail
     photo_url = new_image_entry.photo.url # .../example.png
-    thumb_url = photo_url + '_thumbnail' + photo_url[-4:] # .../example.png_thumbnail.png
+    thumb_url = photo_url[:-5] + '_thumbnail' + photo_url[-5:] # .../example.png_thumbnail.png
     make_thumbnail(photo_url, thumb_url)
     new_image_entry.thumbnail = thumb_url[7:] # [7:] cuts off the redundant "Images/" prefix
     # before saving check that both the image and thumbnail have a file path associated
-    if len(new_image_entry.photo.path) > 5  and len(new_image_entry.thumbnail.path) > 5:
-        new_image_entry.save()
+    new_image_entry.save()
+    if new_image_entry.photo.path and new_image_entry.thumbnail.path:
         return JsonResponse({"Image": new_image_entry.photo.url} , status=200)
     else:
+        new_image_entry.delete()
         return HttpResponse("Could not save image, either the photo or the thumbnail has no image associated with it", status=500)
+
 @csrf_exempt
 def remove_user_from_group(request):
     if not request.POST:
@@ -397,7 +421,7 @@ def remove_user_from_group(request):
     try:
         request_body = json.loads(request.body)
         group_name = request_body["groupName"]
-        group_member_to_remove = request_body["groupMember"]
+        group_member_to_remove = request_body["groupMember"].split(":")[0]
     except:
         return HttpResponse("Could not parse JSON object" \
                             "{'groupMember': groupMember, 'groupName':groupName}" \
@@ -437,9 +461,15 @@ def get_user_groups(request):
         group_data = {}
         group_data["groupName"] = group.group_name
         # Find the members in the group 
-        group_data["memberNames"] = [group_members.friend_id.username for 
-                                group_members in GroupLists.objects.filter(group_id=group.group_id)] 
+        group_data["memberNames"] = []
+        # if the member has a notice field append it to their name for display
+        for group_member in GroupLists.objects.filter(group_id=group.group_id):
+            if group_member.notice:
+                group_data["memberNames"].append(group_member.friend_id.username + ": " + group_member.notice)
+            else:
+                group_data["memberNames"].append(group_member.friend_id.username)
         response["userGroups"].append(group_data)
+
     # get a list of all users
     response["userNames"] = [user.username for user in Users.objects.all()]
     # TODO check for the current username in the list comprehension and remove the following line.
@@ -538,7 +568,10 @@ def add_user_to_group(request):
         return HttpResponse("Could not add user to group" + groupName, status=500)
 
     try:
-        GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
+        if request_body["memberDescription"] != '':
+            GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to, notice=request_body["memberDescription"])
+        else:
+            GroupLists.objects.create(friend_id=user_to_add, group_id=group_to_add_user_to)
     except IntegrityError as e:
         logger.error(e)
         return HttpResponse("This member is already part of the group: " + groupName, status=400)

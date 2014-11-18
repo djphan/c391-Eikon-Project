@@ -254,7 +254,7 @@ var groupManager = (function(){
         },
 
         // checks if a username is already in a given group
-        addUserToGroup: function(member, groupName) {
+        addUserToGroup: function(member, groupName, memberDescription) {
             // get the group 
             var group = this.userGroups.filter(function(obj){return obj.groupName == groupName;})[0];
             // check if the user is already in the group
@@ -267,19 +267,25 @@ var groupManager = (function(){
             _this = this;
             req.onreadystatechange=function(){
                 if (req.readyState==4 && req.status == 200){
-                    group.memberNames.push(member);
-                    // update the list of users
-                    _this.addGroupMembersToList([member], groupName);
+                    // if theres a description of the user append it to their name
+                    if (memberDescription != ''){
+                        group.memberNames.push(member + ": " + memberDescription);
+                        _this.addGroupMembersToList([member + ": " + memberDescription], groupName);
+                    } else {
+                        group.memberNames.push(member);
+                        _this.addGroupMembersToList([member], groupName);
+                    }
+                    // clear the user description field
+                    document.getElementsByClassName("enter-user-description-field")[0].value = '';
                 } else if (req.readyState==4 && req.status != 200){
                     swal("Could not add the user to the group");
                 }
             };
             // send post request to /main/add_user_to_group
             // json object passed {"groupMember": groupMember, "groupName":groupName}
-            // TODO add /main/add_user_to_group pass {"memberName":"member", "groupName":"groupName"}
             req.open("POST","/main/add_user_to_group/", true);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send(JSON.stringify({memberName: member, groupName: groupName}));
+            req.send(JSON.stringify({memberName: member, groupName: groupName, memberDescription: memberDescription}));
         },
 
         addUsersToSelectBox: function(userNames) {
@@ -333,8 +339,9 @@ onDataResponse = function() {
         // get the currently selected group name
         var groupList = document.getElementsByClassName("group-names")[0];
         var activeGroup = groupList.getElementsByClassName("active")[0];
-        activeGroupName = activeGroup.dataset.groupName;
-        groupManager.addUserToGroup(userNameSelected, activeGroupName);
+        var activeGroupName = activeGroup.dataset.groupName;
+        var memberDescription = document.getElementsByClassName("enter-user-description-field")[0].value;
+        groupManager.addUserToGroup(userNameSelected, activeGroupName, memberDescription);
         // reset the select box to show "Select a user"
         userSelectList.value = "Select a user";
     });

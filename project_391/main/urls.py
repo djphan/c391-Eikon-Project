@@ -21,6 +21,7 @@ urlpatterns = patterns(
     url(r"logout/$", views.logout, name='logout'),
     url(r"^get_image_data/$", views.get_image_data, name='get_image_data'),
     url(r"^delete_group/$", views.delete_group, name='delete_group'),
+    url(r"^delete_image/$", views.delete_image, name='delete_image'),
      
 )
 
