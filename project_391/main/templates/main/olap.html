@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- jquery lib required for bootstrap js library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- alerts css and js -->
+    <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
+
+
+    <!-- classie for quick class addition/removal -->
+    <script src="{{ STATIC_URL }}js/classie.js"></script>
+
+    <!-- Date/Time picker stylesheet -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- in place editing plugin -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+    <!-- font -->
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:700' rel='stylesheet' type='text/css'>
+    <!-- font awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Our stylesheet overlayed on bootstrap css, takes priority -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/olap.css">
+    <script src="{{ STATIC_URL }}js/olap.js"></script>
+    <title></title>
+</head>
+<body>
+{% endblock %}
+
+
+{% block nav %}
+{{ block.super }}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+        <div class="select-boxes-wrapper">
+
+
+            <div class="row">
+
+              <div class="col-sm-12">
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                  </span>
+                  <input type="text" class="form-control">
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+
+              <div class="col-lg-6">
+                <div class="input-group">
+                  <input type="text" class="form-control">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Go!</button>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <select class="user-select form-control">
+                    <!-- Django will need to fill in a option items -->
+                        <option>Select a user</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <label for="datetimepicker6" class="col-sm-offset-2 col-sm-2 control-label">Date</label>
+                        <input type='text' class="form-control" id='datetimepicker6' placeholder="Date"/>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+            
+            <div class="row">
+                <div class="col-sm-6">
+                    <select class="period-type-select form-control" id="permissions" name="permissions">
+                    <!-- Django will need to fill in a option items -->
+                        <option>Select a time period</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <select id="period-start-select" class="form-control" id="permissions" name="permissions">
+                    <!-- Django will need to fill in a option items -->
+                        <option>Select a user</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <select id="period-end-select" class="form-control" id="permissions" name="permissions">
+                    <!-- Django will need to fill in a option items -->
+                        <option>Select a user</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        </div><!-- /select boxes wrapper -->
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

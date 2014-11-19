@@ -610,6 +610,9 @@ def logout(request):
         pass
     return loginPage(request)
 
+def olap(request):
+    return render(request, 'main/olap.html')
+
 # make a fixed-width thumbnail from the image at in_path and save it to out_path
 def make_thumbnail(in_path, out_path):
     width = 300

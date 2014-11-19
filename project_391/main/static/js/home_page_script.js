@@ -13,7 +13,7 @@ var imageManager = (function(){
         groupsData: null,
         
         // holds the type of search
-        searchType: "Newest",
+        searchType: "Text",
 
         // get image information
         getImageData: function(search_terms) {
@@ -258,9 +258,18 @@ var imageManager = (function(){
         addSearchTypeEventListener: function(element){
             _this = this;
             element.addEventListener("click", function() {
-                imageManager.searchType = element.dataset.searchtype;
+                imageManager.searchtype = element.dataset.searchtype;
+                if (imageManager.searchtype === "Newest" || imageManager.searchtype === "Oldest"){
+                    $(".search-term").hide();
+                } else {
+                    $(".search-term").show();
+                }
                 searchButton = document.getElementsByClassName("search-button")[0];
-                searchButton.innerHTML = "Search:  " + element.dataset.searchtype + " First";
+                if (element.dataset.searchtype === "Text") {
+                    searchButton.innerHTML = "Search: Full Text";
+                } else {
+                    searchButton.innerHTML = "Search:  " + element.dataset.searchtype + " First";
+                }
             }, 0);
         },
         
@@ -368,7 +377,7 @@ window.onload = function() {
                 if (imageManager.searchImageData.length > 0) {
                     imageManager.populateThumbnails(imageManager.searchImageData, true, searchTerm);
                 } else {
-                    swal("There were no results for your query.");
+                    swal("No Results", "We looked and looked but nothing matched your search");
                 }
             } else if (req.readyState==4 && req.status != 200){
                 // clear all images.
