@@ -207,9 +207,9 @@ def get_image_data(request):
         search_type = request_body["searchType"]
         #print(search_term)
         #print(type(search_term))
-        #print(user)
-        results = Images.searchByText(str(user), str(search_term))
-        print(results)
+        #results = Images.searchByText(str(user), str(search_term))
+        #print(results)
+        print(search_type)
         results = Images.searchByDate(str(user), str(search_type))
         print(results)
         # TODO run the search

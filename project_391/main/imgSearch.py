@@ -3,17 +3,27 @@ from django.db import models, connection
 def searchImageByText(user='testuser', textquery='lies'):
     # Submits the raw query into our django db to pull images based on a rank
     # search of the text using lexiemes.
+    # Returns all fields to use on the view side.
 
-    # Ranking formula
-
-    # TODO: Currently outputs photoid. Adjust query to fit Jon's query request
     dbquery = """
-                    SELECT thumbnail
-                    FROM ( SELECT images.subject,
-                                  images.place,
-                                  images.description,
-                                  images.photo_id as thumbnail,
-                                  images.permitted,
+                    SELECT photoID,
+                           OwnerName,
+                           Permitted
+                           Subject,
+                           Place,
+                           Description,
+                           Thumbnail,
+                           Photo,
+                           ts_rank( array[0.0, 0.1, 0.3, 0.6], img_search.document, to_tsquery('{1}') ) as Rank
+
+                    FROM ( SELECT images.photo_id as photoID,
+                                  images.owner_name as OwnerName,
+                                  images.permitted as Permitted,
+                                  images.subject as Subject,
+                                  images.place as Place,
+                                  images.description as description,
+                                  images.thumbnail as Thumbnail,
+                                  images.photo as Photo,
                                   setweight(to_tsvector(images.subject), 'A') ||
                                   setweight(to_tsvector(images.place), 'B') ||
                                   setweight(to_tsvector(images.description), 'C')  as document
@@ -22,22 +32,29 @@ def searchImageByText(user='testuser', textquery='lies'):
                                   OR (images.permitted = 2 AND images.owner_name = '{0}') 
                                   OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}') ) img_search 
                     WHERE img_search.document @@ to_tsquery('{1}')
-                    ORDER BY ts_rank( array[0.0, 0.1, 0.3, 0.6], img_search.document, to_tsquery('{1}') ) DESC;"""
+                    ORDER BY Rank DESC;"""
+
     dbquery = dbquery.format(user, textquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result_list = []
 
-    # TODO: If Jon requires additional fields modify this result list append
     for row in cursor.fetchall():
-        result_list.append(row[0])
-    return result_list   
+        result_list.append(row)
+        print(type(row))
+    return result_list  
 
-
-def searchImageByDate(user='testuser', condition='Newest'):
-    if condition == "newest":
+def searchImageByDate(user='testuser', condition=''):
+    if condition == "Newest":
         dbquery = """
-                    SELECT images.photo_id
+                    SELECT images.photo_id,
+                           images.owner_name,
+                           images.permitted,
+                           images.subject,
+                           images.place,
+                           images.description,
+                           images.thumbnail,
+                           images.photo
                     FROM images, group_lists
                     WHERE  images.permitted = 1 
                            OR (images.permitted = 2 AND images.owner_name = '{0}') 
@@ -45,17 +62,25 @@ def searchImageByDate(user='testuser', condition='Newest'):
                     ORDER BY images.timing DESC; """
     else:
         dbquery = """
-                    SELECT images.photo_id
+                    SELECT images.photo_id,
+                           images.owner_name,
+                           images.permitted,
+                           images.subject,
+                           images.place,
+                           images.description,
+                           images.thumbnail,
+                           images.photo
                     FROM images, group_lists
                     WHERE  images.permitted = 1 
                            OR (images.permitted = 2 AND images.owner_name = '{0}') 
                            OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}')  
-                    ORDER BY images.timing ASC;"""
+                    ORDER BY images.timing ASC; """
+
     dbquery.format(user)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result_list = []
     for row in cursor.fetchall():
-        result_list.append(row[0])
+        result_list.append(row)
     return result_list
 
