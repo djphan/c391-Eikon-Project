@@ -63,11 +63,11 @@ WSGI_APPLICATION = 'project_391.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': 'eikon', # Or path to database file if using sqlite3.
+            'NAME': 'web_prj_db', # Or path to database file if using sqlite3.
             # The following settings are not used with sqlite3:
-            'USER': 'django',
-            'PASSWORD': 'admin',
-            'HOST': 'localhost', # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
+            'USER': '',
+            'PASSWORD': '',
+            'HOST': '', # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
             'PORT': '', # Set to empty string for default.
          
     }
