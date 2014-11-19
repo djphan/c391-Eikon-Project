@@ -1,7 +1,8 @@
 from django.db import models
+from django.db import connection
+from main.imgSearch import searchImageByText, searchImageByDate
 
-# Create your models here.
-
+# Create your models heres
 class Users(models.Model):
     username = models.CharField(primary_key=True, max_length=24, db_column="user_name")
     password = models.CharField(max_length=24)
@@ -21,6 +22,9 @@ class Persons(models.Model):
     address = models.CharField(max_length=128)
     email = models.CharField(max_length=128, unique=True)
     phone = models.CharField(max_length=10)
+
+    def search(self, condition):
+        return
 
     class Meta:
         db_table = "persons"
@@ -65,14 +69,14 @@ class Images(models.Model):
     thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
     photo = models.ImageField(upload_to="Images", max_length=250)
 
-    class Meta:
-        db_table = "images"
+    def searchByText(user='testuser', textquery='lies'):
+        return searchImageByText(user, textquery)
+
+
+    def searchByDate(user='testuser', condition='newest'):
+        return searchImageByDate(user, condition)
  
-
-        # TODO: - Dan Implement search query based on ranking system givne in assignment specificiations
-        pass
-
-        
+              
 class Session(models.Model):
     username = models.ForeignKey(Users)
     sessiontracker = models.CharField(max_length=32, primary_key=True)

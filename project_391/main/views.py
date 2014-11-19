@@ -205,6 +205,13 @@ def get_image_data(request):
         # if theres a searcTerm value on the request we are doing a search
         search_term = request_body["searchTerm"]
         search_type = request_body["searchType"]
+        #print(search_term)
+        #print(type(search_term))
+        #print(user)
+        results = Images.searchByText(str(user), str(search_term))
+        print(results)
+        results = Images.searchByDate(str(user), str(search_type))
+        print(results)
         # TODO run the search
         # dummy search 
         images = Images.objects.filter(description__icontains=search_term)
@@ -310,8 +317,6 @@ def modify_image_details(request):
     else:
         return HttpResponse("Did no receive an appropriate field to edit", status=400)
     
-
-
 def home_page(request):
     user = authenticate_user(request)
     if user is None:
@@ -349,6 +354,10 @@ def group_management(request):
     if user is None:
         return redirect(loginPage)
     return render(request, 'main/group_management.html')
+
+
+
+#########################
 
 @csrf_exempt
 def upload_images(request):
