@@ -116,6 +116,57 @@ References:
 4. Configure psql and posgres (http://stackoverflow.com/questions/1471571/how-to-configure-postgresql-for-the-first-time)
 
 
+Queries
+===
+Modify where necessary (i.e. if we don't need 'X' field, just delete those select statements)
+
+1. Ranking
+
+SELECT photoID,
+       OwnerName,
+       Permitted
+       Subject,
+       Place,
+       Description,
+       Thumbnail,
+       Photo,
+       ts_rank( array[0.0, 0.1, 0.3, 0.6], img_search.document, to_tsquery('{1}') ) as Rank
+
+FROM ( SELECT images.photo_id as photoID,
+              images.owner_name as OwnerName,
+              images.permitted as Permitted,
+              images.subject as Subject,
+              images.place as Place,
+              images.description as description,
+              images.thumbnail as Thumbnail,
+              images.photo as Photo,
+              setweight(to_tsvector(images.subject), 'A') ||
+              setweight(to_tsvector(images.place), 'B') ||
+              setweight(to_tsvector(images.description), 'C')  as document
+       FROM images, group_lists
+       WHERE  images.permitted = 1 
+              OR (images.permitted = 2 AND images.owner_name = '{0}') 
+              OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}') ) img_search 
+WHERE img_search.document @@ to_tsquery('{1}')
+ORDER BY Rank DESC;
+
+2. Date
+SELECT images.photo_id,
+       images.owner_name,
+       images.permitted,
+       images.subject,
+       images.place,
+       images.description,
+       images.thumbnail,
+       images.photo
+FROM images, group_lists
+WHERE  images.permitted = 1 
+       OR (images.permitted = 2 AND images.owner_name = '{0}') 
+       OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}')  
+ORDER BY images.timing ASC;
+
+Adjust timing by DESC or ASC where necessary.
+
 Resources, References, and Links
 ===
 . Postgres Setup in Django framework provided by Juan Pablo Arriagada Cancino (http://stackoverflow.com/questions/5394331/how-to-setup-postgresql-database-in-django)
