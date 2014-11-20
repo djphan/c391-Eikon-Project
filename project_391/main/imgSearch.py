@@ -1,6 +1,6 @@
 from django.db import models, connection
 
-def searchImageByText(user='testuser', textquery='lies'):
+def searchImageByText(user, textquery):
     # Submits the raw query into our django db to pull images based on a rank
     # search of the text using lexiemes.
     # Returns all fields to use on the view side.
@@ -11,6 +11,7 @@ def searchImageByText(user='testuser', textquery='lies'):
                            Permitted
                            Subject,
                            Place,
+                           Timing,
                            Description,
                            Thumbnail,
                            Photo,
@@ -20,6 +21,7 @@ def searchImageByText(user='testuser', textquery='lies'):
                                   images.owner_name as OwnerName,
                                   images.permitted as Permitted,
                                   images.subject as Subject,
+                                  images.timing as Timing,
                                   images.place as Place,
                                   images.description as description,
                                   images.thumbnail as Thumbnail,
@@ -34,15 +36,11 @@ def searchImageByText(user='testuser', textquery='lies'):
                     WHERE img_search.document @@ to_tsquery('{1}')
                     ORDER BY Rank DESC;"""
 
-    dbquery = dbquery.format(user, textquery)
+    dbquery = dbquery.format(user.username, textquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
-    result_list = []
-
-    for row in cursor.fetchall():
-        result_list.append(row)
-        print(type(row))
-    return result_list  
+    return cursor.fetchall()
+    
 
 def searchImageByDate(user='testuser', condition=''):
     if condition == "Newest":

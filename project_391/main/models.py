@@ -69,9 +69,22 @@ class Images(models.Model):
     thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
     photo = models.ImageField(upload_to="Images", max_length=250)
 
-    def searchByText(user='testuser', textquery='lies'):
-        return searchImageByText(user, textquery)
-
+    def searchByText(user, textquery):
+        import pdb; pdb.set_trace()
+        results = searchImageByText(user, textquery)
+        search_results = []
+        for row in results:
+            result = self.model(photo_id=row[0], 
+                                owner_name=Users.objects.get(username=row[1]), 
+                                permitted=Groups.objects.get(username=row[1], group_id=row[2]), 
+                                subject=row[3], 
+                                place=row[4],
+                                timing=row[5], 
+                                description=row[6], 
+                                thumbnail=row[7], 
+                                photo=row[8])
+            search_results.append(result)
+        return search_results
 
     def searchByDate(user='testuser', condition='newest'):
         return searchImageByDate(user, condition)
