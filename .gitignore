@@ -63,3 +63,5 @@ target/
 
 # Media files
 **/media
+
+*settings.py

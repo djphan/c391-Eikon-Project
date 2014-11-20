@@ -8,7 +8,7 @@ def searchImageByText(user, textquery):
     dbquery = """
                     SELECT photoID,
                            OwnerName,
-                           Permitted
+                           Permitted,
                            Subject,
                            Place,
                            Timing,
@@ -23,7 +23,7 @@ def searchImageByText(user, textquery):
                                   images.subject as Subject,
                                   images.timing as Timing,
                                   images.place as Place,
-                                  images.description as description,
+                                  images.description as Description,
                                   images.thumbnail as Thumbnail,
                                   images.photo as Photo,
                                   setweight(to_tsvector(images.subject), 'A') ||
@@ -35,11 +35,13 @@ def searchImageByText(user, textquery):
                                   OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}') ) img_search 
                     WHERE img_search.document @@ to_tsquery('{1}')
                     ORDER BY Rank DESC;"""
-
+    print(user.username, textquery)
     dbquery = dbquery.format(user.username, textquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
-    return cursor.fetchall()
+    result = cursor.fetchall()
+    print(result)
+    return result
     
 
 def searchImageByDate(user='testuser', condition=''):
