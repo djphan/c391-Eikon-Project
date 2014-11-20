@@ -205,7 +205,7 @@ def get_image_data(request):
         # if theres a searcTerm value on the request we are doing a search
         search_term = request_body["searchTerm"]
         search_type = request_body["searchType"]
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         images = Images.searchByText(user, search_term)
         # dummy search 
         # images = Images.objects.filter(description__icontains=search_term)

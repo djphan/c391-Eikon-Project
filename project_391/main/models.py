@@ -70,25 +70,32 @@ class Images(models.Model):
     photo = models.ImageField(upload_to="Images", max_length=250)
 
     def searchByText(user, textquery):
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         results = searchImageByText(user, textquery)
         search_results = []
         for row in results:
-            result = self.model(photo_id=row[0], 
-                                owner_name=Users.objects.get(username=row[1]), 
-                                permitted=Groups.objects.get(username=row[1], group_id=row[2]), 
-                                subject=row[3], 
-                                place=row[4],
-                                timing=row[5], 
-                                description=row[6], 
-                                thumbnail=row[7], 
-                                photo=row[8])
-            search_results.append(result)
+            search_results.append(Images())
+            search_results[-1].photo_id=row[0]
+            search_results[-1].owner_name=Users.objects.get(username=row[1])
+            search_results[-1].permitted=Groups.objects.get(username=row[1], group_id=row[2])
+            search_results[-1].subject=row[3]
+            search_results[-1].place=row[4]
+            search_results[-1].timing=row[5]
+            search_results[-1].description=row[6]
+            search_results[-1].thumbnail=row[7]
+            search_results[-1].photo=row[8]
+            print(search_results[-1])
+        print('size: '+len(search_results))
         return search_results
+
+    class Meta:
+        db_table = "images"
 
     def searchByDate(user='testuser', condition='newest'):
         return searchImageByDate(user, condition)
- 
+
+    def __str__(self):
+        return ('ID: photo_id' + ' :: ' + photo)
               
 class Session(models.Model):
     username = models.ForeignKey(Users)
