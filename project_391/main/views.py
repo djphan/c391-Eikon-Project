@@ -203,7 +203,6 @@ def get_image_data(request):
     # also need to include a list of the users groups
     user = authenticate_user(request)
     # import pdb; pdb.set_trace()
-    import pdb; pdb.set_trace()
     # if we are returning results for a search term
     try:
         params = json.loads(request.body)
@@ -216,7 +215,6 @@ def get_image_data(request):
     
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
-        import pdb; pdb.set_trace()
         search_type = params["searchType"] # newest/oldest first
         images = Images.objects.filter(owner_name=user)
 
@@ -234,7 +232,11 @@ def get_image_data(request):
         img["subject"] = image.subject
         img["description"] = image.description
         img["location"] = image.place
-        img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
+        # check whether the group is private or public and handle no username
+        if image.permitted.group_name == "private" or image.permitted.group_name == "public":
+            img["group"] = image.permitted.group_name + "@" + user.username
+        else:
+            img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
         img["date"] = image.timing.strftime("%B %d, %Y")
         img["owner"] = user.username
         img["imageID"] = image.photo_id
@@ -302,8 +304,13 @@ def modify_image_details(request):
         # we are editing the image group
         # get the new group
         group_name, group_owner = request.POST["value"].split("@")
-        new_group = Groups.objects.get(user_name=group_owner,
-                            group_name=group_name)
+        if group_name == "private":
+            new_group = Groups.objects.get(group_id=PRIVATE)
+        elif group_name == "public":
+            new_group = Groups.objects.get(group_id=PUBLIC)
+        else:
+            new_group = Groups.objects.get(user_name=group_owner,
+                                group_name=group_name)
         image = Images.objects.get(photo_id=request.POST["key"])
         image.permitted = new_group
         image.save()
@@ -380,9 +387,9 @@ def upload_images(request):
     if "permissions" in request.POST:
         group_name, group_owner = request.POST["permissions"].split("@")
         if group_name == 'private': 
-            new_image_entry.permitted = Groups.objects.get(group_id=1)
-        if group_name == 'public':
-            new_image_entry.permitted = Groups.objects.get(group_id=2)
+            new_image_entry.permitted = Groups.objects.get(group_id=PUBLIC)
+        elif group_name == 'public':
+            new_image_entry.permitted = Groups.objects.get(group_id=PRIVATE)
         else:
             new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:
@@ -495,7 +502,6 @@ def add_group(request):
 
     logger = logging.getLogger(__name__)
 
-    # import pdb; pdb.set_trace()
     user_name = authenticate_user(request).username
     # user_name = Users.objects.get(username='jonnyc')
 
@@ -604,7 +610,6 @@ def add_user_to_group(request):
 def authenticate_user(request):
     st = request.COOKIES.get('sessiontracker', 'nope')
     try:
-        # pdb.set_trace()
         return Session.objects.get(sessiontracker=st).username
     except ObjectDoesNotExist:
         return None

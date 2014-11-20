@@ -70,7 +70,7 @@ class Images(models.Model):
     photo = models.ImageField(upload_to="Images", max_length=250)
 
     def searchByText(user, textquery):
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         results = searchImageByText(user, textquery)
         search_results = []
         for row in results:
@@ -84,8 +84,6 @@ class Images(models.Model):
             search_results[-1].description=row[6]
             search_results[-1].thumbnail=row[7]
             search_results[-1].photo=row[8]
-            print(search_results[-1])
-        print('size: '+len(search_results))
         return search_results
 
     class Meta:
