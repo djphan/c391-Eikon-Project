@@ -411,7 +411,6 @@ def upload_images(request):
     if 'description' in request.POST:
         new_image_entry.description = request.POST["description"]
 
-    # TODO work on better image naming, although this will suffice.
     # Name confilicts are dealt with automatically
     new_image_entry.photo.save(uploaded_image.name, uploaded_image)
     new_image_entry.save()
@@ -622,8 +621,14 @@ def logout(request):
         pass
     return loginPage(request)
 
+@csrf_exempt
 def olap(request):
-    return render(request, 'main/olap.html')
+    user = authenticate_user(request)
+    # get a list of all users
+    data = {}
+    data["users"] = Users.objects.all()
+    return render_to_response('main/olap.html', data, 
+            RequestContext(request))
 
 # make a fixed-width thumbnail from the image at in_path and save it to out_path
 def make_thumbnail(in_path, out_path):
