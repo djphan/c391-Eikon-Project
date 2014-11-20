@@ -387,7 +387,13 @@ window.onload = function() {
         req.open("POST","/main/get_image_data/", true);
         // get the search terms, TODO name the search box.
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        req.send(JSON.stringify({searchTerm: searchTerm, searchType: imageManager.searchType}));
+        // if we are doing a search for all images bases on timing newest/oldest first
+        if (imageManager.searchType == "Newest" || imageManager.searchType == "Oldest"){
+            req.send(JSON.stringify({searchType: imageManager.searchType}));
+         // else we are doing a search based on timing
+        } else {
+            req.send(JSON.stringify({searchTerm: searchTerm}));
+        }
     }, 0);
 };
 

@@ -76,7 +76,7 @@ class Images(models.Model):
         for row in results:
             result = self.model(photo_id=row[0], 
                                 owner_name=Users.objects.get(username=row[1]), 
-                                permitted=Groups.objects.get(username=row[1], group_id=row[2]), 
+                                permitted=Groups.objects.get(group_id=row[2]), 
                                 subject=row[3], 
                                 place=row[4],
                                 timing=row[5], 

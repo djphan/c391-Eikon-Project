@@ -23,6 +23,9 @@ import os
 from project_391.settings import PROJECT_PATH
 # Create your views here.
 
+PUBLIC = 1 # group id for public group
+PRIVATE = 2 # group id for private group
+
 def loginPage(request):         # how do we respond to a request for a login page?
 
     if len(request.POST) == 0:  # "Sign In" not clicked, display log in page
@@ -200,20 +203,25 @@ def get_image_data(request):
     # also need to include a list of the users groups
     user = authenticate_user(request)
     # import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
+    # if we are returning results for a search term
     try:
-        request_body = json.loads(request.body)
-        # if theres a searcTerm value on the request we are doing a search
-        search_term = request_body["searchTerm"]
-        search_type = request_body["searchType"]
-        import pdb; pdb.set_trace()
-        images = Images.searchByText(user, search_term)
-        # dummy search 
-        # images = Images.objects.filter(description__icontains=search_term)
-        # images = Images.object.filter(search)
+        params = json.loads(request.body)
     except:
-        pass
-        # if no value exists for search term we are just returning all the current users images.
-        # get all the curent users images
+        params = {}
+
+    if "searchTerm" in params:
+        search_term = params["searchTerm"]
+        images = Images.searchByText(user, search_term)
+    
+    # if we are returning results for newest/oldest first search
+    elif "searchType" in params:
+        import pdb; pdb.set_trace()
+        search_type = params["searchType"] # newest/oldest first
+        images = Images.objects.filter(owner_name=user)
+
+    # if we are passing the user back all of there images
+    else:
         images = Images.objects.filter(owner_name=user)
 
     # build the json response for each image
@@ -371,7 +379,12 @@ def upload_images(request):
     # Get the information posted with the image
     if "permissions" in request.POST:
         group_name, group_owner = request.POST["permissions"].split("@")
-        new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
+        if group_name == 'private': 
+            new_image_entry.permitted = Groups.objects.get(group_id=1)
+        if group_name == 'public':
+            new_image_entry.permitted = Groups.objects.get(group_id=2)
+        else:
+            new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
