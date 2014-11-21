@@ -24,6 +24,11 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
 
+    <!-- Selection box stuff -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-select.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-select.js"></script>
+
+
     <!-- in place editing plugin -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
@@ -48,80 +53,60 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-5">
         <div class="select-boxes-wrapper">
-
-
             <div class="row">
 
-              <div class="col-sm-12">
-                <div class="input-group">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
-                  </span>
-                  <input type="text" class="form-control">
-                </div><!-- /input-group -->
-              </div><!-- /.col-lg-6 -->
-
-              <div class="col-lg-6">
-                <div class="input-group">
-                  <input type="text" class="form-control">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Go!</button>
-                  </span>
-                </div><!-- /input-group -->
-              </div><!-- /.col-lg-6 -->
-            </div><!-- /.row -->
-
-            <div class="row">
-                <div class="col-sm-12">
-
-                    <select class="user-select form-control">
-                    <!-- Django will need to fill in a option items -->
-                        <option>Select a user</option>
-                    </select>
+            <form class="form-horizontal" role="form">
+               <div class="form-group">
+                <label for="user" class="col-sm-4 control-label">Username</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="user" name="username">
+                    {% for user in users %}
+                        <option>{{ user }}<option>
+                    {% endfor %}
+                  </select>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <div>
-                        <label for="datetimepicker6" class="col-sm-offset-2 col-sm-2 control-label">Date</label>
-                        <input type='text' class="form-control" id='datetimepicker6' placeholder="Date"/>
-                    </div>
-                </div>
-                </div>
-            </div>
+              </div>
 
 
-            
-            <div class="row">
-                <div class="col-sm-6">
-                    <select class="period-type-select form-control" id="permissions" name="permissions">
-                    <!-- Django will need to fill in a option items -->
-                        <option>Select a time period</option>
-                    </select>
+              <div class="form-group">
+                <label for="time-period" class="col-sm-4 control-label">Time Period</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="time-period" name="timePeriod">
+                      <option>Weekly</option>
+                      <option>Monthly</option>
+                      <option>Yearly</option>
+                  </select>
                 </div>
-            </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="start-date" class="col-sm-4 control-label">Start Date</label>
+                <div class="col-sm-8">
+                  <input type="text" readonly=true class="form-control" id="start-date" placeholder="Start Date">
+                </div>
+              </div>
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <select id="period-start-select" class="form-control" id="permissions" name="permissions">
-                    <!-- Django will need to fill in a option items -->
-                        <option>Select a user</option>
-                    </select>
+              <div class="form-group">
+                <label for="end-date" class="col-sm-4 control-label">End Date</label>
+                <div class="col-sm-8">
+                  <input type="text" readonly=true class="form-control" id="end-date" placeholder="End Date">
                 </div>
-            </div>
+              </div>
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <select id="period-end-select" class="form-control" id="permissions" name="permissions">
-                    <!-- Django will need to fill in a option items -->
-                        <option>Select a user</option>
-                    </select>
+              <div class="form-group">
+                <label for="subject" class="col-sm-4 control-label">Subject</label>
+                <div class="col-sm-8">
+                  <select class="form-control" id="subject" name="subject">
+                    {% for subject in subjects %}
+                      <option>{{ subject }}</option>
+                    {% endfor %}
+                  </select>
                 </div>
-            </div>
-        </div>
+              </div>
+         </form>
+
 
         </div><!-- /select boxes wrapper -->
     </div>
