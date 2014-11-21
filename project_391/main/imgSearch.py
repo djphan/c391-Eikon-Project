@@ -32,15 +32,13 @@ def searchImageByText(user, textquery):
                            FROM images, group_lists
                            WHERE  images.permitted = 1 
                                   OR (images.permitted = 2 AND images.owner_name = '{0}') 
-                                  OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}') ) img_search 
+                                  OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}' ) ) img_search 
                     WHERE img_search.document @@ to_tsquery('{1}')
                     ORDER BY Rank DESC;"""
-    print(user.username, textquery)
     dbquery = dbquery.format(user.username, textquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result = cursor.fetchall()
-    print(result)
     return result
     
 
@@ -79,8 +77,6 @@ def searchImageByDate(user='testuser', condition=''):
     dbquery.format(user)
     cursor = connection.cursor()
     cursor.execute(dbquery)
-    result_list = []
-    for row in cursor.fetchall():
-        result_list.append(row)
-    return result_list
+    results = cursor.fetchall()
+    return results
 
