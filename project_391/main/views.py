@@ -1,4 +1,6 @@
 import random
+import calendar
+from datetime import timedelta
 from PIL import Image
 import datetime
 from django.template.loader import get_template
@@ -8,7 +10,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
-from main.models import Users, Persons, Session, Groups, GroupLists, Images
+from main.models import Users, Persons, Session, Groups, GroupLists, Images, Views
 from django.http import HttpResponse, JsonResponse
 from django.forms import EmailField
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -196,6 +198,91 @@ def temp_main_page(request):
 ################################################################################
 
 @csrf_exempt
+def add_view(request):
+    # add a view to the view count
+    user = authenticate_user(request)
+    try:
+        # fail silently, user should not be affected by failure here
+        params = json.loads(request.body)
+    except:
+        return HttpResponse("Failed to add view to views table", status=500)
+
+    image = Images.objects.get(photo_id=params["photoID"])
+    if image.owner_name.username == user.username:
+        # exclude when users views own image.
+        return HttpResponse("Users own image, view not added", status=200)
+
+    try:
+        # if the user has already viewed the image hande the exception
+        Views.objects.create(photo_id=image, user_name=user)
+    except IntegrityError:
+        return HttpResponse("View already recorded", status=200)
+
+    return HttpResponse("Added view to image", status=200)
+
+@csrf_exempt
+def get_olap_data(request):
+    # passed in a username, pass back a list of all data for
+    # weekly, monthly, yearly
+    # import pdb; pdb.set_trace()
+    user = authenticate_user(request)
+    # parse json
+    try:
+        request_data = json.loads(request.body)
+    except:
+        return HttpResponse("Could not parse JSON", status=500)
+    # get the date the user signed up
+    user_being_analyzed = Users.objects.get(username=request_data["username"])
+    # find the user begin date
+    response = {}
+    response["userName"] = user_being_analyzed.username
+    response["registrationDate"] = user_being_analyzed.date_registered
+    # get the data by week take start date and add 7
+    response["byWeek"] = []
+    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
+    while date <= datetime.datetime.today():
+        image_count = Images.objects.filter(owner_name=user)\
+                                    .filter(timing__gte=date)\
+                                    .filter(timing__lt=date + timedelta(days=7))\
+                                    .count()
+        response["byWeek"].append({"x": date.strftime("%Y-%m-%d"), "y": image_count})
+        date += timedelta(days=7)
+    
+    # get the data by month
+    response["byMonth"] = []
+    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
+    # get the beginning of the month
+    while date <= datetime.datetime.today():
+        # get the last day in the month
+        last_day_of_month = calendar.monthrange(date.year, date.month)[1] 
+        daysdelta = last_day_of_month - date.day
+        image_count = Images.objects.filter(owner_name=user)\
+                                    .filter(timing__gte=date)\
+                                    .filter(timing__lt=date + timedelta(days=daysdelta))\
+                                    .count()
+        response["byMonth"].append({"x": date.strftime("%Y-%m-%d"), "y": image_count})
+        # this rolls the date over to the first of the next month
+        date += timedelta(days=1 + daysdelta)
+
+    response["byYear"] = []
+    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
+    # get the data by year
+    while date <= datetime.datetime.today():
+        # get the last day in the month
+        last_day_of_year = datetime.datetime(date.year, 12, 31)
+        daysdelta = (last_day_of_year - date).days
+        image_count = Images.objects.filter(owner_name=user)\
+                                    .filter(timing__gte=date)\
+                                    .filter(timing__lt=date + timedelta(days=daysdelta))\
+                                    .count()
+        response["byYear"].append({"x": date.strftime("%Y"), "y": image_count})
+        # this rolls the date over to the first of the next month
+        date += timedelta(days=1 + daysdelta)
+    
+    response["subject"] = []
+    return JsonResponse(response, status=200)
+
+@csrf_exempt
 def get_image_data(request):
     # This view returns all required data for displaying users images
     # and for image searches.
@@ -216,9 +303,12 @@ def get_image_data(request):
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
-        images = Images.objects.filter(owner_name=user)
+        if search_type == "Newest":
+            images = Images.objects.filter(grouplists__friend_id=user)
+        elif search_type == "Oldest":
+            images = Images.objects.filter(grouplists__friend_id=user)
 
-    # if we are passing the user back all of there images
+    # otherwise we are passing the user back all of there images
     else:
         images = Images.objects.filter(owner_name=user)
 
@@ -267,7 +357,10 @@ def delete_group(request):
     user = authenticate_user(request)
     group_name_to_delete = json.loads(request.body)["groupName"]
     group = Groups.objects.get(user_name=user, group_name=group_name_to_delete)
-    group.delete()
+    try:
+        group.delete()
+    except IntegrityError:
+        return HttpResponse("Images still belong to this group. Change the groups they belong to before deleting", status=400)
     if len(Groups.objects.filter(user_name=user, group_name=group_name_to_delete)) == 0:
         return JsonResponse({"deletedGroup": group_name_to_delete}, status=200)
     else:

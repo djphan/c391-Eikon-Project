@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        
+    <!-- d3 graphing library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.js"></script>
 
     <!-- alerts css and js -->
     <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
@@ -28,6 +31,10 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-select.css">
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-select.js"></script>
 
+
+    <!-- Graphing stuff -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/xcharts.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/xcharts.js"></script>
 
     <!-- in place editing plugin -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
@@ -62,6 +69,7 @@
                 <label for="user" class="col-sm-4 control-label">Username</label>
                 <div class="col-sm-8">
                   <select class="form-control" id="user" name="username">
+                        <option>Select a user</option>
                     {% for user in users %}
                         <option>{{ user }}<option>
                     {% endfor %}
@@ -105,12 +113,23 @@
                   </select>
                 </div>
               </div>
+            <div class="form-group">
+              <div class="col-sm-12 text-center">
+                <button type="submit" class="btn btn-primary animated fadeInUp delay-05s">Sign in</button>
+              </div>
+            </div>
          </form>
 
-
+        
         </div><!-- /select boxes wrapper -->
-    </div>
-</div>
+
+        </div>
+        </div>
+        <div class="col-sm-7">
+            <figure style="width: 400px; height: 300px;" id="chart"></figure>
+        <div>
+
+        </div>
 
 </body>
 </html>

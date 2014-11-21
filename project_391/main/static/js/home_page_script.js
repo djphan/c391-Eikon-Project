@@ -85,6 +85,13 @@ var imageManager = (function(){
             _this = this;
             clicked_element.addEventListener("click", function() {
                 _this.displayImage(image);
+                // log view
+                if (!image.editable){
+                    var req = new XMLHttpRequest();
+                    req.open("POST","/main/add_view/", true);
+                    req.setRequestHeader("Content-type", "application/json");
+                    req.send(JSON.stringify({photoID: image.imageID}));
+                }
             }, 0);
         },
 
@@ -388,8 +395,8 @@ window.onload = function() {
         // get the search terms, TODO name the search box.
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // if we are doing a search for all images bases on timing newest/oldest first
-        if (imageManager.searchType == "Newest" || imageManager.searchType == "Oldest"){
-            req.send(JSON.stringify({searchType: imageManager.searchType}));
+        if (imageManager.searchtype == "Newest" || imageManager.searchtype == "Oldest"){
+            req.send(JSON.stringify({searchType: imageManager.searchtype}));
          // else we are doing a search based on timing
         } else {
             req.send(JSON.stringify({searchTerm: searchTerm}));

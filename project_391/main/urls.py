@@ -23,6 +23,8 @@ urlpatterns = patterns(
     url(r"^delete_group/$", views.delete_group, name='delete_group'),
     url(r"^delete_image/$", views.delete_image, name='delete_image'),
     url(r"^olap/$", views.olap, name='olap'),
+    url(r"^get_olap_data/$", views.get_olap_data, name='get_olap_data'),
+    url(r"^add_view/$", views.add_view, name='add_view'),
 )
 
 if settings.DEBUG:

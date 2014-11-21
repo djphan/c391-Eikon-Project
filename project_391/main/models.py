@@ -3,6 +3,13 @@ from django.db import connection
 from main.imgSearch import searchImageByText, searchImageByDate
 
 # Create your models heres
+class Views(models.Model):
+    photo_id = models.ForeignKey('Images', db_column="photo_id")
+    user_name = models.ForeignKey('Users', db_column="user_name") 
+    class Meta:
+        db_table = "views"
+        unique_together = (("photo_id", "user_name"),)
+
 class Users(models.Model):
     username = models.CharField(primary_key=True, max_length=24, db_column="user_name")
     password = models.CharField(max_length=24)
@@ -42,7 +49,9 @@ class Groups(models.Model):
     class Meta:
         db_table = "groups"
         unique_together = (("user_name", "group_name"),)
-
+    
+    def __str__(self):
+        return self.group_name
 
 class GroupLists(models.Model):
     """
@@ -50,21 +59,23 @@ class GroupLists(models.Model):
     group_id = models.ForeignKey(Groups, db_column="group_id")
     friend_id = models.ForeignKey(Users, db_column="friend_id")
     date_added = models.DateField(auto_now_add=True)
-    notice = models.CharField(max_length=1024)
+    notice = models.CharField(max_length=1024, blank=True)
 
     class Meta:
         db_table = "group_lists"
         unique_together = (("group_id", "friend_id"),)
-
+    
+    def __str__(self):
+        return "Group Name: " + str(self.group_id) + " Member Name: " + str(self.friend_id)
 
 class Images(models.Model):
     photo_id = models.AutoField(primary_key=True)
     owner_name = models.ForeignKey(Users, db_column="owner_name")
     permitted = models.ForeignKey(Groups, db_column="permitted")
-    subject = models.CharField(max_length=128)
-    place = models.CharField(max_length=128)
+    subject = models.CharField(max_length=128, blank=True)
+    place = models.CharField(max_length=128, blank=True)
     timing = models.DateField(auto_now_add=False)
-    description = models.CharField(max_length=2048)
+    description = models.CharField(max_length=2048, blank=True)
     
     thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
     photo = models.ImageField(upload_to="Images", max_length=250)
@@ -98,7 +109,7 @@ class Images(models.Model):
         return searchImageByDate(user, condition)
 
     def __str__(self):
-        return ('ID: photo_id' + ' :: ' + photo)
+        return ('ID: photo_id' + ' :: ' + self.photo.url)
               
 class Session(models.Model):
     username = models.ForeignKey(Users)

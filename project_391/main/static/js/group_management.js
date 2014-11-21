@@ -133,9 +133,11 @@ var groupManager = (function(){
                         }
                         // remove the group from the cache
                         groupManager.removeObjectWithAttr(groupManager.userGroups, "groupName", groupName);
-                    } else if (req.readyState==4 && req.status != 200){
+                    } else if (req.readyState==4 && req.status != 200 && req.status != 400){
                         swal("Could not delete group, bad response from server" + "\n" +
                                 req.responseText);
+                    } else if (req.readyState==4 && req.status == 400){
+                        swal("Foreign Key Error", "Images belong to this group, remove them before deleting");
                     }
                 };
                 req.open("POST","/main/delete_group/", true);
