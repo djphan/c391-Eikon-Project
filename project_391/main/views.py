@@ -297,6 +297,14 @@ def get_image_data(request):
     except:
         params = {}
 
+    # datetime objects are available for searches if they are set in the browser
+    # note that the user can set one or both so before performing queries check
+    # whether both or only one has been given by the user.
+    if "startDate" in params:
+        search_start_date = datetime.datetime.strptime(params["startDate"], "%m/%d/%Y")
+    if "endDate" in params:
+        search_end_date = datetime.datetime.strptime(params["endDate"], "%m/%d/%Y")
+
     if "searchTerm" in params:
         search_term = params["searchTerm"]
         images = Images.searchByText(user, search_term)

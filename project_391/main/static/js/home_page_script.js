@@ -350,7 +350,9 @@ window.onload = function() {
         // launch the modal
         $("#dateModal").modal('show');
     });
-
+    
+    $('#start-date').datetimepicker({pickTime: false});
+    $('#end-date').datetimepicker({pickTime: false});
     // set up date choice saving on modal close
     $("#dateModal").on('hidden.bs.modal', function() {
         // get the start and end dates
@@ -361,6 +363,13 @@ window.onload = function() {
         }
         if (endDate){
             imageManager.searchEndDate = endDate;
+        }
+        if (startDate && endDate){
+            if(new Date(startDate) > new Date(endDate)){
+                swal("Date Error" ,"Start date must be before end date");
+                imageManager.searchEndDate = undefined;
+                $("#end-date").val("");
+            }
         }
     });
 

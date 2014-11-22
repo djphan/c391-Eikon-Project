@@ -15,6 +15,12 @@
     <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
 
+    <!-- Date/Time picker stuff -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+
+
     <script src="{{ STATIC_URL }}js/home_page_script.js"></script>
 
     <!-- classie for quick class addition/removal -->
@@ -155,8 +161,8 @@
                                 <label for="idTourDateDetails">Start Date</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <input type="date" name="idTourDateDetails" id="start-date" 
-                                                class="form-control clsDatePicker"> 
+                                        <input type="text" readonly="true" name="idTourDateDetails" id="start-date" 
+                                                class="form-control"> 
                                                 <span class="input-group-addon"><i id="calIconTourDateDetails" 
                                                 class="glyphicon glyphicon-th"></i></span>
                                     </div>
@@ -166,8 +172,8 @@
                                 <label for="idTourDateDetails">End Date</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <input type="date" name="idTourDateDetails" id="end-date" 
-                                                class="form-control clsDatePicker"> 
+                                        <input type="text" readonly="true" name="idTourDateDetails" id="end-date" 
+                                                class="form-control"> 
                                                 <span class="input-group-addon"><i id="calIconTourDateDetails" 
                                                 class="glyphicon glyphicon-th"></i></span>
                                     </div>
