@@ -320,7 +320,7 @@ def get_image_data(request):
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
     if "searchType" in params:
-        top_images = Views.objects.annotate(num_views=Count('photo_id')).order_by('num_views')[:5]
+        top_images = Views.objects.annotate(num_views=Count('photo_id')).order_by('num_views')
         for idx, image in enumerate(top_images):
             photo_id = image.photo_id.photo_id 
             top_image = Images.objects.get(photo_id=photo_id)
@@ -328,6 +328,9 @@ def get_image_data(request):
             top_image["topImage"] = "true"
             top_image["rank"] = str(idx + 1)
             top_image["views"] = image.num_views
+            # this handles the case where the 5th image is tied with the following images in view count.
+            if idx > 4 and response["images"][idx - 1]["views"] > image.num_views:
+                break
             response["images"].append(top_image)
             top_image_ids.append(photo_id)
     
