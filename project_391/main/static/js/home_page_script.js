@@ -72,6 +72,24 @@ var imageManager = (function(){
                 thumb_image.src = images[i].thumbnail;
                 thumb_wrapper.appendChild(thumb_image);
                 row_container.appendChild(thumb_wrapper);
+                
+                // add ranking info if image is a top image
+                if (images[i].topImage){
+                    topTag = document.createElement("span");
+                    topTag.innerHTML = "Top Image"; 
+                    topTag.className = "label label-warning label-top-image";
+                    thumb_wrapper.appendChild(topTag);
+
+                    rankTag = document.createElement("span");
+                    rankTag.innerHTML = "Rank: " + images[i].rank; 
+                    rankTag.className = "label label-default label-rank";
+                    thumb_wrapper.appendChild(rankTag);
+
+                    viewTag = document.createElement("span");
+                    viewTag.innerHTML = "Views: " + images[i].views; 
+                    viewTag.className = "label label-default label-views";
+                    thumb_wrapper.appendChild(viewTag);
+                }
                 // set a click listener to display as main image.
                 this.thumbnailClickListener(images[i], row_container);
                 // add the image to the thumbnail display

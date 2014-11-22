@@ -3,6 +3,8 @@ import calendar
 from datetime import timedelta
 from PIL import Image
 import datetime
+from django.db.models import Count
+from django.db.models import Sum
 from django.template.loader import get_template
 from django.template import Context
 from django.core import serializers
@@ -289,7 +291,6 @@ def get_image_data(request):
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
     user = authenticate_user(request)
-    # import pdb; pdb.set_trace()
     # if we are returning results for a search term
     try:
         params = json.loads(request.body)
@@ -304,9 +305,9 @@ def get_image_data(request):
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
         if search_type == "Newest":
-            images = Images.objects.filter(grouplists__friend_id=user)
+            images = Images.objects.all()
         elif search_type == "Oldest":
-            images = Images.objects.filter(grouplists__friend_id=user)
+            images = Images.objects.all()
 
     # otherwise we are passing the user back all of there images
     else:
@@ -315,24 +316,25 @@ def get_image_data(request):
     # build the json response for each image
     response = {}
     response["images"] = []
+
+    # if the user performed a search, append the top 5 images first
+    top_image_ids = []
+    if "searchType" in params:
+        top_images = Views.objects.annotate(num_views=Count('photo_id')).order_by('num_views')[:5]
+        for idx, image in enumerate(top_images):
+            photo_id = image.photo_id.photo_id 
+            top_image = Images.objects.get(photo_id=photo_id)
+            top_image = serialize_image(top_image, user)
+            top_image["topImage"] = "true"
+            top_image["rank"] = str(idx + 1)
+            top_image["views"] = image.num_views
+            response["images"].append(top_image)
+            top_image_ids.append(photo_id)
+    
     for image in images:
-        img = {}
-        img["thumbnail"] = ".." + image.thumbnail.path
-        img["image"] = ".." + image.photo.path
-        img["subject"] = image.subject
-        img["description"] = image.description
-        img["location"] = image.place
-        # check whether the group is private or public and handle no username
-        if image.permitted.group_name == "private" or image.permitted.group_name == "public":
-            img["group"] = image.permitted.group_name + "@" + user.username
-        else:
-            img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
-        img["date"] = image.timing.strftime("%B %d, %Y")
-        img["owner"] = user.username
-        img["imageID"] = image.photo_id
-        # editable indicates whether the user can edit the details of the image.
-        # if the image belongs to the user its editable.
-        img["editable"] = image.owner_name.username == user.username
+        if image.photo_id in top_image_ids:
+            continue
+        img = serialize_image(image, user)
         response["images"].append(img)
     
     # get all the groups the user belongs to.
@@ -343,6 +345,30 @@ def get_image_data(request):
     response["userGroups"].append("private" + "@" + user.username)
     response["userGroups"].append("public" + "@" + user.username)
     return JsonResponse(response, status=200)
+
+
+def serialize_image(image, user):
+    # serializes an image object and returns it
+    # top images is a list of top image photo_ids in the search
+    img = {}
+    img["thumbnail"] = ".." + image.thumbnail.path
+    img["image"] = ".." + image.photo.path
+    img["subject"] = image.subject
+    img["description"] = image.description
+    img["location"] = image.place
+
+    # check whether the group is private or public and handle no username
+    if image.permitted.group_name == "private" or image.permitted.group_name == "public":
+        img["group"] = image.permitted.group_name + "@" + user.username
+    else:
+        img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
+    img["date"] = image.timing.strftime("%B %d, %Y")
+    img["owner"] = user.username
+    img["imageID"] = image.photo_id
+    # editable indicates whether the user can edit the details of the image.
+    # if the image belongs to the user its editable.
+    img["editable"] = image.owner_name.username == user.username
+    return img
 
 @csrf_exempt
 def delete_image(request):
