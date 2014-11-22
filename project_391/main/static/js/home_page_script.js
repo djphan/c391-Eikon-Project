@@ -343,10 +343,33 @@ window.onload = function() {
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = 53 + "px";
 
+    // set up date choice
+    $("#dateModal").modal({show: false});
+    dateChoiceSelectOption = document.getElementById("date-choice-button");
+    dateChoiceSelectOption.addEventListener("click", function() {
+        // launch the modal
+        $("#dateModal").modal('show');
+    });
+
+    // set up date choice saving on modal close
+    $("#dateModal").on('hidden.bs.modal', function() {
+        // get the start and end dates
+        var startDate = document.getElementById("start-date").value;
+        var endDate = document.getElementById("end-date").value;
+        if (startDate){
+            imageManager.searchStartDate = startDate;
+        }
+        if (endDate){
+            imageManager.searchEndDate = endDate;
+        }
+    });
+
     // set up tracking of search box drop down selection
     searchSelectionOptions = document.getElementsByClassName("search-option");
     for (var i = 0; i < searchSelectionOptions.length; i++){
-        imageManager.addSearchTypeEventListener(searchSelectionOptions[i]);
+        if (i != 3){
+            imageManager.addSearchTypeEventListener(searchSelectionOptions[i]);
+        }
     }
     
     // set up the delete photo button
@@ -414,10 +437,12 @@ window.onload = function() {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // if we are doing a search for all images bases on timing newest/oldest first
         if (imageManager.searchtype == "Newest" || imageManager.searchtype == "Oldest"){
-            req.send(JSON.stringify({searchType: imageManager.searchtype}));
+            req.send(JSON.stringify({searchType: imageManager.searchtype, startDate: imageManager.searchStartDate, endDate: 
+            imageManager.searchEndDate}));
          // else we are doing a search based on timing
         } else {
-            req.send(JSON.stringify({searchTerm: searchTerm}));
+            req.send(JSON.stringify({searchTerm: searchTerm, startDate: imageManager.searchStartDate, 
+            endDate: imageManager.searchEndDate}));
         }
     }, 0);
 };
