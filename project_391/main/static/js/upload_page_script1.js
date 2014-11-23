@@ -14,7 +14,8 @@ window.onload = function(){
         var location = document.getElementById("location").value;
         var subject = document.getElementById("subject").value;
         var date = document.getElementById("datetimepicker6").value;
-        var permissions = document.getElementById("permissions").value;
+        var permissions = document.getElementById("permissions");
+        permissions = permissions.options[permissions.selectedIndex].text;
         var description = document.getElementById("description").value;
         if (description) {
             formData.append("description", description);

@@ -10,6 +10,7 @@ from django.template import Context
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
 from main.models import Users, Persons, Session, Groups, GroupLists, Images, Views
@@ -528,9 +529,9 @@ def upload_images(request):
     if "permissions" in request.POST:
         group_name, group_owner = request.POST["permissions"].split("@")
         if group_name == 'private': 
-            new_image_entry.permitted = Groups.objects.get(group_id=PUBLIC)
-        elif group_name == 'public':
             new_image_entry.permitted = Groups.objects.get(group_id=PRIVATE)
+        elif group_name == 'public':
+            new_image_entry.permitted = Groups.objects.get(group_id=PUBLIC)
         else:
             new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:
