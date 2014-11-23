@@ -1,5 +1,8 @@
 from django.contrib import admin
-from main.models import Persons, Users, Groups, GroupLists, Images
+from main.models import Persons, Users, Groups, GroupLists, Images, Views, SubjectDashboard
+
+class SubjectDashboardAdmin(admin.ModelAdmin):
+    pass
 
 class PersonsAdmin(admin.ModelAdmin):
     pass
@@ -27,3 +30,5 @@ admin.site.register(Groups)
 admin.site.register(GroupLists)
 admin.site.register(Images)
 admin.site.register(Persons)
+admin.site.register(Views)
+admin.site.register(SubjectDashboard)

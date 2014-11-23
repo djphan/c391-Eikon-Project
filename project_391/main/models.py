@@ -3,12 +3,21 @@ from django.db import connection
 from main.imgSearch import searchImageByText, searchImageByDate
 
 # Create your models heres
+
+class SubjectDashboard(models.Model):
+    def __str__(self):
+        return Images.objects.all().aggregate(Sum('subject'))
+
 class Views(models.Model):
     photo_id = models.ForeignKey('Images', db_column="photo_id")
     user_name = models.ForeignKey('Users', db_column="user_name") 
     class Meta:
         db_table = "views"
         unique_together = (("photo_id", "user_name"),)
+        verbose_name = "View"
+
+    def __str__(self):
+        return "Image: " + str(self.photo_id.photo_id) + ", Viewer: " + str(self.user_name)
 
 class Users(models.Model):
     username = models.CharField(primary_key=True, max_length=24, db_column="user_name")
@@ -17,9 +26,10 @@ class Users(models.Model):
 
     class Meta:
         db_table = "users"
+        verbose_name = "User"
 
     def __str__(self):
-        return self.username
+        return "Username: " + self.username + ", Total Images: " + str(Images.objects.filter(owner_name=self).count())
         
 
 class Persons(models.Model):
@@ -35,6 +45,7 @@ class Persons(models.Model):
 
     class Meta:
         db_table = "persons"
+        verbose_name = "Person"
 
     def __str__(self):
         return ' '.join([str(self.user_name), '-', self.first_name, self.last_name, self.email])
@@ -49,7 +60,8 @@ class Groups(models.Model):
     class Meta:
         db_table = "groups"
         unique_together = (("user_name", "group_name"),)
-    
+        verbose_name = "Group"
+
     def __str__(self):
         return self.group_name
 
@@ -64,7 +76,8 @@ class GroupLists(models.Model):
     class Meta:
         db_table = "group_lists"
         unique_together = (("group_id", "friend_id"),)
-    
+        verbose_name = "GroupList"
+
     def __str__(self):
         return "Group Name: " + str(self.group_id) + " Member Name: " + str(self.friend_id)
 
@@ -104,6 +117,7 @@ class Images(models.Model):
 
     class Meta:
         db_table = "images"
+        verbose_name = "Image"
 
     def searchByDate(user='testuser', condition='newest'):
         return searchImageByDate(user, condition)

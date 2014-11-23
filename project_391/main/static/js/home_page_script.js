@@ -350,9 +350,9 @@ window.onload = function() {
         // launch the modal
         $("#dateModal").modal('show');
     });
-    
     $('#start-date').datetimepicker({pickTime: false});
     $('#end-date').datetimepicker({pickTime: false});
+
     // set up date choice saving on modal close
     $("#dateModal").on('hidden.bs.modal', function() {
         // get the start and end dates
