@@ -94,14 +94,11 @@ class Images(models.Model):
     photo = models.ImageField(upload_to="Images", max_length=250)
     
     def searchByText(user, textquery):
-
         results = searchImageByText(user, textquery)
         print(len(results))
         search_results = []
         for row in results:
             print(len(row))
-        for row in results:
-            
             search_results.append(Images())
             search_results[-1].photo_id=row[0]
             search_results[-1].owner_name=Users.objects.get(username=row[1])
@@ -112,15 +109,33 @@ class Images(models.Model):
             search_results[-1].description=row[6]
             search_results[-1].thumbnail=row[7]
             search_results[-1].photo=row[8]
-
+        print(search_results)
         return search_results
 
     class Meta:
         db_table = "images"
         verbose_name = "Image"
 
-    def searchByDate(user='testuser', condition='newest'):
-        return searchImageByDate(user, condition)
+    def searchByDate(user, condition):
+        results = searchImageByDate(user, condition)
+        print(results)
+        search_results = []
+        #import pdb
+        for row in results:
+            #pdb.set_trace()
+            search_results.append(Images())
+            search_results[-1].photo_id=row[0]
+            search_results[-1].owner_name=Users.objects.get(username=row[1])
+            search_results[-1].permitted=Groups.objects.get(group_id=row[2])
+            search_results[-1].subject=row[3]
+            search_results[-1].place=row[4]
+            search_results[-1].timing=row[5]
+            search_results[-1].description=row[6]
+            search_results[-1].thumbnail=row[7]
+            search_results[-1].photo=row[8]
+        print(search_results)
+        return search_results
+
 
     def __str__(self):
         return ('ID: photo_id' + ' :: ' + self.photo.url)

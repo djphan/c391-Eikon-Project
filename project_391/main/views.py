@@ -3,7 +3,7 @@ import calendar
 from datetime import timedelta
 from PIL import Image
 import datetime
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models import Sum
 from django.template.loader import get_template
 from django.template import Context
@@ -22,7 +22,6 @@ import logging
 from django.shortcuts import redirect
 # import pdb
 import sys
-from django.db import IntegrityError
 import os
 from project_391.settings import PROJECT_PATH
 # Create your views here.
@@ -292,6 +291,7 @@ def get_image_data(request):
     # also need to include a list of the users groups
     user = authenticate_user(request)
     # if we are returning results for a search term
+    images = []
     try:
         params = json.loads(request.body)
     except:
@@ -315,9 +315,13 @@ def get_image_data(request):
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
         if search_type == "Newest":
-            images = Images.objects.all()
+            print('lols')
+            images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user))
+            #images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(Groups__group_id=permitted))
+            print(images)
+
         elif search_type == "Oldest":
-            images = Images.objects.all()
+            images = Images.objects.filter(permitted=1) #| permitted=2, owner_name=user)
 
     # otherwise we are passing the user back all of there images
     else:
