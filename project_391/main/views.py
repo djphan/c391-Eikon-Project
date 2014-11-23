@@ -373,7 +373,12 @@ def serialize_image(image, user):
         img["group"] = image.permitted.group_name + "@" + user.username
     else:
         img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
-    img["date"] = image.timing.strftime("%B %d, %Y")
+
+    if image.timing != None:
+        img["date"] = image.timing.strftime("%B %d, %Y")
+    else:
+        img["date"] = ""
+
     img["owner"] = user.username
     img["imageID"] = image.photo_id
     # editable indicates whether the user can edit the details of the image.
@@ -529,8 +534,6 @@ def upload_images(request):
         # TODO figure out whether we need to enforce a not null constraint on the date.
         # the provided create statements don't but I can't enter images with a null date.
         new_image_entry.timing = datetime.datetime.strptime(request.POST["date"], "%m/%d/%Y")
-    else:
-        new_image_entry.timing = datetime.datetime.now()
 
     if "location" in request.POST:
         new_image_entry.place = request.POST["location"]

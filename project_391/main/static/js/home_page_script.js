@@ -14,7 +14,8 @@ var imageManager = (function(){
         
         // holds the type of search
         searchType: "Text",
-
+        searchStartDate: undefined,
+        searchEndDate: undefined,
         // get image information
         getImageData: function(search_terms) {
             _this = this;
@@ -283,14 +284,14 @@ var imageManager = (function(){
         addSearchTypeEventListener: function(element){
             _this = this;
             element.addEventListener("click", function() {
-                imageManager.searchtype = element.dataset.searchtype;
-                if (imageManager.searchtype === "Newest" || imageManager.searchtype === "Oldest"){
+                imageManager.searchType = element.dataset.searchtype;
+                if (imageManager.searchType === "Newest" || imageManager.searchType === "Oldest"){
                     $(".search-term").hide();
                 } else {
                     $(".search-term").show();
                 }
                 searchButton = document.getElementsByClassName("search-button")[0];
-                if (element.dataset.searchtype === "Text") {
+                if (imageManager.searchType === "Text") {
                     searchButton.innerHTML = "Search: Full Text";
                 } else {
                     searchButton.innerHTML = "Search:  " + element.dataset.searchtype + " First";
@@ -300,8 +301,30 @@ var imageManager = (function(){
         
         // Display search info shows a notification about the search
         displaySearchInfo: function(content) {
-            searchInfo = document.getElementsByClassName("search-phrase")[0]; 
-            searchInfo.innerHTML = content;
+            searchResultType = document.getElementsByClassName("search-result-type")[0]; 
+            if (this.searchType == "Oldest" || this.searchType == "Newest"){
+                $(".search-result-type").show();
+                searchResultType.innerHTML = this.searchType + " images first";
+                $(".search-phrase").hide();
+            } else {
+                searchPhrase = document.getElementsByClassName("search-phrase")[0]; 
+                $(".search-result-type").show();
+                $(".search-phrase").show();
+                searchPhrase.innerHTML = "\"" + content + "\"";
+            }
+            if (this.searchStartDate) {
+                $(".search-start-date").show();
+                document.getElementsByClassName("search-start-date")[0].innerHTML = "From: " + this.searchStartDate;
+            } else {
+                $(".search-start-date").hide();
+            }
+            if (this.searchEndDate) {
+                $(".search-end-date").show();
+                document.getElementsByClassName("search-end-date")[0].innerHTML = "To: " + this.searchEndDate;
+            } else {
+                $(".search-end-date").hide();
+            }
+
         },
     
         removeObjectWithAttr: function(array, property, value){
@@ -351,7 +374,7 @@ window.onload = function() {
         $("#dateModal").modal('show');
     });
     $('#start-date').datetimepicker({pickTime: false});
-    $('#end-date').datetimepicker({pickTime: false});
+    $('#end-date').datetimepicker({pickTime: false, clearBtn: true});
 
     // set up date choice saving on modal close
     $("#dateModal").on('hidden.bs.modal', function() {
@@ -445,8 +468,8 @@ window.onload = function() {
         // get the search terms, TODO name the search box.
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // if we are doing a search for all images bases on timing newest/oldest first
-        if (imageManager.searchtype == "Newest" || imageManager.searchtype == "Oldest"){
-            req.send(JSON.stringify({searchType: imageManager.searchtype, startDate: imageManager.searchStartDate, endDate: 
+        if (imageManager.searchType == "Newest" || imageManager.searchType == "Oldest"){
+            req.send(JSON.stringify({searchType: imageManager.searchType, startDate: imageManager.searchStartDate, endDate: 
             imageManager.searchEndDate}));
          // else we are doing a search based on timing
         } else {

@@ -134,7 +134,9 @@
                     <div class="alert alert-success" role="alert">
                         <p class="search-header"><b>Showing search results for...</b></p>
                         <p class="search-phrase"></p>
-                        <p class="search-result-type"><em>Newest First</em></p> 
+                        <p class="search-result-type"></p> 
+                        <span class="search-start-date"></span> 
+                        <span class="search-end-date"></span><br> 
                         <span class="label label-info back-to-user-images">Back to your images</span>
                     </div>
                 </div>
@@ -160,19 +162,17 @@
                             <div class="row">
                                 <label for="idTourDateDetails">Start Date</label>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" readonly="true" name="idTourDateDetails" id="start-date" 
-                                                class="form-control"> 
-                                                <span class="input-group-addon"><i id="calIconTourDateDetails" 
-                                                class="glyphicon glyphicon-th"></i></span>
+                                    <div class="input-append date form_datetime" id="start-date">
+                                        <input type="text" readonly="true" name="idTourDateDetails" class="form-control"> 
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <label for="idTourDateDetails">End Date</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <input type="text" readonly="true" name="idTourDateDetails" id="end-date" 
+                                        <input type="text" readonly="true" name="idTourDateDetails" data-date-clear-btn="true" id="end-date" 
                                                 class="form-control"> 
                                                 <span class="input-group-addon"><i id="calIconTourDateDetails" 
                                                 class="glyphicon glyphicon-th"></i></span>
