@@ -80,11 +80,13 @@ var imageManager = (function(){
                     topTag.innerHTML = "Top Image"; 
                     topTag.className = "label label-warning label-top-image";
                     thumb_wrapper.appendChild(topTag);
-
+                    
+                    /*
                     rankTag = document.createElement("span");
                     rankTag.innerHTML = "Rank: " + images[i].rank; 
                     rankTag.className = "label label-default label-rank";
                     thumb_wrapper.appendChild(rankTag);
+                    */
 
                     viewTag = document.createElement("span");
                     viewTag.innerHTML = "Views: " + images[i].views; 
