@@ -14,7 +14,8 @@ var imageManager = (function(){
         
         // holds the type of search
         searchType: "Text",
-
+        searchStartDate: undefined,
+        searchEndDate: undefined,
         // get image information
         getImageData: function(search_terms) {
             _this = this;
@@ -79,11 +80,13 @@ var imageManager = (function(){
                     topTag.innerHTML = "Top Image"; 
                     topTag.className = "label label-warning label-top-image";
                     thumb_wrapper.appendChild(topTag);
-
+                    
+                    /*
                     rankTag = document.createElement("span");
                     rankTag.innerHTML = "Rank: " + images[i].rank; 
                     rankTag.className = "label label-default label-rank";
                     thumb_wrapper.appendChild(rankTag);
+                    */
 
                     viewTag = document.createElement("span");
                     viewTag.innerHTML = "Views: " + images[i].views; 
@@ -283,14 +286,14 @@ var imageManager = (function(){
         addSearchTypeEventListener: function(element){
             _this = this;
             element.addEventListener("click", function() {
-                imageManager.searchtype = element.dataset.searchtype;
-                if (imageManager.searchtype === "Newest" || imageManager.searchtype === "Oldest"){
+                imageManager.searchType = element.dataset.searchtype;
+                if (imageManager.searchType === "Newest" || imageManager.searchType === "Oldest"){
                     $(".search-term").hide();
                 } else {
                     $(".search-term").show();
                 }
                 searchButton = document.getElementsByClassName("search-button")[0];
-                if (element.dataset.searchtype === "Text") {
+                if (imageManager.searchType === "Text") {
                     searchButton.innerHTML = "Search: Full Text";
                 } else {
                     searchButton.innerHTML = "Search:  " + element.dataset.searchtype + " First";
@@ -300,8 +303,30 @@ var imageManager = (function(){
         
         // Display search info shows a notification about the search
         displaySearchInfo: function(content) {
-            searchInfo = document.getElementsByClassName("search-phrase")[0]; 
-            searchInfo.innerHTML = content;
+            searchResultType = document.getElementsByClassName("search-result-type")[0]; 
+            if (this.searchType == "Oldest" || this.searchType == "Newest"){
+                $(".search-result-type").show();
+                searchResultType.innerHTML = this.searchType + " images first";
+                $(".search-phrase").hide();
+            } else {
+                searchPhrase = document.getElementsByClassName("search-phrase")[0]; 
+                $(".search-result-type").show();
+                $(".search-phrase").show();
+                searchPhrase.innerHTML = "\"" + content + "\"";
+            }
+            if (this.searchStartDate) {
+                $(".search-start-date").show();
+                document.getElementsByClassName("search-start-date")[0].innerHTML = "From: " + this.searchStartDate;
+            } else {
+                $(".search-start-date").hide();
+            }
+            if (this.searchEndDate) {
+                $(".search-end-date").show();
+                document.getElementsByClassName("search-end-date")[0].innerHTML = "To: " + this.searchEndDate;
+            } else {
+                $(".search-end-date").hide();
+            }
+
         },
     
         removeObjectWithAttr: function(array, property, value){
@@ -358,9 +383,20 @@ window.onload = function() {
         var endDate = document.getElementById("end-date").value;
         if (startDate){
             imageManager.searchStartDate = startDate;
+        } else {
+            imageManager.searchStartDate = undefined;
         }
         if (endDate){
             imageManager.searchEndDate = endDate;
+        } else {
+            imageManager.searchEndDate = undefined;
+        }
+        if (startDate && endDate){
+            if(new Date(startDate) > new Date(endDate)){
+                swal("Date Error" ,"Start date must be before end date");
+                imageManager.searchEndDate = undefined;
+                $("#end-date").val("");
+            }
         }
     });
 
@@ -417,6 +453,10 @@ window.onload = function() {
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
         searchTerm = document.getElementsByClassName("search-term")[0].value;
+        if (searchTerm == "" && imageManager.searchType == "Text"){
+            swal("No Search Term", "You must enter a search term.");
+            return;
+        }
         // Get the search query and send to 
         var req = new XMLHttpRequest();
         req.onreadystatechange=function(){
@@ -433,16 +473,16 @@ window.onload = function() {
             }
         };
         req.open("POST","/main/get_image_data/", true);
-        // get the search terms, TODO name the search box.
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // if we are doing a search for all images bases on timing newest/oldest first
-        if (imageManager.searchtype == "Newest" || imageManager.searchtype == "Oldest"){
-            req.send(JSON.stringify({searchType: imageManager.searchtype, startDate: imageManager.searchStartDate, endDate: 
-            imageManager.searchEndDate}));
+        var searchType = imageManager.searchType;
+        var startDate = imageManager.searchStartDate;
+        var endDate = imageManager.searchEndDate;
+        if (searchType == "Newest" || searchType == "Oldest"){
+            req.send(JSON.stringify({searchType: searchType, startDate: startDate, endDate: endDate}));
          // else we are doing a search based on timing
         } else {
-            req.send(JSON.stringify({searchTerm: searchTerm, startDate: imageManager.searchStartDate, 
-            endDate: imageManager.searchEndDate}));
+            req.send(JSON.stringify({searchTerm: searchTerm, startDate: startDate, endDate: endDate}));
         }
     }, 0);
 };

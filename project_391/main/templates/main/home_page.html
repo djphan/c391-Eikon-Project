@@ -15,6 +15,12 @@
     <script src="{{ STATIC_URL }}js/sweet-alert.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/sweet-alert.css">
 
+    <!-- Date/Time picker stuff -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
+
+
     <script src="{{ STATIC_URL }}js/home_page_script.js"></script>
 
     <!-- classie for quick class addition/removal -->
@@ -128,7 +134,9 @@
                     <div class="alert alert-success" role="alert">
                         <p class="search-header"><b>Showing search results for...</b></p>
                         <p class="search-phrase"></p>
-                        <p class="search-result-type"><em>Newest First</em></p> 
+                        <p class="search-result-type"></p> 
+                        <span class="search-start-date"></span> 
+                        <span class="search-end-date"></span><br> 
                         <span class="label label-info back-to-user-images">Back to your images</span>
                     </div>
                 </div>
@@ -154,26 +162,20 @@
                             <div class="row">
                                 <label for="idTourDateDetails">Start Date</label>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="date" name="idTourDateDetails" id="start-date" 
-                                                class="form-control clsDatePicker"> 
-                                                <span class="input-group-addon"><i id="calIconTourDateDetails" 
-                                                class="glyphicon glyphicon-th"></i></span>
+                                    <div class="input-append date form_datetime">
+                                        <input type="date" name="idTourDateDetails" class="form-control" id="start-date"> 
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <label for="idTourDateDetails">End Date</label>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="date" name="idTourDateDetails" id="end-date" 
-                                                class="form-control clsDatePicker"> 
-                                                <span class="input-group-addon"><i id="calIconTourDateDetails" 
-                                                class="glyphicon glyphicon-th"></i></span>
+                                    <div class="input-append date form_datetime" >
+                                        <input type="date"  name="idTourDateDetails" class="form-control" id="end-date"> 
                                     </div>
                                 </div>
                             </div>
-
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

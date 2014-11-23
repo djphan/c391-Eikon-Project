@@ -39,18 +39,11 @@
     left: 15px;
 }
 
-.label-rank {
+.label-views {
     position: absolute;
     top: 35px;
     left: 15px;
     background-color: #FF7676;
-}
-
-.label-views {
-    position: absolute;
-    top: 55px;
-    left: 15px;
-    background-color: #F94F4F;
 }
 
 .save-edit-button {

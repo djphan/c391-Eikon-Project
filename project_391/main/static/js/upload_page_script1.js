@@ -3,6 +3,11 @@ window.onload = function(){
     $('#datetimepicker6').datetimepicker({pickTime: false});
     swal("Upload Details", "If you wish to submit photo details please place them in the fields before choosing files");
     var dropzone = window.Dropzone.instances[0];
+
+    // set private as the default group
+    permissionsSelectBox = document.getElementById("permissions");
+    permissionsSelectBox.selectedIndex = permissionsSelectBox.length - 1;
+
     // set the options
     dropzone.on("sending", function(file, xhr, formData) {
         
