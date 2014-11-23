@@ -10,6 +10,7 @@ from django.template import Context
 from django.core import serializers
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.utils import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.shortcuts import render, render_to_response
 from main.models import Users, Persons, Session, Groups, GroupLists, Images, Views
@@ -341,16 +342,16 @@ def get_image_data(request):
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
     if "searchType" in params:
-        top_images = Views.objects.annotate(num_views=Count('photo_id')).order_by('num_views')
+        top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
         for idx, image in enumerate(top_images):
-            photo_id = image.photo_id.photo_id 
+            photo_id = image["photo_id"]
             top_image = Images.objects.get(photo_id=photo_id)
             top_image = serialize_image(top_image, user)
             top_image["topImage"] = "true"
             top_image["rank"] = str(idx + 1)
-            top_image["views"] = image.num_views
+            top_image["views"] = image["id__count"]
             # this handles the case where the 5th image is tied with the following images in view count.
-            if idx > 4 and response["images"][idx - 1]["views"] > image.num_views:
+            if idx > 4 and response["images"][idx - 1]["views"] > image["id__count"]:
                 break
             response["images"].append(top_image)
             top_image_ids.append(photo_id)
@@ -383,7 +384,7 @@ def serialize_image(image, user):
 
     # check whether the group is private or public and handle no username
     if image.permitted.group_name == "private" or image.permitted.group_name == "public":
-        img["group"] = image.permitted.group_name + "@" + user.username
+        img["group"] = image.permitted.group_name + "@" + image.owner_name.username
     else:
         img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
 
@@ -535,9 +536,9 @@ def upload_images(request):
     if "permissions" in request.POST:
         group_name, group_owner = request.POST["permissions"].split("@")
         if group_name == 'private': 
-            new_image_entry.permitted = Groups.objects.get(group_id=PUBLIC)
-        elif group_name == 'public':
             new_image_entry.permitted = Groups.objects.get(group_id=PRIVATE)
+        elif group_name == 'public':
+            new_image_entry.permitted = Groups.objects.get(group_id=PUBLIC)
         else:
             new_image_entry.permitted = Groups.objects.get(group_name=group_name, user_name=group_owner)
     else:

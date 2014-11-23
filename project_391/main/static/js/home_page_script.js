@@ -151,7 +151,8 @@ var imageManager = (function(){
                     }
                 }
             }
-
+            
+            $(".left-side").show();
             // clear the old xeditable fields so they can be reinitialized with the
             //  new image data
             $('#image-subject').editable("destroy");
@@ -363,7 +364,7 @@ var imageManager = (function(){
 window.onload = function() {
     // make ajax call receive back a json array of image objects
     var jsonData = imageManager.getImageData();    
-
+    
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = 53 + "px";
@@ -448,7 +449,7 @@ window.onload = function() {
         // display the user thumbnails
         imageManager.populateThumbnails(imageManager.imageData, false, null);
     }, 0);
-
+        
     // set up the search click handler
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
