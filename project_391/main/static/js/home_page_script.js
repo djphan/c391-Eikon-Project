@@ -451,7 +451,7 @@ window.onload = function() {
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
         searchTerm = document.getElementsByClassName("search-term")[0].value;
-        if (searchTerm == ""){
+        if (searchTerm == "" && imageManager.searchType == "Text"){
             swal("No Search Term", "You must enter a search term.");
             return;
         }
@@ -471,16 +471,16 @@ window.onload = function() {
             }
         };
         req.open("POST","/main/get_image_data/", true);
-        // get the search terms, TODO name the search box.
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         // if we are doing a search for all images bases on timing newest/oldest first
-        if (imageManager.searchType == "Newest" || imageManager.searchType == "Oldest"){
-            req.send(JSON.stringify({searchType: imageManager.searchType, startDate: imageManager.searchStartDate, endDate: 
-            imageManager.searchEndDate}));
+        var searchType = imageManager.searchType;
+        var startDate = imageManager.searchStartDate;
+        var endDate = imageManager.searchEndDate;
+        if (searchType == "Newest" || searchType == "Oldest"){
+            req.send(JSON.stringify({searchType: searchType, startDate: startDate, endDate: endDate}));
          // else we are doing a search based on timing
         } else {
-            req.send(JSON.stringify({searchTerm: searchTerm, startDate: imageManager.searchStartDate, 
-            endDate: imageManager.searchEndDate}));
+            req.send(JSON.stringify({searchTerm: searchTerm, startDate: startDate, endDate: endDate}));
         }
     }, 0);
 };
