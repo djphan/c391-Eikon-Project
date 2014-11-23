@@ -53,7 +53,7 @@ class Persons(models.Model):
 
 class Groups(models.Model):
     group_id = models.AutoField(primary_key=True)
-    user_name = models.ForeignKey(Users, db_column="user_name")
+    user_name = models.ForeignKey(Users, db_column="user_name", null=True)
     group_name = models.CharField(max_length=24, db_column="group_name")
     date_created = models.DateField(auto_now_add=True)
     
