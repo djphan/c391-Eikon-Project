@@ -376,7 +376,7 @@ def serialize_image(image, user):
 
     # check whether the group is private or public and handle no username
     if image.permitted.group_name == "private" or image.permitted.group_name == "public":
-        img["group"] = image.permitted.group_name + "@" + user.username
+        img["group"] = image.permitted.group_name + "@" + image.owner_name.username
     else:
         img["group"] = image.permitted.group_name + "@" + image.permitted.user_name.username
 
