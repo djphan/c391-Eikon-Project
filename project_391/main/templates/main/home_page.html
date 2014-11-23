@@ -18,7 +18,7 @@
     <!-- Date/Time picker stuff -->
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css">
     <script type="text/javascript" src="{{ STATIC_URL }}js/moment.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.js"></script>
 
 
     <script src="{{ STATIC_URL }}js/home_page_script.js"></script>
@@ -162,24 +162,20 @@
                             <div class="row">
                                 <label for="idTourDateDetails">Start Date</label>
                                 <div class="form-group">
-                                    <div class="input-append date form_datetime" id="start-date">
-                                        <input type="text" readonly="true" name="idTourDateDetails" class="form-control"> 
+                                    <div class="input-append date form_datetime">
+                                        <input type="date" name="idTourDateDetails" class="form-control" id="start-date"> 
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <label for="idTourDateDetails">End Date</label>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="text" readonly="true" name="idTourDateDetails" data-date-clear-btn="true" id="end-date" 
-                                                class="form-control"> 
-                                                <span class="input-group-addon"><i id="calIconTourDateDetails" 
-                                                class="glyphicon glyphicon-th"></i></span>
+                                    <div class="input-append date form_datetime" >
+                                        <input type="date"  name="idTourDateDetails" class="form-control" id="end-date"> 
                                     </div>
                                 </div>
                             </div>
-
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

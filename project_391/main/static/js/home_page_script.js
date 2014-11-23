@@ -373,8 +373,6 @@ window.onload = function() {
         // launch the modal
         $("#dateModal").modal('show');
     });
-    $('#start-date').datetimepicker({pickTime: false});
-    $('#end-date').datetimepicker({pickTime: false, clearBtn: true});
 
     // set up date choice saving on modal close
     $("#dateModal").on('hidden.bs.modal', function() {
@@ -383,9 +381,13 @@ window.onload = function() {
         var endDate = document.getElementById("end-date").value;
         if (startDate){
             imageManager.searchStartDate = startDate;
+        } else {
+            imageManager.searchStartDate = undefined;
         }
         if (endDate){
             imageManager.searchEndDate = endDate;
+        } else {
+            imageManager.searchEndDate = undefined;
         }
         if (startDate && endDate){
             if(new Date(startDate) > new Date(endDate)){
@@ -449,6 +451,10 @@ window.onload = function() {
     var searchButton = document.getElementsByClassName("search-button")[0];
     searchButton.addEventListener("click", function(){
         searchTerm = document.getElementsByClassName("search-term")[0].value;
+        if (searchTerm == ""){
+            swal("No Search Term", "You must enter a search term.");
+            return;
+        }
         // Get the search query and send to 
         var req = new XMLHttpRequest();
         req.onreadystatechange=function(){

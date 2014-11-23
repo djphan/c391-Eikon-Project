@@ -300,14 +300,16 @@ def get_image_data(request):
     # datetime objects are available for searches if they are set in the browser
     # note that the user can set one or both so before performing queries check
     # whether both or only one has been given by the user.
+    import pdb; pdb.set_trace()
     if "startDate" in params:
-        search_start_date = datetime.datetime.strptime(params["startDate"], "%m/%d/%Y")
+        search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")
     if "endDate" in params:
-        search_end_date = datetime.datetime.strptime(params["endDate"], "%m/%d/%Y")
+        search_end_date = datetime.datetime.strptime(params["endDate"], "%Y-%m-%d")
 
     if "searchTerm" in params:
-        search_term = params["searchTerm"]
-        images = Images.searchByText(user, search_term)
+        if params["searchTerm"] != "":
+            search_term = params["searchTerm"]
+            images = Images.searchByText(user, search_term)
     
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
