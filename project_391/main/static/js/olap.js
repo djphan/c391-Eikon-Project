@@ -28,6 +28,8 @@ var olapManager = (function(){
 
 window.onload = function() {
     // set up the user selection box
+    $("#search-term").hide();
+    $("#btn-group").hide();
     userSelectBox = document.getElementById("get-data-button");
     userSelectBox.addEventListener("click", function() {
         var byUser = document.getElementById("user");

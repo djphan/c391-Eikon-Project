@@ -179,7 +179,7 @@ var imageManager = (function(){
             image_group.innerHTML = image.group;
             // set image date 
             var image_date = document.getElementById("image-date"); 
-            image_date.innerHTML = image.date;
+            image_date.innerHTML = image.date ? image.date: null;
 
             // check if the image is one of the users
             // if so set up the editing functions.
@@ -263,7 +263,6 @@ var imageManager = (function(){
                                             });
                 image_date.dataset.pk = image.imageID; 
                 $('#image-date').editable({placement: "top", emptytext: "Select a date.",
-                                            display: false,
                                             emptyclass: "empty",
                                             params: function(params) {
                                                 data = {};

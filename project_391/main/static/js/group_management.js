@@ -351,5 +351,7 @@ onDataResponse = function() {
 
 window.onload = function(){
     // get an array of all groups and their members and all users
+    $("#search-term").hide();
+    $("#btn-group").hide();
     groupManager.getGroupInformation();
 };
