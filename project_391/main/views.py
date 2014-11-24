@@ -279,11 +279,6 @@ def get_image_data(request):
         allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
         images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
 
-            # import pdb; pdb.set_trace()
-            allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
-            images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
-            print(allowed_groups)
-        
         if search_type == "Newest":
             images = images.order_by('-timing')
         elif search_type == "Oldest":

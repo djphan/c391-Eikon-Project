@@ -38,7 +38,7 @@ class Persons(models.Model):
     last_name = models.CharField(max_length=24)
     address = models.CharField(max_length=128)
     email = models.CharField(max_length=128, unique=True)
-    phone = models.CharField(max_length=10)
+    phone = models.CharField(max_length=20)
 
     def search(self, condition):
         return
