@@ -1,6 +1,6 @@
 from django.db import models
 from django.db import connection
-from main.imgSearch import searchImageByText, searchImageByDate
+from main.imgSearch import searchImageByText
 
 # Create your models heres
 
