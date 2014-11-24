@@ -25,6 +25,7 @@ from django.shortcuts import redirect
 import sys
 import os
 from project_391.settings import PROJECT_PATH
+from main.datacube import generateDataCube
 # Create your views here.
 
 PUBLIC = 1 # group id for public group
