@@ -250,6 +250,8 @@ def get_image_data(request):
     # need to return thumbnail, main image, title, description, location, group, date, owner, and image_id, editable
     # also need to include a list of the users groups
     user = authenticate_user(request)
+    groups = Groups.objects.all()
+
     # if we are returning results for a search term
     images = []
     try:
@@ -274,14 +276,13 @@ def get_image_data(request):
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
+        allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
+        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
+        
         if search_type == "Newest":
-            print('lols')
-            images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user))
-            #images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(Groups__group_id=permitted))
-            print(images)
-
+            images = images.order_by('-timing')
         elif search_type == "Oldest":
-            images = Images.objects.filter(permitted=1) #| permitted=2, owner_name=user)
+            images = images.order_by('timing')
 
     # otherwise we are passing the user back all of there images
     else:
