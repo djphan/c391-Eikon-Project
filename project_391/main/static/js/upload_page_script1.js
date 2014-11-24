@@ -10,7 +10,7 @@ window.onload = function(){
         alert("nope");
     });
 
-    dropzone.options.acceptedFiles = ".jpg,.jpeg,.gif";
+    dropzone.options.acceptedFiles = ".jpg,.jpeg,.gif,.png";
     // set private as the default group
     permissionsSelectBox = document.getElementById("permissions");
     permissionsSelectBox.selectedIndex = permissionsSelectBox.length - 1;

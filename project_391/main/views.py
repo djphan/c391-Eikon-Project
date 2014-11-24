@@ -284,8 +284,12 @@ def get_image_data(request):
             images = images.order_by('timing')
 
     # otherwise we are passing the user back all of there images
+    # if the user is username 'admin' then pass them back all images
     else:
-        images = Images.objects.filter(owner_name=user)
+        if user.username == 'admin':
+            images = Images.objects.all()
+        else:
+            images = Images.objects.filter(owner_name=user)
 
     # build the json response for each image
     response = {}
