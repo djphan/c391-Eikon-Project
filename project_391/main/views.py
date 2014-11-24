@@ -258,7 +258,7 @@ def get_image_data(request):
         params = json.loads(request.body)
     except:
         params = {}
-
+    # import pdb; pdb.set_trace()
     # datetime objects are available for searches if they are set in the browser
     # note that the user can set one or both so before performing queries check
     # whether both or only one has been given by the user.
@@ -277,8 +277,7 @@ def get_image_data(request):
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
         allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
-        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
-        
+        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups])).filter(timing__isnull=False)
         if search_type == "Newest":
             images = images.order_by('-timing')
         elif search_type == "Oldest":
@@ -605,7 +604,7 @@ def add_group(request):
     # user_name = Users.objects.get(username='jonnyc')
 
     # receives a json object {"newGroupName":"nameOfNewGroup"}
-
+    # import pdb; pdb.set_trace()
     try:
         request_body = json.loads(request.body)
     except:
