@@ -49,7 +49,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_pdb.middleware.PdbMiddleware',
 )
 
 ROOT_URLCONF = 'project_391.urls'
@@ -66,7 +65,7 @@ DATABASES = {
             'NAME': 'web_prj_db', # Or path to database file if using sqlite3.
             # The following settings are not used with sqlite3:
             'USER': '',
-            'PASSWORD': '',
+            'PASSWORD': 'carrma',
             'HOST': '', # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
             'PORT': '', # Set to empty string for default.
          
