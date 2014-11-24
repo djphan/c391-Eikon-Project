@@ -5,7 +5,7 @@ var olapManager = (function(){
         userData: [],
    
         // get all olap data for a given user
-        getUserData: function(username){
+        getData: function(jsonParams){
             var req = new XMLHttpRequest();
             req.onreadystatechange=function(){
                 // TODO uncomment the req.status == 200 snippet
@@ -20,35 +20,31 @@ var olapManager = (function(){
             // json object passed {"groupMember": groupMember, "groupName":groupName}
             req.open("POST","/main/get_olap_data/", true);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            req.send(JSON.stringify({username: username}));
-        },
-
-        // create a chart given a usersdata
-        graphUserData: function(userData, dmy){
-           var data = {
-              "xScale": "time",
-              "yScale": "linear",
-              "type": "line",
-              "main": [
-                {
-                  "className": ".pizza",
-                  "data": userData
-                }]
-            };
-            var myChart = new xChart('line', data, '#chart'); 
-        }
+            req.send(jsonParams);
+        }    
     };
 })();
 
 
 window.onload = function() {
-    // set up the dates pickers
-    $('#start-date').datetimepicker({pickTime: false});
-    $('#end-date').datetimepicker({pickTime: false});
     // set up the user selection box
-    userSelectBox = document.getElementById("user");
-    userSelectBox.onchange = function(){
-        userSelected = userSelectBox.options[userSelectBox.selectedIndex].text;
-        olapManager.getUserData(userSelected);
-    };
+    userSelectBox = document.getElementById("get-data-button");
+    userSelectBox.addEventListener("click", function() {
+        var byUser = document.getElementById("user");
+        var byUser = byUser.options[byUser.selectedIndex].dataset.byuser;
+        var byDate = document.getElementById("time-period");
+        var byDate = byDate.options[byDate.selectedIndex].dataset.bydate;
+        var bySubject = document.getElementById("subject");
+        var bySubject = bySubject.options[bySubject.selectedIndex].dataset.bysubject;
+        var startDate = document.getElementById("start-date").value;
+        if (startDate == ""){
+            startDate = "False";
+        }
+        var endDate = document.getElementById("end-date").value;
+        if (endDate == ""){
+            endDate = "False";
+        }
+        olapManager.getData(JSON.stringify({byUser: byUser, byDate: byDate, 
+                                bySubject: bySubject, startDate: startDate, endDate: endDate}));
+    });
 };

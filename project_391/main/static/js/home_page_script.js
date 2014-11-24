@@ -151,7 +151,8 @@ var imageManager = (function(){
                     }
                 }
             }
-
+            
+            $(".left-side").show();
             // clear the old xeditable fields so they can be reinitialized with the
             //  new image data
             $('#image-subject').editable("destroy");

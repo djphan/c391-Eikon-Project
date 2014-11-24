@@ -1,4 +1,7 @@
 window.onload = function(){
+    // hide search and search text field
+    $("#search-term").hide();
+    $("#btn-group").hide();
     // instantiate the date time picker
     $('#datetimepicker6').datetimepicker({pickTime: false});
     swal("Upload Details", "If you wish to submit photo details please place them in the fields before choosing files");
