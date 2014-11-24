@@ -6,7 +6,11 @@ window.onload = function(){
     $('#datetimepicker6').datetimepicker({pickTime: false});
     swal("Upload Details", "If you wish to submit photo details please place them in the fields before choosing files");
     var dropzone = window.Dropzone.instances[0];
+    dropzone.on("cancelled", function(file){
+        alert("nope");
+    });
 
+    dropzone.options.acceptedFiles = ".jpg,.jpeg,.gif";
     // set private as the default group
     permissionsSelectBox = document.getElementById("permissions");
     permissionsSelectBox.selectedIndex = permissionsSelectBox.length - 1;
@@ -36,7 +40,7 @@ window.onload = function(){
 
     });
 
-    dropzone.on("queuecomplete", function() {
+    dropzone.on("success", function() {
         swal({
             title: "Upload complete",
             text: "Check out your uploaded images?",
