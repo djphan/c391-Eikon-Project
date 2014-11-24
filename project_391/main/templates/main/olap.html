@@ -69,10 +69,8 @@
                 <label for="user" class="col-sm-4 control-label">Username</label>
                 <div class="col-sm-8">
                   <select class="form-control" id="user" name="username">
-                        <option>Select a user</option>
-                    {% for user in users %}
-                        <option>{{ user }}<option>
-                    {% endfor %}
+                      <option data-byuser="False">Group All Users</option>
+                      <option data-buyuser="true">By Individual User</option>
                   </select>
                 </div>
               </div>
@@ -82,9 +80,10 @@
                 <label for="time-period" class="col-sm-4 control-label">Time Period</label>
                 <div class="col-sm-8">
                   <select class="form-control" id="time-period" name="timePeriod">
-                      <option>Weekly</option>
-                      <option>Monthly</option>
-                      <option>Yearly</option>
+                      <option data-bydate="False">None</option>
+                      <option data-byddate="weekly">Weekly</option>
+                      <option data-bydate="monthly">Monthly</option>
+                      <option data-bydate="yearly">Yearly</option>
                   </select>
                 </div>
               </div>
@@ -92,14 +91,14 @@
               <div class="form-group">
                 <label for="start-date" class="col-sm-4 control-label">Start Date</label>
                 <div class="col-sm-8">
-                  <input type="text" readonly=true class="form-control" id="start-date" placeholder="Start Date">
+                  <input type="date" class="form-control" id="start-date" placeholder="Start Date">
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="end-date" class="col-sm-4 control-label">End Date</label>
                 <div class="col-sm-8">
-                  <input type="text" readonly=true class="form-control" id="end-date" placeholder="End Date">
+                  <input type="date" class="form-control" id="end-date" placeholder="End Date">
                 </div>
               </div>
 
@@ -107,15 +106,14 @@
                 <label for="subject" class="col-sm-4 control-label">Subject</label>
                 <div class="col-sm-8">
                   <select class="form-control" id="subject" name="subject">
-                    {% for subject in subjects %}
-                      <option>{{ subject }}</option>
-                    {% endfor %}
+                      <option data-bysubject="True">By Subject</option>
+                      <option data-bysubject="False">Ignore Subject</option>
                   </select>
                 </div>
               </div>
             <div class="form-group">
-              <div class="col-sm-12 text-center">
-                <button type="submit" class="btn btn-primary animated fadeInUp delay-05s">Sign in</button>
+              <div class="text-center">
+                <button type="submit" id="get-data-button" class="col-sm-6 col-sm-offset-5 btn btn-primary animated fadeInUp delay-05s">Display</button>
               </div>
             </div>
          </form>

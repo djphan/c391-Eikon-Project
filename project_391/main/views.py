@@ -224,65 +224,24 @@ def add_view(request):
 
 @csrf_exempt
 def get_olap_data(request):
-    # passed in a username, pass back a list of all data for
-    # weekly, monthly, yearly
-    # import pdb; pdb.set_trace()
     user = authenticate_user(request)
     # parse json
-    try:
-        request_data = json.loads(request.body)
-    except:
-        return HttpResponse("Could not parse JSON", status=500)
-    # get the date the user signed up
-    user_being_analyzed = Users.objects.get(username=request_data["username"])
-    # find the user begin date
-    response = {}
-    response["userName"] = user_being_analyzed.username
-    response["registrationDate"] = user_being_analyzed.date_registered
-    # get the data by week take start date and add 7
-    response["byWeek"] = []
-    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
-    while date <= datetime.datetime.today():
-        image_count = Images.objects.filter(owner_name=user)\
-                                    .filter(timing__gte=date)\
-                                    .filter(timing__lt=date + timedelta(days=7))\
-                                    .count()
-        response["byWeek"].append({"x": date.strftime("%Y-%m-%d"), "y": image_count})
-        date += timedelta(days=7)
-    
-    # get the data by month
-    response["byMonth"] = []
-    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
-    # get the beginning of the month
-    while date <= datetime.datetime.today():
-        # get the last day in the month
-        last_day_of_month = calendar.monthrange(date.year, date.month)[1] 
-        daysdelta = last_day_of_month - date.day
-        image_count = Images.objects.filter(owner_name=user)\
-                                    .filter(timing__gte=date)\
-                                    .filter(timing__lt=date + timedelta(days=daysdelta))\
-                                    .count()
-        response["byMonth"].append({"x": date.strftime("%Y-%m-%d"), "y": image_count})
-        # this rolls the date over to the first of the next month
-        date += timedelta(days=1 + daysdelta)
+    # parameters passed in are the following
+    params = json.loads(request.body)
+    by_user = params["byUser"] #by_user True/False¬
+    by_date = params["byDate"] #by_date False/weekly/monthly/yearly
+    by_subject = params["bySubject"] # by_subject True/False
+    start_date = params["startDate"] # start_date a date such as 2014-01-01 or False if not supplied
+    end_date = params["endDate"] # end_date a date such as 2014-01-01 or False if not supplied
+    # note that true false values are strings not bool
 
-    response["byYear"] = []
-    date = datetime.datetime.combine(user_being_analyzed.date_registered, datetime.datetime.min.time())
-    # get the data by year
-    while date <= datetime.datetime.today():
-        # get the last day in the month
-        last_day_of_year = datetime.datetime(date.year, 12, 31)
-        daysdelta = (last_day_of_year - date).days
-        image_count = Images.objects.filter(owner_name=user)\
-                                    .filter(timing__gte=date)\
-                                    .filter(timing__lt=date + timedelta(days=daysdelta))\
-                                    .count()
-        response["byYear"].append({"x": date.strftime("%Y"), "y": image_count})
-        # this rolls the date over to the first of the next month
-        date += timedelta(days=1 + daysdelta)
-    
-    response["subject"] = []
-    return JsonResponse(response, status=200)
+    return HttpResponse("No data", status=400) 
+
+
+
+
+
+
 
 @csrf_exempt
 def get_image_data(request):
