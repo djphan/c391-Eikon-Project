@@ -277,7 +277,7 @@ def get_image_data(request):
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
         allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
-        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
+        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups])).filter(timing__isnull=False)
         
         if search_type == "Newest":
             images = images.order_by('-timing')
