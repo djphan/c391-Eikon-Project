@@ -293,7 +293,7 @@ def get_image_data(request):
 
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
-    if "searchType" in params:
+    if "searchType" not in params and "searchTerm" not in params:
         top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
         for idx, image in enumerate(top_images):
             photo_id = image["photo_id"]
