@@ -364,6 +364,15 @@ window.onload = function() {
     // make ajax call receive back a json array of image objects
     var jsonData = imageManager.getImageData();    
     
+    // if the logged in user is 'admin' then change upload to olap
+    var uploadButton = document.getElementById("upload-button"); 
+    var currentUser = document.getElementsByClassName("navbar-brand")[0].innerHTML;
+    if (currentUser == 'admin'){
+        // hide the search elements
+        uploadButton.innerHTML = "OLAP";
+        uploadButton.href = "/main/olap";
+    }
+
     // set the height of the image scrolling grid
     var navBarHeight = document.getElementById("bs-example-navbar-collapse-1").clientHeight;
     document.getElementsByClassName("image-grid")[0].style.top = 53 + "px";
