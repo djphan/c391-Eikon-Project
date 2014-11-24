@@ -30,7 +30,7 @@ def searchImageByText(user, textquery):
                                   setweight(to_tsvector(images.place), 'B') ||
                                   setweight(to_tsvector(images.description), 'C')  as document
                            FROM images, groups, group_lists 
-                           WHERE  images.permitted = 1 
+                           WHERE  (images.permitted = 1) 
                                   OR (images.permitted = 2 AND images.owner_name = '{0}')
                                   OR (images.permitted = groups.group_id AND groups.user_name = '{0}')
                                   OR (images.permitted = group_lists.group_id AND group_lists.friend_id = '{0}' ) ) img_search 
