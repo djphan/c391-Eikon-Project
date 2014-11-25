@@ -238,8 +238,14 @@ def get_olap_data(request):
     start_date = params["startDate"] # start_date a date such as 2014-01-01 or False if not supplied
     end_date = params["endDate"] # end_date a date such as 2014-01-01 or False if not supplied
     # note that true false values are strings not bool
-    
-    return HttpResponse("No data", status=400) 
+    import pdb; pdb.set_trace()
+    test = []
+    testobject = {}
+    testobject["col1"] = 10
+    testobject["col2"] = 20
+    testobject["col3"] = 30
+    test.append(testobject)
+    return JsonResponse(test, status=200)
 
 
 
