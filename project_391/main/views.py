@@ -268,24 +268,32 @@ def get_image_data(request):
     # note that the user can set one or both so before performing queries check
     # whether both or only one has been given by the user.
     print (params)
+
+    # Constants used to reference to for the search
+    search_start_date = None
+    search_end_date = None
+    allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
+
     if "startDate" in params:
-        search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")
+        search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")        
     if "endDate" in params:
         search_end_date = datetime.datetime.strptime(params["endDate"], "%Y-%m-%d")
 
+    print('lolsolols')
+    print(search_start_date)
+    print(search_end_date)
     if "searchTerm" in params:
         if params["searchTerm"] != "":
             search_term = params["searchTerm"]
-            images = Images.searchByText(user, search_term)
+            images = Images.searchByText(user, search_term, search_start_date, search_end_date)
             print("START")
-            dc = generateDataCube(None, None, 'month')
-            print(dc)
-            print("END")
+            #dc = generateDataCube(None, None, 'month')
+            #print(dc)
+            #print("END")
     
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
-        allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
         images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups])).filter(timing__isnull=False)
         if search_type == "Newest":
             images = images.order_by('-timing')

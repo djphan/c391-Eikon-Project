@@ -16,7 +16,6 @@ def generateDataCube(owner_name=None, subject=None, timing=None):
     if not any([owner_name, subject, timing]):
         dbquery = dbquery[:-11]
     
-    print(dbquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result = cursor.fetchall()
