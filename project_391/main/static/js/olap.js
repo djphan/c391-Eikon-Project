@@ -10,10 +10,10 @@ var olapManager = (function(){
             req.onreadystatechange=function(){
                 // TODO uncomment the req.status == 200 snippet
                 if (req.readyState==4 && req.status == 200){
-                    olapManager.userData.push(JSON.parse(req.responseText));     
+                    olapManager.displayData(JSON.parse(req.responseText));
                     //olapManager.graphUserData(user
                 } else if (req.readyState==4 && req.status != 200){
-                    swal("Could not pull data for the user");
+                    swal("Could not get OLAP data");
                 }
             };
             // send post request to /main/remove_user_from_group
@@ -21,7 +21,43 @@ var olapManager = (function(){
             req.open("POST","/main/get_olap_data/", true);
             req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             req.send(jsonParams);
-        }    
+        },
+
+        displayData(table){
+            // find the column names
+            columnLabels = Object.keys(table[0]);
+            table = document.createElement("table");
+            // place the table in the document
+            tableContainer = document.getElementById("table-container");
+
+            // delete any existing table before appending the new one
+            while (tableContainer.hasChildNodes){
+                tableContainer.removeChild(tableContainer.lastChild);
+            }
+            tableContainer.appendChild(table);
+            table.className = "table";
+            tableHeaderRow = document.createElement("tr");
+            table.appendChild("tableHeaderRow");
+            for (var i = 0; i < columnLabels.length; i++){
+                columbLabel = document.createElement("th");
+                columbLabel.innerHTML = columbLabels[i];
+                tableHeaderRow.appendChild(columbLabel);
+            }
+
+            // create the rows
+            for (var j = 0; j < table.length; j++){
+                row = table[j];
+                tableRow = document.createElement("tr");
+                table.appendChild("tableRow");
+                for (var attribute in row) {
+                    if (p.hasOwnProperty(attribute)){
+                        tableAttribute = document.createElement("td");
+                        tableAttribute.innerHTML = row[attribute];
+                        tableRow.appendChild(tableAttribute);
+                    }
+                }
+            }
+        }
     };
 })();
 
