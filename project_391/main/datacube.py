@@ -1,30 +1,35 @@
+
+
 from django.db import models, connection
-def generateDataCube(owner_name, subject, timing):
-    if timing == null:
+
+def generateDataCube(owner_name=None, subject=None, timing=None):
+    if owner_name == None:
+        owner_name = 'null'
+
+    if subject == None:
+        subject = 'null'
+
+    if timing == None:
+        field = 'null'
+        timing = 'null'
+
+    elif timing == 'timing':
         field = 'timing'
-        timing = 'timing'
     else:
         field = timing
-        timing = """date_trunc({0}, timing)""".format(timing)
+        timing = """date_trunc('{0}', timing) as {0} """.format(timing)
+      
+    if ((owner_name == 'null') & (subject == 'null') & (timing == 'null')):
+        dbquery = """
+                  SELECT owner_name, subject, timing, count(*) as image_count FROM Images GROUP BY owner_name, subject, timing
+                  """ 
+    else:    
+        dbquery = """
+                    SELECT {0}, {1}, {2}, count(*) as image_count FROM Images GROUP BY {0}, {1}, {3};
+                  """ 
+        dbquery = dbquery.format(owner_name, subject, timing, field)
 
-
-    dbquery = """
-                SELECT owner_name, subject, {0}, count(*) as image_count FROM Images GROUP BY owner_name, subject, {1}
-                UNION ALL
-                SELECT owner_name, null, {0}, count(*) as image_count FROM Images GROUP BY owner_name, {1}
-                UNION ALL
-                SELECT null, subject, {0}, count(*) as image_count FROM Images GROUP BY subject, {1}
-                UNION ALL
-                SELECT owner_name, subject, null, count(*) as image_count FROM Images GROUP BY owner_name, subject
-                UNION ALL
-                SELECT owner_name, null, null, count(*) as image_count FROM Images GROUP BY owner_name
-                UNION ALL
-                SELECT null, subject, null, count(*) as image_count FROM images GROUP BY subject
-                UNION ALL
-                SELECT null, null, {0}, count(*) as image_count FROM images GROUP BY {1};
-              """ 
-
-    dbquery = dbquery.format(timing, field)
+    print(dbquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result = cursor.fetchall()
