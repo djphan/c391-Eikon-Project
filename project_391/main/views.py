@@ -229,6 +229,8 @@ def add_view(request):
 @csrf_exempt
 def get_olap_data(request):
     user = authenticate_user(request)
+    if user.username != 'admin':
+        return HttpResponse("Not authorized to access OLAP data", status=400)
     # parse json
     # parameters passed in are the following
     # import pdb; pdb.set_trace()
