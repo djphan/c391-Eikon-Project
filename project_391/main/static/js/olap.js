@@ -23,7 +23,7 @@ var olapManager = (function(){
             req.send(jsonParams);
         },
 
-        displayData(table){
+        displayData: function(table){
             // find the column names
             columnLabels = Object.keys(table[0]);
             table = document.createElement("table");
