@@ -601,7 +601,7 @@ def get_user_groups(request):
         response["userGroups"].append(group_data)
 
     # get a list of all users
-    response["userNames"] = [user.username for user in Users.objects.all()]
+    response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
     # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)

@@ -1,0 +1,111 @@
+1. Install Postgresql
+- Open a terminal and type: 
+    sudo apt-get install postgresql
+
+- install the development extension of postgres
+    $ sudo apt-get install libpq-dev
+
+- Wait for installation to complete
+
+- Once installed type the following where $USER is your system username: 
+    sudo -u postgres createuser --superuser $USER 
+
+- To open psql type:
+    sudo -u postgres psql
+
+- Enter a password in psql, replace $USER with system username as above:
+    \password $USER
+
+- Create database for your current user, replace $USER with system username as above
+    create database $USER;
+
+- Press control-d to logout of the psql prompt and get back to the system command line.
+
+- Try typing psql at the system prompt and ensure you can login to the psql prompt again.
+
+- If you can't redo the above steps.
+
+- lastly create the database for the app
+    once at the psql prompt type create database web_prj_db
+
+
+
+
+
+2. Install Virtualenv (Ensure you are back at the system command prompt and not in psql)
+
+First make sure you have pip3 installed:
+    $ pip3 -V
+You should get something like this:
+    pip 1.5.4 from /usr/lib/python3/dist-packages (python 3.4)
+
+if its not installed follow the command line prompt to install it with sudo apt-get
+
+Next:
+    $ sudo pip3 install virtualenvwrapper
+
+Add the following to your shell's startup file (probably .bashrc):
+
+    export WORKON_HOME=$HOME/.virtualenvs
+    export PROJECT_HOME=$HOME/directory-you-do-development-in
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+    source /usr/local/bin/virtualenvwrapper.sh
+
+Restart your terminal.
+
+Next:
+    $ mkvirtualenv 391_project
+
+What this does is installs a fresh python and pip that you only use when working
+on this project. (You can check this by running "which python". Compare with
+other programs you already have installed ("which git" for example): you still
+have access to everything else.) From now on if you're working on the project,
+make sure you're in the virtualenv.
+
+    $ workon 391_project            # to enter virtualenv
+    $ deactivate                    # to leave virtualenv
+
+*** Note that a common cause of errors is not being in the virtual environment when
+running the server. Ensure before you run it you have done workon 391_project
+also before continuing with these instructions ensure you have performed the workon 391_project command
+***
+
+Next:
+
+    $ pip3 install django
+
+DON'T skip this step. Make sure it worked by running "which django-admin.py" If
+the path doesn't contain .../.virtualenv/... then you're running your computer's
+version of django, which we don't want to get mixed up with the project's
+version.
+
+Finally install the project dependencies:
+    $ pip3 install pillow
+    $ pip3 install simplejson
+    $ sudo pip3 install psycopg2
+    $ sudo apt-get install libjpeg-dev
+    $ pip install -I pillow
+
+git clone repository into your workspace 
+    $ git clone https://github.com/sobolews/391_project.git
+
+cd into to the project
+    $ cd 391_project/project_391
+
+Sync the server
+    $ python3 manage.py syncdb
+
+*** Note that if you are prompted for a password navigate to the settings.py file and enter your password
+in the "DATABASES" object. ***
+
+When prompted as to whether you want to define superusers type yes. Name 'admin' password 'admin'.
+
+Populate the database with the admin user and public/private groups using the script called ....
+    ************
+
+Start the server
+    $ python3 manage.py runserver
+
+4. Point your web browser to the following link, and register yourself as user and follow the prompts.
+    http://127.0.0.1:8000/main/register/
+
