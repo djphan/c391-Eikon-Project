@@ -203,6 +203,9 @@ def temp_main_page(request):
 def add_view(request):
     # add a view to the view count
     user = authenticate_user(request)
+    if user.username == 'admin':
+        return HttpResponse("Admin clicks do not count as views.", status=200)
+
     try:
         # fail silently, user should not be affected by failure here
         params = json.loads(request.body)
