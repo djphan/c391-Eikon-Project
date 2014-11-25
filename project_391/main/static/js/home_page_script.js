@@ -371,6 +371,7 @@ window.onload = function() {
         // hide the search elements
         uploadButton.innerHTML = "OLAP";
         uploadButton.href = "/main/olap";
+        $("#manage-groups").hide();
     }
 
     // set the height of the image scrolling grid
