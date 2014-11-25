@@ -283,10 +283,6 @@ def get_image_data(request):
         search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")        
     if "endDate" in params:
         search_end_date = datetime.datetime.strptime(params["endDate"], "%Y-%m-%d")
-
-    print('lolsolols')
-    print(search_start_date)
-    print(search_end_date)
     if "searchTerm" in params:
         if params["searchTerm"] != "":
             search_term = params["searchTerm"]
@@ -300,6 +296,11 @@ def get_image_data(request):
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
         images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups])).filter(timing__isnull=False)
+        if "startDate" in params:
+            images = images.filter(timing__gt=search_start_date)
+        if "endDate" in params:
+            images = images.filter(timing__lt=search_end_date)
+
         if search_type == "Newest":
             images = images.order_by('-timing')
         elif search_type == "Oldest":
