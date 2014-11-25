@@ -372,6 +372,7 @@ window.onload = function() {
         uploadButton.innerHTML = "OLAP";
         uploadButton.href = "/main/olap";
         $("#manage-groups").hide();
+        $("#admin-panel-button").show();
     }
 
     // set the height of the image scrolling grid
