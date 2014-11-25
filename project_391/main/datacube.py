@@ -53,6 +53,7 @@ def generateDataCube(owner_name=None, subject=None, timing=None, start_date=None
             else:
                 row["Subject"] = db_row[1]
         if timing:
+            # timing_col = {"year":"Year", "Month
             if db_row[2] is None:
                 row["Timing"] = "&lt;No Date&gt;"
             elif timing == 'year':
