@@ -275,7 +275,7 @@ def get_image_data(request):
             search_term = params["searchTerm"]
             images = Images.searchByText(user, search_term)
             print("START")
-            dc = generateDataCube(None, None, 'day')
+            dc = generateDataCube(None, None, 'month')
             print(dc)
             print("END")
     
