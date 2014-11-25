@@ -476,6 +476,7 @@ def upload(request):
     data["group_names"] = data["group_names"] + friend_groups
     data["group_names"].append('public' + '@' + user.username)
     data["group_names"].append('private'+ '@' + user.username)
+    data["username"] = user.username
     return render_to_response('main/uploads.html', data, 
             RequestContext(request))
     
@@ -483,13 +484,13 @@ def photo_details(request):
     user = authenticate_user(request)
     if user is None:
         return redirect(loginPage)
-    return render(request, 'main/photo_details.html')
+    return render(request, 'main/photo_details.html', {'username' : user.username})
     
 def group_management(request):
     user = authenticate_user(request)
     if user is None:
         return redirect(loginPage)
-    return render(request, 'main/group_management.html')
+    return render(request, 'main/group_management.html', {'username' : user.username})
 
 
 
