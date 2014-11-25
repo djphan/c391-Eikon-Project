@@ -4,3 +4,31 @@ div {
 form {
     margin-top: 10%;
 }
+
+table {
+    width: 100%;
+}
+
+th {
+    text-align: center;
+    text-decoration: underline;
+    padding: 2px;
+}
+
+tr {
+    text-align: center;
+    padding: 2px;
+}
+
+tr:nth-child(even) {
+    background: rgb(255, 206, 221);
+}
+
+tr:nth-child(odd) {
+    background: rgb(255, 219, 219);
+}
+
+td {
+    text-align: center !important;
+    padding: 2px;
+}
