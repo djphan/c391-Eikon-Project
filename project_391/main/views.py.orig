@@ -25,7 +25,6 @@ from django.shortcuts import redirect
 import sys
 import os
 from project_391.settings import PROJECT_PATH
-from main.datacube import generateDataCube
 # Create your views here.
 
 PUBLIC = 1 # group id for public group
@@ -204,9 +203,6 @@ def temp_main_page(request):
 def add_view(request):
     # add a view to the view count
     user = authenticate_user(request)
-    if user.username == 'admin':
-        return HttpResponse("Admin clicks do not count as views.", status=200)
-
     try:
         # fail silently, user should not be affected by failure here
         params = json.loads(request.body)
@@ -256,7 +252,6 @@ def get_image_data(request):
     user = authenticate_user(request)
     groups = Groups.objects.all()
 
-
     # if we are returning results for a search term
     images = []
     try:
@@ -268,45 +263,43 @@ def get_image_data(request):
     # note that the user can set one or both so before performing queries check
     # whether both or only one has been given by the user.
     print (params)
-
-    # Constants used to reference to for the search
-    search_start_date = None
-    search_end_date = None
-    allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
-
     if "startDate" in params:
-        search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")        
+        search_start_date = datetime.datetime.strptime(params["startDate"], "%Y-%m-%d")
     if "endDate" in params:
         search_end_date = datetime.datetime.strptime(params["endDate"], "%Y-%m-%d")
 
-    print('lolsolols')
-    print(search_start_date)
-    print(search_end_date)
     if "searchTerm" in params:
         if params["searchTerm"] != "":
             search_term = params["searchTerm"]
-            images = Images.searchByText(user, search_term, search_start_date, search_end_date)
-            print("START")
-            #dc = generateDataCube(None, None, 'month')
-            #print(dc)
-            #print("END")
+            images = Images.searchByText(user, search_term)
     
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
         search_type = params["searchType"] # newest/oldest first
-        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups])).filter(timing__isnull=False)
+        allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
+        images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
+        
         if search_type == "Newest":
+<<<<<<< HEAD
+            print('lols')
+            # images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user)) # 
+
+            #images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(Groups__group_id=permitted))
+            # import pdb; pdb.set_trace()
+            allowed_groups = GroupLists.objects.filter(Q(group_id__user_name=user) | Q(friend_id=user))
+            images = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
+            print(allowed_groups)
+            print(images)
+
+=======
             images = images.order_by('-timing')
+>>>>>>> 78215c99f685faef220bf4cd3124ffdd93d6678a
         elif search_type == "Oldest":
             images = images.order_by('timing')
 
     # otherwise we are passing the user back all of there images
-    # if the user is username 'admin' then pass them back all images
     else:
-        if user.username == 'admin':
-            images = Images.objects.all()
-        else:
-            images = Images.objects.filter(owner_name=user)
+        images = Images.objects.filter(owner_name=user)
 
     # build the json response for each image
     response = {}
@@ -314,7 +307,7 @@ def get_image_data(request):
 
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
-    if "searchType" not in params and "searchTerm" not in params:
+    if "searchType" in params:
         top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
         for idx, image in enumerate(top_images):
             photo_id = image["photo_id"]
@@ -609,7 +602,7 @@ def get_user_groups(request):
         response["userGroups"].append(group_data)
 
     # get a list of all users
-    response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
+    response["userNames"] = [user.username for user in Users.objects.all()]
     # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)

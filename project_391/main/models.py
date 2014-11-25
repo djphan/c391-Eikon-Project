@@ -93,8 +93,8 @@ class Images(models.Model):
     thumbnail = models.ImageField(upload_to="Thumbnails/", max_length=250)
     photo = models.ImageField(upload_to="Images", max_length=250)
     
-    def searchByText(user, textquery):
-        results = searchImageByText(user, textquery)
+    def searchByText(user, textquery, startDate, endDate):
+        results = searchImageByText(user, textquery, startDate, endDate)
         print(len(results))
         search_results = []
         for row in results:
