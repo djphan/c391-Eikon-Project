@@ -26,21 +26,21 @@ var olapManager = (function(){
         displayData: function(table){
             // find the column names
             columnLabels = Object.keys(table[0]);
-            table = document.createElement("table");
+            tableElement = document.createElement("table");
             // place the table in the document
             tableContainer = document.getElementById("table-container");
 
             // delete any existing table before appending the new one
-            while (tableContainer.hasChildNodes){
+            while (tableContainer.hasChildNodes()){
                 tableContainer.removeChild(tableContainer.lastChild);
             }
-            tableContainer.appendChild(table);
+            tableContainer.appendChild(tableElement);
             table.className = "table";
             tableHeaderRow = document.createElement("tr");
-            table.appendChild("tableHeaderRow");
+            tableElement.appendChild(tableHeaderRow);
             for (var i = 0; i < columnLabels.length; i++){
                 columbLabel = document.createElement("th");
-                columbLabel.innerHTML = columbLabels[i];
+                columbLabel.innerHTML = columnLabels[i];
                 tableHeaderRow.appendChild(columbLabel);
             }
 
@@ -48,9 +48,9 @@ var olapManager = (function(){
             for (var j = 0; j < table.length; j++){
                 row = table[j];
                 tableRow = document.createElement("tr");
-                table.appendChild("tableRow");
+                tableElement.appendChild(tableRow);
                 for (var attribute in row) {
-                    if (p.hasOwnProperty(attribute)){
+                    if (row.hasOwnProperty(attribute)){
                         tableAttribute = document.createElement("td");
                         tableAttribute.innerHTML = row[attribute];
                         tableRow.appendChild(tableAttribute);
