@@ -27,8 +27,13 @@ def generateDataCube(owner_name=None, subject=None, timing=None):
                                 ) 
                  
 
-    print(dbquery)
     cursor = connection.cursor()
     cursor.execute(dbquery)
     result = cursor.fetchall()
+    results = resultParsing(owner_name, subject, timing, cursor_results)
     return result
+
+
+def resultParsing(owner_name, subject, timing, cursor_results):
+    results = []
+    return results
