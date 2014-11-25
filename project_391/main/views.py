@@ -25,6 +25,7 @@ from django.shortcuts import redirect
 import sys
 import os
 from project_391.settings import PROJECT_PATH
+from main.datacube import generateDataCube
 # Create your views here.
 
 PUBLIC = 1 # group id for public group
@@ -255,6 +256,7 @@ def get_image_data(request):
     user = authenticate_user(request)
     groups = Groups.objects.all()
 
+
     # if we are returning results for a search term
     images = []
     try:
@@ -275,6 +277,10 @@ def get_image_data(request):
         if params["searchTerm"] != "":
             search_term = params["searchTerm"]
             images = Images.searchByText(user, search_term)
+            print("START")
+            dc = generateDataCube(None, None, 'day')
+            print(dc)
+            print("END")
     
     # if we are returning results for newest/oldest first search
     elif "searchType" in params:
