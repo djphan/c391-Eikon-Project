@@ -1,0 +1,21 @@
+1. SSH in
+    $ ssh -i ecinstance.pem ubuntu@54.68.19.92 
+
+2. enter db if neccessary
+    $ psql
+
+    If you have any problems then switch to user postgres as they are the sus
+        $ sudo su postgres
+        $ psql
+
+3. Run the scripts to preinstall
+
+4. if you switched to the postgres user type exit to switch back to ubuntu user:
+    $ exit
+
+5. got to ~/prj/391_project/project_391
+    $ workon 391_project
+    $ python3 manage.py runserver 0.0.0.0:8000
+
+
+Should be good to go, visit the site.

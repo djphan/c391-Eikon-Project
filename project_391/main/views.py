@@ -204,6 +204,9 @@ def temp_main_page(request):
 def add_view(request):
     # add a view to the view count
     user = authenticate_user(request)
+    if user.username == 'admin':
+        return HttpResponse("Admin clicks do not count as views.", status=200)
+
     try:
         # fail silently, user should not be affected by failure here
         params = json.loads(request.body)
@@ -598,7 +601,7 @@ def get_user_groups(request):
         response["userGroups"].append(group_data)
 
     # get a list of all users
-    response["userNames"] = [user.username for user in Users.objects.all()]
+    response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
     # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)
