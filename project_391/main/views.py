@@ -231,14 +231,21 @@ def get_olap_data(request):
     user = authenticate_user(request)
     # parse json
     # parameters passed in are the following
+    # import pdb; pdb.set_trace()
+
     params = json.loads(request.body)
-    by_user = params["byUser"] #by_user True/False¬
-    by_date = params["byDate"] #by_date False/weekly/monthly/yearly
-    by_subject = params["bySubject"] # by_subject True/False
-    start_date = params["startDate"] # start_date a date such as 2014-01-01 or False if not supplied
-    end_date = params["endDate"] # end_date a date such as 2014-01-01 or False if not supplied
+    by_user = True if params["byUser"] == "True" else False #by_user True/False¬
+    by_date = {"weekly":"week", "monthly":"month", "yearly":"year", "False":False}[params["byDate"]]
+    by_subject = True if params["bySubject"] == "True" else False  # by_subject True/False
+    start_date = False if params["startDate"] == "False" else params["startDate"] # start_date a date such as 2014-01-01 or False if not supplied
+    end_date = False if params["endDate"] == "False" else params["endDate"] # end_date a date such as 2014-01-01 or False if not supplied
     # note that true false values are strings not bool
-    return JsonResponse(test, status=200)
+    
+
+    jsonDataCube = generateDataCube(owner_name=by_user, subject=by_subject, timing=by_date,
+                                    start_date=start_date, end_date=end_date)
+    # print(jsonDataCube)
+    return JsonResponse(jsonDataCube, safe=False, status=200)
 
 
 
@@ -254,7 +261,6 @@ def get_image_data(request):
     # also need to include a list of the users groups
     user = authenticate_user(request)
     groups = Groups.objects.all()
-
 
     # if we are returning results for a search term
     images = []

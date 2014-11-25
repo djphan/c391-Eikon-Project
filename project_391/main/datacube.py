@@ -1,7 +1,7 @@
 from django.db import models, connection
 
 def generateDataCube(owner_name=None, subject=None, timing=None, start_date=None, end_date=None):
-    assert timing in [None, 'year', 'week', 'month']
+    assert timing in [False, 'year', 'week', 'month']
     
     dbquery = "SELECT {0}, {1}, {2}, count(*) FROM images {4} GROUP BY {3} {5};"
 
@@ -43,11 +43,20 @@ def generateDataCube(owner_name=None, subject=None, timing=None, start_date=None
     for db_row in result:
         row = dict()
         if owner_name:
-            row["Owner"] = db_row[0]
+            if db_row[0] is None:
+                row["Owner"] = "&lt;No Owner&gt;"
+            else:
+                row["Owner"] = db_row[0]
         if subject:
-            row["Subject"] = db_row[1]
+            if db_row[1] is None:
+                row["Subject"] = "&lt;No Subject&gt;"
+            else:
+                row["Subject"] = db_row[1]
         if timing:
-            row["Timing"] = str(db_row[2].year) + '-' + str(db_row[2].month) + '-' + str(db_row[2].day)
+            if db_row[2] is None:
+                row["Timing"] = "&lt;No Date&gt;"
+            else:
+                row["Timing"] = "%d-%02d-%02d" % (db_row[2].year, db_row[2].month, db_row[2].day)
         
         row["Count"] = db_row[3]
         json.append(row)
