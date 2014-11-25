@@ -55,7 +55,11 @@ def generateDataCube(owner_name=None, subject=None, timing=None, start_date=None
         if timing:
             if db_row[2] is None:
                 row["Timing"] = "&lt;No Date&gt;"
-            else:
+            elif timing == 'year':
+                row["Timing"] = "%d" % (db_row[2].year)
+            elif timing == 'month':
+                row["Timing"] = "%d-%02d" % (db_row[2].year, db_row[2].month)
+            elif timing == 'week':
                 row["Timing"] = "%d-%02d-%02d" % (db_row[2].year, db_row[2].month, db_row[2].day)
         
         row["Count"] = db_row[3]
