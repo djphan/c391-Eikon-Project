@@ -64,8 +64,9 @@ width: 500 px;
 
 
 .large-image-display {
-    width: 100%;
-    max-width: 100%
+    max-width: 100%;
+    max-height: 48em;
+    width: auto
 }
 
 .large-image-wrapper:hover .delete-button.editable{
