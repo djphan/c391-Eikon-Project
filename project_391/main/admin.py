@@ -1,9 +1,6 @@
 from django.contrib import admin
 from main.models import Persons, Users, Groups, GroupLists, Images, Views
 
-class SubjectDashboardAdmin(admin.ModelAdmin):
-    pass
-
 class PersonsAdmin(admin.ModelAdmin):
     pass
 
