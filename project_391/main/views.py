@@ -153,8 +153,8 @@ def register(request):
 
         assert new_person.user_name.password == password
 
-        response = render_to_response('main/index.html',
-                                      {'password':password, 'username':username},
+        response = render_to_response('main/home_page.html',
+                                      {'username':username},
                                       RequestContext(request))
 
         # Generate a session
@@ -173,32 +173,7 @@ def register(request):
             session.save()
 
         return response
-    
-################################################################################
 
-def temp_main_page(request):
-    """
-    Sandbox for Carl to test cookies/sessions. Beware: garbage lies below.
-    """
-    text = ""
-    shash = request.COOKIES.get('sessiontracker', '0')
-    if shash == 1:
-        text += 'session tracker is marked as expired (logged out)!'
-    if shash == 0:
-        text += 'no \'sessiontracker\' cookie exists.'
-    else:
-        text += 'session tracker cookie says %s<br/>'%shash
-        try:
-            user = Session.objects.get(sessiontracker=shash)
-        except ObjectDoesNotExist:
-            text += 'no session object with that id exists in database.\n'
-        else:
-            text += 'this corresponds to user %s'%user
-      
-
-    return render(request, 'main/index.html', {'temp_cookie_text':text})
-            
-################################################################################
 
 @csrf_exempt
 def add_view(request):
@@ -745,6 +720,9 @@ def authenticate_user(request):
         return Session.objects.get(sessiontracker=st).username
     except ObjectDoesNotExist:
         return None
+
+def redirectLogin(request):
+    return redirect(loginPage)
 
 def logout(request):
     st = request.COOKIES.get('sessiontracker', '0')
