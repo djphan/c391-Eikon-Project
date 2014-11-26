@@ -26,49 +26,49 @@
             <div class="form-group">
               <label for="firstName" class="col-sm-offset-2 col-sm-2 control-label">First Name</label>
               <div class="col-sm-4">
-                <input type="text" name="FIRSTNAME" class="form-control" id="firstName" placeholder="First Name">
+                <input maxlength="24" type="text" name="FIRSTNAME" class="form-control" id="firstName" placeholder="First Name">
               </div> {% if err_firstname %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="lastName" class="col-sm-offset-2 col-sm-2 control-label">Last Name</label>
               <div class="col-sm-4">
-                <input type="text" name="LASTNAME" class="form-control" id="lastName" placeholder="Last Name">
+                <input maxlength="24" type="text" name="LASTNAME" class="form-control" id="lastName" placeholder="Last Name">
               </div> {% if err_lastname %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="userName" class="col-sm-offset-2 col-sm-2 control-label">User Name</label>
               <div class="col-sm-4">
-                <input type="text" name="USERNAME" class="form-control" id="userName" placeholder="User Name">
+                <input maxlength="24" type="text" name="USERNAME" class="form-control" id="userName" placeholder="User Name">
               </div> {% if err_username %} * {% endif %} {% if err_username_taken %} Username already taken {% endif %}
             </div>
             <div class="form-group">
               <label for="address" class="col-sm-offset-2 col-sm-2 control-label">Address</label>
               <div class="col-sm-4">
-                <input type="text" name="ADDRESS" class="form-control" id="address" placeholder="Address">
+                <input maxlength="124" type="text" name="ADDRESS" class="form-control" id="address" placeholder="Address">
               </div> {% if err_address %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="inputEmail" class="col-sm-offset-2 col-sm-2 control-label">Email</label>
               <div class="col-sm-4">
-                <input type="text" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email">
+                <input maxlength="124" type="text" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email">
               </div> {% if err_email %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="phoneNumber" class="col-sm-offset-2 col-sm-2 control-label">Phone Number</label>
               <div class="col-sm-4">
-                <input type="text" name="PHONE" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                <input maxlength="10" type="text" name="PHONE" class="form-control" id="phoneNumber" placeholder="Phone Number">
               </div> {% if err_phone %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="inputPassword" class="col-sm-offset-2 col-sm-2 control-label">Password</label>
               <div class="col-sm-4">
-                <input type="password" name="PASSWORD" class="form-control" id="inputPassword" placeholder="Password">
+                <input maxlength="24" type="password" name="PASSWORD" class="form-control" id="inputPassword" placeholder="Password">
               </div> {% if err_password %} * {% endif %}
             </div>
             <div class="form-group">
               <label for="inputPasswordConfirm" class="col-sm-offset-2 col-sm-2 control-label">Confirm Password</label>
               <div class="col-sm-4">
-                <input type="password" name="PASSWORDCONFIRM" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password">
+                <input maxlength="24" type="password" name="PASSWORDCONFIRM" class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password">
               </div> {% if err_passwordconfirm %} * {% endif %} {% if err_passwordconfirm %} Passwords did not match {% endif %} 
             </div>
             <div class="form-group">

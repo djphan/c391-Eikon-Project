@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'django_tutorial.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^$', views.loginPage, name='loginPage'),
+    url(r'^$', views.redirectLogin, name='redirectLoginPage'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^main/', include('main.urls')),
 )

@@ -153,8 +153,8 @@ def register(request):
 
         assert new_person.user_name.password == password
 
-        response = render_to_response('main/index.html',
-                                      {'password':password, 'username':username},
+        response = render_to_response('main/home_page.html',
+                                      {'username':username},
                                       RequestContext(request))
 
         # Generate a session
@@ -173,32 +173,7 @@ def register(request):
             session.save()
 
         return response
-    
-################################################################################
 
-def temp_main_page(request):
-    """
-    Sandbox for Carl to test cookies/sessions. Beware: garbage lies below.
-    """
-    text = ""
-    shash = request.COOKIES.get('sessiontracker', '0')
-    if shash == 1:
-        text += 'session tracker is marked as expired (logged out)!'
-    if shash == 0:
-        text += 'no \'sessiontracker\' cookie exists.'
-    else:
-        text += 'session tracker cookie says %s<br/>'%shash
-        try:
-            user = Session.objects.get(sessiontracker=shash)
-        except ObjectDoesNotExist:
-            text += 'no session object with that id exists in database.\n'
-        else:
-            text += 'this corresponds to user %s'%user
-      
-
-    return render(request, 'main/index.html', {'temp_cookie_text':text})
-            
-################################################################################
 
 @csrf_exempt
 def add_view(request):
@@ -229,6 +204,8 @@ def add_view(request):
 @csrf_exempt
 def get_olap_data(request):
     user = authenticate_user(request)
+    if user.username != 'admin':
+        return HttpResponse("Not authorized to access OLAP data", status=400)
     # parse json
     # parameters passed in are the following
     # import pdb; pdb.set_trace()
@@ -321,16 +298,24 @@ def get_image_data(request):
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
     if "searchType" not in params and "searchTerm" not in params:
+        # get all the user accessible images
+        if user.username == 'admin':
+            user_accessible_imgs = Images.objects.all()
+        else:
+            user_accessible_imgs = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
         top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
-        for idx, image in enumerate(top_images):
+        for image in top_images:
+            # if the image is not accessible by the user don't add it.
+            if not user_accessible_imgs.filter(photo_id=image["photo_id"]):
+                continue
             photo_id = image["photo_id"]
             top_image = Images.objects.get(photo_id=photo_id)
             top_image = serialize_image(top_image, user)
+            # add the top image and views flags.
             top_image["topImage"] = "true"
-            top_image["rank"] = str(idx + 1)
             top_image["views"] = image["id__count"]
             # this handles the case where the 5th image is tied with the following images in view count.
-            if idx > 4 and response["images"][idx - 1]["views"] > image["id__count"]:
+            if len(response["images"]) > 4 and response["images"][-1]["views"] > image["id__count"]:
                 break
             response["images"].append(top_image)
             top_image_ids.append(photo_id)
@@ -421,7 +406,6 @@ def modify_image_details(request):
 
     if request.POST["name"] == "image-date":
         image = Images.objects.get(photo_id=request.POST["key"])
-        # TODO format as date field before setting
         image.timing = datetime.datetime.strptime(request.POST["value"], "%Y-%m-%d")
         image.save()
         response = {}
@@ -525,7 +509,6 @@ def upload_images(request):
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
     if "date" in request.POST:
-        # TODO figure out whether we need to enforce a not null constraint on the date.
         # the provided create statements don't but I can't enter images with a null date.
         new_image_entry.timing = datetime.datetime.strptime(request.POST["date"], "%m/%d/%Y")
 
@@ -596,7 +579,6 @@ def get_user_groups(request):
     } 
     '''
 
-    # TODO Build an authenticate user function
     user_name = authenticate_user(request)
     # user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     response = {}
@@ -617,7 +599,6 @@ def get_user_groups(request):
 
     # get a list of all users
     response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
-    # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)
 
@@ -740,6 +721,9 @@ def authenticate_user(request):
     except ObjectDoesNotExist:
         return None
 
+def redirectLogin(request):
+    return redirect(loginPage)
+
 def logout(request):
     st = request.COOKIES.get('sessiontracker', '0')
     try:
@@ -751,6 +735,9 @@ def logout(request):
 @csrf_exempt
 def olap(request):
     user = authenticate_user(request)
+    if not user.username == 'admin':
+        return redirect(loginPage)
+
     # get a list of all users
     data = {}
     data["users"] = Users.objects.all()

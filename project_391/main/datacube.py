@@ -66,4 +66,5 @@ def generateDataCube(owner_name=None, subject=None, timing=None, start_date=None
         row["Count"] = db_row[3]
         json.append(row)
 
+    print(dbquery)
     return json

@@ -319,15 +319,24 @@ onDataResponse = function() {
         if (document.getElementsByClassName("group-names")[0]){
             var displayGroupElement = document.getElementsByClassName("group-names")[0];
             classie.add(displayGroupElement.children[0], 'active');
+        }
+
+        if (groupManager.userNames.length > 0){
             // add the usernames to the select box
-            groupManager.addUsersToSelectBox(groupManager.userNames);
+            setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
         }
     }
+
+    
 
     // set up the add group button
     var addGroupButton = document.getElementsByClassName("submit-new-group")[0];
     addGroupButton.addEventListener("click", function() {
         var groupNameTextField = document.getElementsByClassName("enter-group-name-field")[0];
+        if (groupNameTextField.value.length > 20) {
+            swal("Group Name Error", "Names must be less than 24 characters.");
+            return;
+        }
         groupManager.addNewGroupNameToList(groupNameTextField.value);
     });
     var addGroupSelectionBox = document.getElementsByClassName("group-select")[0];
