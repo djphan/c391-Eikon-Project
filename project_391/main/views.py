@@ -88,6 +88,7 @@ def register(request):
     ### Validation ###
     err_pass_not_match = False
     err_username_taken = False
+    err_email_taken = False
 
     # Check whether username already exists
     try:
