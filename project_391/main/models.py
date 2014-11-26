@@ -2,12 +2,8 @@ from django.db import models
 from django.db import connection
 from main.imgSearch import searchImageByText
 
-# Create your models heres
-
-class SubjectDashboard(models.Model):
-    def __str__(self):
-        return Images.objects.all().aggregate(Sum('subject'))
-
+# Data Models or database tables are created here
+# Relevent Functions acting on the table can be defined here
 class Views(models.Model):
     photo_id = models.ForeignKey('Images', db_column="photo_id")
     user_name = models.ForeignKey('Users', db_column="user_name") 
@@ -66,8 +62,6 @@ class Groups(models.Model):
         return self.group_name
 
 class GroupLists(models.Model):
-    """
-    """
     group_id = models.ForeignKey(Groups, db_column="group_id")
     friend_id = models.ForeignKey(Users, db_column="friend_id")
     date_added = models.DateField(auto_now_add=True)
@@ -94,6 +88,11 @@ class Images(models.Model):
     photo = models.ImageField(upload_to="Images", max_length=250)
     
     def searchByText(user, textquery, startDate, endDate):
+        """
+        This function builds a list of image objects in the correct format to display
+        in our website. The query is exected by passing the paramters
+        to searchImageByText()
+        """
         results = searchImageByText(user, textquery, startDate, endDate)
         print(len(results))
         search_results = []
@@ -115,27 +114,6 @@ class Images(models.Model):
     class Meta:
         db_table = "images"
         verbose_name = "Image"
-
-    def searchByDate(user, condition):
-        results = searchImageByDate(user, condition)
-        print(results)
-        search_results = []
-        #import pdb
-        for row in results:
-            #pdb.set_trace()
-            search_results.append(Images())
-            search_results[-1].photo_id=row[0]
-            search_results[-1].owner_name=Users.objects.get(username=row[1])
-            search_results[-1].permitted=Groups.objects.get(group_id=row[2])
-            search_results[-1].subject=row[3]
-            search_results[-1].place=row[4]
-            search_results[-1].timing=row[5]
-            search_results[-1].description=row[6]
-            search_results[-1].thumbnail=row[7]
-            search_results[-1].photo=row[8]
-        print(search_results)
-        return search_results
-
 
     def __str__(self):
         return ('ID: '+ self.photo_id + ' owner: '+ self.owner_name + " subject: " + self.subject + " " + self.photo.url)

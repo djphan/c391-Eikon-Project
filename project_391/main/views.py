@@ -88,6 +88,7 @@ def register(request):
     ### Validation ###
     err_pass_not_match = False
     err_username_taken = False
+    err_email_taken = False
 
     # Check whether username already exists
     try:
@@ -110,6 +111,14 @@ def register(request):
     except ValidationError:
         email = None
 
+    # Check whether email is already in use
+    try:
+        Persons.objects.get(email=email)
+    except ObjectDoesNotExist:  # good
+        pass
+    else:
+        err_email_taken = True
+        
     # Check that passwords match if both given
     if password and passwordconfirm and password != passwordconfirm:
         err_pass_not_match = True
@@ -135,7 +144,8 @@ def register(request):
         "err_password"        : err_password,
         "err_passwordconfirm" : err_passwordconfirm,
         "err_pass_not_match"  : err_pass_not_match,
-        "err_username_taken"  : err_username_taken
+        "err_username_taken"  : err_username_taken,
+        "err_email_taken"     : err_email_taken
     }
         
     if any(errors.values()):
