@@ -431,7 +431,6 @@ def modify_image_details(request):
 
     if request.POST["name"] == "image-date":
         image = Images.objects.get(photo_id=request.POST["key"])
-        # TODO format as date field before setting
         image.timing = datetime.datetime.strptime(request.POST["value"], "%Y-%m-%d")
         image.save()
         response = {}
@@ -535,7 +534,6 @@ def upload_images(request):
         return HttpResponse("You must provide the group the image belongs to.", status=400)
 
     if "date" in request.POST:
-        # TODO figure out whether we need to enforce a not null constraint on the date.
         # the provided create statements don't but I can't enter images with a null date.
         new_image_entry.timing = datetime.datetime.strptime(request.POST["date"], "%m/%d/%Y")
 
@@ -606,7 +604,6 @@ def get_user_groups(request):
     } 
     '''
 
-    # TODO Build an authenticate user function
     user_name = authenticate_user(request)
     # user_name = Users.objects.get(username="jonnyc") # remove this line uncomment line above once authenticate users works
     response = {}
@@ -627,7 +624,6 @@ def get_user_groups(request):
 
     # get a list of all users
     response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
-    # TODO check for the current username in the list comprehension and remove the following line.
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)
 
