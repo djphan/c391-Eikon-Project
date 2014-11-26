@@ -333,6 +333,10 @@ onDataResponse = function() {
     var addGroupButton = document.getElementsByClassName("submit-new-group")[0];
     addGroupButton.addEventListener("click", function() {
         var groupNameTextField = document.getElementsByClassName("enter-group-name-field")[0];
+        if (groupNameTextField.value.length >10) {
+            swal("Group Name Error", "Names must be less than 10 characters.");
+            return;
+        }
         groupManager.addNewGroupNameToList(groupNameTextField.value);
     });
     var addGroupSelectionBox = document.getElementsByClassName("group-select")[0];
