@@ -598,7 +598,6 @@ def get_user_groups(request):
         response["userGroups"].append(group_data)
 
     # get a list of all users
-    import pdb; pdb.set_trace()
     response["userNames"] = [user.username for user in Users.objects.all().exclude(username="admin")]
     response["userNames"].remove(user_name.username)
     return JsonResponse(data=response)
