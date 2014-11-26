@@ -329,7 +329,6 @@ def get_image_data(request):
         else:
             user_accessible_imgs = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
         top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
-        import pdb; pdb.set_trace()
         for image in top_images:
             # if the image is not accessible by the user don't add it.
             if not user_accessible_imgs.filter(photo_id=image["photo_id"]):
