@@ -319,9 +319,13 @@ onDataResponse = function() {
         if (document.getElementsByClassName("group-names")[0]){
             var displayGroupElement = document.getElementsByClassName("group-names")[0];
             classie.add(displayGroupElement.children[0], 'active');
-            // add the usernames to the select box
-            setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
         }
+
+    }
+
+    if (groupManager.userNames.length > 0){
+        // add the usernames to the select box
+        setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
     }
 
     // set up the add group button

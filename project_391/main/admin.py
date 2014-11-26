@@ -28,7 +28,4 @@ class ImagesAdmin(admin.ModelAdmin):
 admin.site.register(Users)
 admin.site.register(Groups)
 admin.site.register(GroupLists)
-admin.site.register(Images)
-admin.site.register(Persons)
 admin.site.register(Views)
-admin.site.register(SubjectDashboard)
