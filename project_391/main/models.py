@@ -138,7 +138,7 @@ class Images(models.Model):
 
 
     def __str__(self):
-        return ('ID: photo_id' + ' :: ' + self.photo.url)
+        return ('ID: '+ self.photo_id + ' owner: '+ self.owner_name + " subject: " self.subject + " " self.photo.url)
               
 class Session(models.Model):
     username = models.ForeignKey(Users)

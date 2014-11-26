@@ -735,6 +735,9 @@ def logout(request):
 @csrf_exempt
 def olap(request):
     user = authenticate_user(request)
+    if not user.username == 'admin':
+        return redirect(loginPage)
+
     # get a list of all users
     data = {}
     data["users"] = Users.objects.all()
