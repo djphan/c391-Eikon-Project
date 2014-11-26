@@ -321,12 +321,13 @@ onDataResponse = function() {
             classie.add(displayGroupElement.children[0], 'active');
         }
 
+        if (groupManager.userNames.length > 0){
+            // add the usernames to the select box
+            setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
+        }
     }
 
-    if (groupManager.userNames.length > 0){
-        // add the usernames to the select box
-        setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
-    }
+    
 
     // set up the add group button
     var addGroupButton = document.getElementsByClassName("submit-new-group")[0];
