@@ -96,6 +96,7 @@ class Images(models.Model):
         results = searchImageByText(user, textquery, startDate, endDate)
         print(len(results))
         search_results = []
+        
         for row in results:
             print(len(row))
             search_results.append(Images())
@@ -116,7 +117,7 @@ class Images(models.Model):
         verbose_name = "Image"
 
     def __str__(self):
-        return ('ID: '+ self.photo_id + ' owner: '+ self.owner_name + " subject: " + self.subject + " " + self.photo.url)
+        return ('ID: '+ str(self.photo_id) + ' owner: '+ str(self.owner_name) + " subject: " + str(self.subject) + " " + str(self.photo.url))
               
 class Session(models.Model):
     username = models.ForeignKey(Users)

@@ -260,7 +260,7 @@ def get_image_data(request):
     # note that the user can set one or both so before performing queries check
     # whether both or only one has been given by the user.
     print (params)
-
+    
     # Constants used to reference to for the search
     search_start_date = None
     search_end_date = None
