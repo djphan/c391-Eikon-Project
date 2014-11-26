@@ -320,7 +320,7 @@ onDataResponse = function() {
             var displayGroupElement = document.getElementsByClassName("group-names")[0];
             classie.add(displayGroupElement.children[0], 'active');
             // add the usernames to the select box
-            groupManager.addUsersToSelectBox(groupManager.userNames);
+            setTimeout(function() {groupManager.addUsersToSelectBox(groupManager.userNames);}, 500);
         }
     }
 
