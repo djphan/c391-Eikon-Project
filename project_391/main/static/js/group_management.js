@@ -334,7 +334,7 @@ onDataResponse = function() {
     addGroupButton.addEventListener("click", function() {
         var groupNameTextField = document.getElementsByClassName("enter-group-name-field")[0];
         if (groupNameTextField.value.length > 20) {
-            swal("Group Name Error", "Names must be less than 10 characters.");
+            swal("Group Name Error", "Names must be less than 24 characters.");
             return;
         }
         groupManager.addNewGroupNameToList(groupNameTextField.value);
