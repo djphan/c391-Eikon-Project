@@ -51,7 +51,7 @@
               <label for="inputEmail" class="col-sm-offset-2 col-sm-2 control-label">Email</label>
               <div class="col-sm-4">
                 <input maxlength="124" type="text" name="EMAIL" class="form-control" id="inputEmail" placeholder="Email">
-              </div> {% if err_email %} * {% endif %}
+              </div> {% if err_email %} * {% endif %} {% if err_email_taken %} * Email already registered {% endif %}
             </div>
             <div class="form-group">
               <label for="phoneNumber" class="col-sm-offset-2 col-sm-2 control-label">Phone Number</label>
