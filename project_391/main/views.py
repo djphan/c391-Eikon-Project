@@ -323,16 +323,25 @@ def get_image_data(request):
     # if the user performed a search, append the top 5 images first
     top_image_ids = []
     if "searchType" not in params and "searchTerm" not in params:
+        # get all the user accessible images
+        if user.username == 'admin':
+            user_accessible_imgs = Images.objects.all()
+        else:
+            user_accessible_imgs = Images.objects.filter(Q(permitted=1) | Q(permitted=2, owner_name=user) | Q(permitted__group_id__in=[group.group_id.group_id for group in allowed_groups]))
         top_images = Views.objects.values("photo_id").annotate(Count("id")).order_by("-id__count")
-        for idx, image in enumerate(top_images):
+        import pdb; pdb.set_trace()
+        for image in top_images:
+            # if the image is not accessible by the user don't add it.
+            if not user_accessible_imgs.filter(photo_id=image["photo_id"]):
+                continue
             photo_id = image["photo_id"]
             top_image = Images.objects.get(photo_id=photo_id)
             top_image = serialize_image(top_image, user)
+            # add the top image and views flags.
             top_image["topImage"] = "true"
-            top_image["rank"] = str(idx + 1)
             top_image["views"] = image["id__count"]
             # this handles the case where the 5th image is tied with the following images in view count.
-            if idx > 4 and response["images"][idx - 1]["views"] > image["id__count"]:
+            if len(response["images"]) > 4 and response["images"][-1]["views"] > image["id__count"]:
                 break
             response["images"].append(top_image)
             top_image_ids.append(photo_id)
